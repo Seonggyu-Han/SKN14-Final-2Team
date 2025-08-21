@@ -15,7 +15,7 @@ Repository for SKN14-Final-2Team
 3. 그래서 이러한 문제 해결을 위해 챗봇을 통해 사용자가 원하는 향을 분석하고 맞춤형 향수를 추천하는 서비스를 제공하는 것을 목표로 합니다.
 <br><br>`RAG`과 `VectorDB` 를 활용한 챗봇서비스 `ScentPick`으로 다양한 향수 추천 기능을 테스트할 수 있습니다. <br><br>
 
-![img.png](img.png)
+<img width="896" height="726" alt="Image" src="https://github.com/user-attachments/assets/3c0233f2-cf6e-4644-b9f5-eac7d1f34421" />
 
 
 
@@ -85,7 +85,7 @@ Repository for SKN14-Final-2Team
 - 사용자가 원하는 조건에 맞게 향수를 3가지 추천해주는 챗봇 구현
 - 향수 이름, 향수 브랜드, 향수 종류, 향 설명, 가격, 용량, 메인 어코드, 탑/미들/베이스 노트 데이터를 DB에 저장
 - 참고 링크
-![img_2.png](img_2.png)
+<img width="1427" height="679" alt="Image" src="https://github.com/user-attachments/assets/1e4b6971-1b67-4fb8-b028-5573b7c274de" />
 ---
 
 ## 📱 주요 기능
@@ -99,10 +99,10 @@ Repository for SKN14-Final-2Team
 - 향수/노트/어코드/브랜드/가격/이미지 등 도메인 엔터티 관리
 - RAG 검색을 위한 임베딩/소스 문서 관리
 
-![img_3.png](img_3.png)
-![img_4.png](img_4.png)
-![img_5.png](img_5.png)
-![img_6.png](img_6.png)
+<img width="1068" height="599" alt="Image" src="https://github.com/user-attachments/assets/bb77a9bd-213f-4f8c-8779-c70a985c2340" />
+<img width="1072" height="591" alt="Image" src="https://github.com/user-attachments/assets/dda1392d-caa3-404e-9f33-6a0b7d155d18" />
+<img width="473" height="284" alt="Image" src="https://github.com/user-attachments/assets/d8a3b79b-8001-42a4-95f9-777174a41153" />
+<img width="958" height="474" alt="Image" src="https://github.com/user-attachments/assets/8bcac447-f498-4817-a4f9-011cd2c4b179" />
 
 ---
 
@@ -140,7 +140,7 @@ Repository for SKN14-Final-2Team
 
 ## 🔢데이터 구조 
 
-![img_8.png](img_8.png)
+<img width="1046" height="534" alt="Image" src="https://github.com/user-attachments/assets/dfd7efe5-2f18-44c0-ab9a-729ca16100d7" />
 
 ---
 
