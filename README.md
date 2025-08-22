@@ -140,8 +140,7 @@ Repository for SKN14-Final-2Team
 
 ## 🔢데이터 구조 
 
-<img width="1046" height="534" alt="Image" src="https://github.com/user-attachments/assets/dfd7efe5-2f18-44c0-ab9a-729ca16100d7" />
-
+<img width="1342" height="889" alt="Image" src="https://github.com/user-attachments/assets/1ee5bdfd-1016-43b6-ad85-4487b2154dab" />
 ---
 
 ## 🚩기대 효과
