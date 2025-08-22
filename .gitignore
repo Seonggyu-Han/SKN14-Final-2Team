@@ -385,5 +385,3 @@ $RECYCLE.BIN/
 .streamlit/secrets.toml
 
 *.jpg
-*.png
-*.pdf
