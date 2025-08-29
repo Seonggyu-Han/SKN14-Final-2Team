@@ -140,7 +140,8 @@ Repository for SKN14-Final-2Team
 
 ## 🔢데이터 구조 
 
-<img width="1342" height="889" alt="Image" src="https://github.com/user-attachments/assets/1ee5bdfd-1016-43b6-ad85-4487b2154dab" />
+<img width="1345" height="893" alt="Image" src="https://github.com/user-attachments/assets/860be6e9-2cf1-4d50-afd5-92bec117a181" />
+
 ---
 
 ## 🚩기대 효과
@@ -158,4 +159,5 @@ Repository for SKN14-Final-2Team
 ## 📢 Contact
 - 프로젝트 노션: https://www.notion.so/shqkel/SKN14-Final-2-24c9cb46e5e28024a084f0508d66d217?source=copy_link
 - Github 저장소: https://github.com/skn-ai14-250409/SKN14-Final-2Team
+-               https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN14-FINAL-2Team
 
