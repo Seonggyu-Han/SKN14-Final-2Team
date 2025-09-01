@@ -62,3 +62,5 @@ def human_fallback(state: dict) -> str:
         f"👉 질문을 구체적으로 다시 작성해 주세요.\n"
         f"💡 또는 향수에 관한 멋진 질문을 해보시는 건 어떨까요?"
     )
+def perfume_recommendation_tool():
+    pass
