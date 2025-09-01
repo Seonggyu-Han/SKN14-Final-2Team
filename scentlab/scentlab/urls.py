@@ -24,7 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('scentpick/', include('scentpick.urls')),
     path('', RedirectView.as_view(url='/scentpick'), name='index'),
-    path('uauth/', include('uauth.urls')),
+    path('', include(('scentpick.urls', 'scentpick'), namespace="scentpick")),
+    path("", include(("uauth.urls", "uauth"), namespace="uauth")),
 ]
 
 # 업로드 파일 경로 설정
