@@ -1,5 +1,5 @@
 ---
-name: 진행사항 이슈 템플릿
+name: "진행사항 이슈 템플릿 (Made by 나경\U0001F490)"
 about: Describe this issue template's purpose here.
 title: ''
 labels: ''
