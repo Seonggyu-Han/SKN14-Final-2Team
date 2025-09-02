@@ -33,6 +33,7 @@ class UserDetail(models.Model):
         indexes = [
             models.Index(fields=["name"]),
             models.Index(fields=["gender"]),
+            models.Index(fields=["created_at"]),
         ]
         verbose_name = "User Detail"
         verbose_name_plural = "User Details"
@@ -45,7 +46,9 @@ class UserDetail(models.Model):
 
 class OAuthAccount(models.Model):
     """
-    ERD: oauth_accounts (User : OAuthAccount = 1 : N)
+    oauth_accounts (User : OAuthAccount = 1 : N)
+    - 같은 provider 내 동일 계정 중복 연결 방지
+    - 한 사용자가 동일 provider를 중복 연결하지 않도록 UK 추가
     """
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="oauth_accounts")
@@ -60,7 +63,7 @@ class OAuthAccount(models.Model):
                 fields=["provider", "provider_user_id"],
                 name="uq_oauth_provider_user",
             ),
-            # 한 사용자가 동일 provider를 중복 연결하지 못하도록(선택)
+            # 한 사용자가 동일 provider를 중복 연결하지 못하도록
             models.UniqueConstraint(
                 fields=["user", "provider"],
                 name="uq_oauth_user_provider",
@@ -69,6 +72,7 @@ class OAuthAccount(models.Model):
         indexes = [
             models.Index(fields=["provider"]),
             models.Index(fields=["provider_user_id"]),
+            models.Index(fields=["user"]),
         ]
 
     def __str__(self):
