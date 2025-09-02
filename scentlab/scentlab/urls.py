@@ -22,10 +22,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('scentpick/', include('scentpick.urls')),
-    path('', RedirectView.as_view(url='/scentpick'), name='index'),
-    path('', include(('scentpick.urls', 'scentpick'), namespace="scentpick")),
-    path("", include(("uauth.urls", "uauth"), namespace="uauth")),
+    path('scentpick/', include(('scentpick.urls', 'scentpick'), namespace='scentpick')),
+    path('', RedirectView.as_view(url='/scentpick/', permanent=False), name='index'),
+    path('', include(('uauth.urls', 'uauth'), namespace='uauth')),
 ]
 
 # 업로드 파일 경로 설정

@@ -1,14 +1,14 @@
 -- Active: 1753665902833@@127.0.0.1@3306@scentpickdb
 use scentpickdb;
 
-TRUNCATE TABLE images;
+TRUNCATE TABLE note_images;
 
 -- 만약 DELETE만 했다면 AUTO_INCREMENT 값 수동 초기화
-ALTER TABLE images AUTO_INCREMENT = 1;
+ALTER TABLE note_images AUTO_INCREMENT = 1;
 
 start transaction;
 
-INSERT INTO images (category, note_name, image_url)
+INSERT INTO note_images (category, note_name, image_url)
 VALUES
 ('Citrus Smells', 'Bergamot', 'https://fimgs.net/mdimg/sastojci/m.75.jpg') ,
 ('Citrus Smells', 'Bigarade', 'https://fimgs.net/mdimg/sastojci/m.1083.jpg') ,
