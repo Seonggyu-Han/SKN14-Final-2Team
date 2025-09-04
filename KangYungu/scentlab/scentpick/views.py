@@ -1,4 +1,3 @@
-# views.py
 from django.conf import settings
 from django.shortcuts import render
 from django.db.models import Q
@@ -27,16 +26,15 @@ def recommend(request):
 
 
 def perfumes(request):
-    """perfumes 목록: MySQL Perfume에서 검색/필터/페이징"""
     q = (request.GET.get("q") or "").strip()
     brand_sel = request.GET.getlist("brand")
     size_sel = request.GET.getlist("size")
     gender_sel = request.GET.getlist("gender")
     conc_sel = request.GET.getlist("conc")
+    accord_sel = request.GET.getlist("accord")
 
     qs = Perfume.objects.all()
 
-    # 검색어
     if q:
         qs = qs.filter(
             Q(name__icontains=q)
@@ -48,11 +46,9 @@ def perfumes(request):
             | Q(base_notes__icontains=q)
         )
 
-    # 브랜드
     if brand_sel:
         qs = qs.filter(brand__in=brand_sel)
 
-    # 용량
     if size_sel:
         size_q = Q()
         for s in size_sel:
@@ -64,7 +60,6 @@ def perfumes(request):
         if size_q:
             qs = qs.filter(size_q)
 
-    # 성별
     if gender_sel:
         gq = Q()
         for g in gender_sel:
@@ -72,7 +67,6 @@ def perfumes(request):
         if gq:
             qs = qs.filter(gq)
 
-    # 농도
     if conc_sel:
         cq = Q()
         for c in conc_sel:
@@ -80,14 +74,19 @@ def perfumes(request):
         if cq:
             qs = qs.filter(cq)
 
+    if accord_sel:
+        aq = Q()
+        for a in accord_sel:
+            aq |= Q(main_accords__icontains=a)
+        if aq:
+            qs = qs.filter(aq)
+
     qs = qs.order_by("brand", "name")
 
-    # 페이지네이션
     paginator = Paginator(qs, 24)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    # 페이지 range 커스텀
     current = page_obj.number
     total = paginator.num_pages
     page_range_custom = []
@@ -102,17 +101,20 @@ def perfumes(request):
         else:
             page_range_custom = [1, "..."] + list(range(current - 2, current + 3)) + ["...", total]
 
-    # 카드 데이터 가공
     for p in page_obj.object_list:
-        raw = (p.main_accords or "")
-        if "," in raw:
-            toks = [t.strip() for t in raw.split(",")]
+        raw = p.main_accords or ""
+        if isinstance(raw, list):
+            toks = [str(t).strip() for t in raw]
+        elif isinstance(raw, str):
+            if "," in raw:
+                toks = [t.strip() for t in raw.split(",")]
+            else:
+                toks = [t.strip() for t in raw.split()]
         else:
-            toks = [t.strip() for t in raw.split()]
+            toks = []
         p.accord_list = [t for t in toks if t][:6]
         p.image_url = f"https://scentpick-images.s3.ap-northeast-2.amazonaws.com/perfumes/{p.id}.jpg"
 
-    # 필터 옵션
     brands = Perfume.objects.values_list("brand", flat=True).distinct().order_by("brand")
     concentrations = (
         Perfume.objects.exclude(concentration="")
@@ -127,6 +129,21 @@ def perfumes(request):
         .order_by("gender")
     )
 
+    raw_accords = Perfume.objects.exclude(main_accords="").values_list("main_accords", flat=True)
+    accord_set = set()
+    for raw in raw_accords:
+        if not raw:
+            continue
+        if isinstance(raw, list):
+            parts = [str(p).strip() for p in raw if p]
+        else:
+            cleaned = str(raw).strip("[]").replace("'", "").replace('"', "")
+            parts = [p.strip() for p in cleaned.split(",") if p.strip()]
+        for p in parts:
+            if p and p not in ["/", "-", "_"]:
+                accord_set.add(p)
+    accords = sorted(accord_set)
+
     base_qd = request.GET.copy()
     base_qd.pop("page", True)
     base_qs = base_qd.urlencode()
@@ -137,11 +154,13 @@ def perfumes(request):
         "brands": brands,
         "concentrations": concentrations,
         "genders": genders,
+        "accords": accords,
         "selected": {
             "q": q,
             "brand": brand_sel,
             "gender": gender_sel,
             "conc": conc_sel,
+            "accord": accord_sel,
         },
         "base_qs": base_qs,
     }

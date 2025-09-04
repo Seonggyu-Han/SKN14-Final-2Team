@@ -5,15 +5,21 @@
 <h2 style="margin-bottom:20px;color:#111827;">향수 리스트</h2>
 
 <!-- 검색 영역 -->
-<form id="searchForm" method="get" style="margin-bottom:16px;display:flex;gap:10px;align-items:center;">
+<form id="searchForm" method="get" 
+      style="margin-bottom:16px;display:flex;align-items:stretch;gap:0;width:1215px;height:44px;">
   <input type="text" name="q" value="{{ selected.q }}" class="search-bar"
-         placeholder="향수 이름, 브랜드, 메인 어코드로 검색하세요..."
-         style="flex:1;padding:12px 14px;border:1px solid #e5e7eb;border-radius:14px;background:#f8fafc;outline:none;">
+         placeholder="향수 이름, 브랜드, 메인 어코드로 검색"
+         style="flex:1;height:100%;padding:0 14px;border:1px solid #e5e7eb;border-right:none;
+                border-radius:12px 0 0 12px;background:#f8fafc;outline:none;box-sizing:border-box;">
   <button type="submit"
-          style="padding:12px 16px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;cursor:pointer;">
+          style="width:80px;height:100%;border:1px solid #e5e7eb;border-left:none;
+                 border-radius:0 12px 12px 0;background:#6366F1;color:white;
+                 font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-sizing:border-box;">
     검색
   </button>
 </form>
+
+
 
 <div style="display:grid;grid-template-columns:260px 1fr;gap:16px;align-items:start;">
   <!-- 필터 -->
@@ -48,6 +54,19 @@
         <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;margin-top:6px;margin-left:6px;">
           {% for c in concentrations %}
             <label><input type="checkbox" name="conc" value="{{ c }}" {% if c in selected.conc %}checked{% endif %}> {{ c }}</label>
+          {% endfor %}
+        </div>
+      </details>
+
+      <details class="filter-section">
+        <summary style="cursor:pointer;font-weight:600;">메인어코드</summary>
+        <div style="display:flex;flex-direction:column;gap:6px;max-height:180px;overflow:auto;font-size:13px;margin-top:6px;margin-left:6px;">
+          {% for a in accords %}
+            <label>
+              <input type="checkbox" name="accord" value="{{ a }}"
+                     {% if a in selected.accord %}checked{% endif %}>
+              {{ a }}
+            </label>
           {% endfor %}
         </div>
       </details>
