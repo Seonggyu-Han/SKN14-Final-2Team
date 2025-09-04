@@ -1,7 +1,6 @@
 from pathlib import Path
 import sys, os, json
 
-# 0) sys.path: 프로젝트 루트 + KangYungu
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -16,13 +15,11 @@ def _fmt(obj) -> str:
     try:    return json.dumps(obj, ensure_ascii=False, indent=2)
     except: return str(obj)
 
-# 1) router
 try:
     from KangYungu.perfume_llm_router.router import classify_question
 except Exception:
     from perfume_llm_router.router import classify_question
 
-# 2) note 매핑 (pinecone 우선 → 키워드 대체)
 match_note = None
 try:
     from KangYungu.key_word_mapping.scent_match_pinecone import match_note as _mn
@@ -42,7 +39,6 @@ except Exception:
             except Exception:
                 match_note = None
 
-# 3) 검색 유틸
 try:
     from KangYungu.perfume_vdb.vdb_llm.search import (
         search_corpus, build_filters, extract_filters_from_query,
@@ -68,9 +64,8 @@ except Exception:
 
 MIN_SCORE   = float(os.getenv("RAG_MIN_SCORE", str(_MIN_SCORE)))
 TOPK_DEF    = int(os.getenv("RAG_TOPK", str(_TOPK_DEF)))
-STICKY_MIN  = float(os.getenv("RAG_STICKY_MIN", "0.25"))  # 노트/브랜드 있으면 임계 완화
+STICKY_MIN  = float(os.getenv("RAG_STICKY_MIN", "0.25"))
 
-# ---------- 유틸 ----------
 def _to_text(d):
     if isinstance(d, dict):
         for k in ("text", "content", "chunk", "page_text", "body"):
@@ -148,7 +143,6 @@ def _names_from_docs(docs, limit=3) -> str:
         if n: names.append(str(n).strip())
     names = _dedup_keep_order(names)
     if not names:
-        # fallback: text의 첫 구간 사용(브랜드 포함될 수 있음)
         for d in (docs or []):
             t = (d.get("text") or "").split(" | ", 1)[0].strip()
             if t: names.append(t)
@@ -166,19 +160,16 @@ def _pick_better(a, b):
         return a if ad[0]["score"] > bd[0]["score"] else b
     return a if len(ad) >= len(bd) else b
 
-# ---------- 메인 ----------
 def answer_query(query: str) -> str:
     info = classify_question(query)
     intents = info.get("intents", [])
 
-    # (요구사항) 의도만 출력
     print(f"intents = {intents}")
 
     base_f = extract_filters_from_query(query)
 
     used = None
 
-    # SCENT면 노트 매핑(요구사항) → 매칭된 메인어코드만 출력
     if "SCENT_INFO" in intents and match_note is not None:
         try:
             raw_notes = match_note(query, top_k=5) or []
@@ -216,7 +207,6 @@ def answer_query(query: str) -> str:
     if top < threshold:
         return "내 데이터에서 관련 결과를 충분히 찾지 못했어. 질문을 조금 더 구체적으로 적어줄래?"
 
-    # (요구사항) 최종 출력: "향수 이름"만, 콤마 구분
     return _names_from_docs(docs, limit=3)
 
 if __name__ == "__main__":
