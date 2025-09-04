@@ -9,7 +9,7 @@ urlpatterns = [
     path("chat/", views.chat, name="chat"),
     path("recommend/", views.recommend, name="recommend"),
     path("perfumes/", views.perfumes, name="perfumes"),
-    path("product/<slug:slug>/", views.product_detail, name="product_detail"),  # 상세는 slug 사용 예시
+    path("product/<int:pk>/", views.product_detail, name="product_detail"),  # ✅ id(pk)로 수정
     path("offlines/", views.offlines, name="offlines"),
     path("mypage/", views.mypage, name="mypage"),
 ]
