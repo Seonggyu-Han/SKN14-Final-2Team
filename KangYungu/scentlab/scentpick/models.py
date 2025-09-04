@@ -2,36 +2,46 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-USER_MODEL = settings.AUTH_USER_MODEL
+USER_MODEL = settings.AUTH_USER_MODEL  # 기본값: auth.User
 
+# Django 모델에서 기본값은 null=False (즉, NOT NULL)
+
+# -----------------------------
+# Perfume & static resources
+# -----------------------------
 class Perfume(models.Model):
     """
     향수 테이블 (perfumes)
     """
     id = models.BigAutoField(primary_key=True)
-    brand = models.CharField(max_length=50)
-    name = models.CharField(max_length=50)
+    brand = models.CharField(max_length=50)                         # text NN
+    name = models.CharField(max_length=50)                          # text NN
 
+    # 단일 ml 컬럼 삭제(size_ml) → JSON 리스트로 sizes 추가
+    # 예: [30, 50, 100]
     sizes = models.JSONField(default=list, help_text="용량(ml) 리스트", null=True)
 
     detail_url = models.CharField(max_length=500, blank=True, null=True)
     description = models.TextField()
     concentration = models.CharField(max_length=30)
 
+    # 마케팅/사용 대상을 위한 성별
     gender = models.CharField(
-        max_length=10,
+        max_length=10,  # Male, Female, Unisex 등
         default="Unisex",
         help_text="마케팅/사용 대상으로 설정한 성별(Male/Female/Unisex)"
     )
 
-    main_accords = models.CharField(max_length=300)
-    top_notes = models.CharField(max_length=300, blank=True, null=True)
-    middle_notes = models.CharField(max_length=300, blank=True, null=True)
-    base_notes = models.CharField(max_length=300, blank=True, null=True)
+    # 노트 / 어코드 JSON 리스트 필드
+    main_accords = models.JSONField() 
+    top_notes = models.JSONField(blank=True, null=True)  
+    middle_notes = models.JSONField(blank=True, null=True)
+    base_notes = models.JSONField(blank=True, null=True)
 
-    notes_score = models.JSONField(blank=True, null=True)           # {rose(100.0) / ...}
-    season_score = models.JSONField(blank=True, null=True)          # {winter(14.2) / ...}
-    day_night_score = models.JSONField(blank=True, null=True)       # {day(47.1) / night(25.9)}
+    # 점수/추천 지표는 구조화 가능한 JSON dict로 관리
+    notes_score = models.JSONField(blank=True, null=True)           # {"rose": 100.0, "jasmine": 87.5, ...}
+    season_score = models.JSONField(blank=True, null=True)          # {"winter": 14.2, "summer": 22.5, ...}
+    day_night_score = models.JSONField(blank=True, null=True)       # {"day": 47.1, "night": 25.9}
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -69,6 +79,10 @@ class NoteImage(models.Model):
     def __str__(self):
         return self.note_name or f"Image#{self.pk}"
 
+
+# -----------------------------
+# Conversations & messages
+# -----------------------------
 class Conversation(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(
@@ -91,10 +105,10 @@ class Conversation(models.Model):
 
 class Message(models.Model):
     class Role(models.TextChoices):
-        SYSTEM = "system", "system"
+        SYSTEM = "system", "system" # 값(DB 저장용), 라벨(표시용)
         USER = "user", "user"
         ASSISTANT = "assistant", "assistant"
-        TOOL = "tool", "tool"
+        TOOL = "tool", "tool"  # user/assistant/tool
 
     id = models.BigAutoField(primary_key=True)
     conversation = models.ForeignKey(
@@ -114,6 +128,10 @@ class Message(models.Model):
     def __str__(self):
         return f"{self.role}@{self.conversation_id}"
 
+
+# -----------------------------
+# Favorites
+# -----------------------------
 class Favorite(models.Model):
     user = models.ForeignKey(
         USER_MODEL, on_delete=models.CASCADE, related_name="favorites"
@@ -136,6 +154,10 @@ class Favorite(models.Model):
     def __str__(self):
         return f"{self.user_id} - {self.perfume_id}"
 
+
+# -----------------------------
+# Recommendation logging
+# -----------------------------
 class RecRun(models.Model):
     """
     추천 근거 로깅 (rec_runs)
