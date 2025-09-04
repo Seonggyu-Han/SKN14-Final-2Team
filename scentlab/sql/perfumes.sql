@@ -75,7 +75,7 @@ INSERT INTO perfumes (
 ('끌로에', '노마드 자스민 나츄렐 인텐스 오 드 퍼퓸', 'https://www.bysuco.com/product/show/140889', '자연을 기념하고 보호하려는 열망으로 탄생한 빛나는 플로랄 향.', '오 드 퍼퓸', '["스위트", "프루티", "화이트", "플로랄"]', '["미라벨", "배"]', '["대추야자", "이집트", "자스민", "프리지아"]', '["바닐라", "샌달우드", "오크모스", "파출리"]', '{"sweet": 100.0, "fruity": 83.2, "floral": 57.0, "woody": 70.9, "vanilla": 63.0, "powdery": 54.1, "spicy": 48.1, "earthy": 45.7, "fresh": 45.3}', '{"winter": 38.6, "spring": 27.7, "summer": 3.7, "fall": 45.8}', '{"day": 96.4, "night": 70.7}', 'Female', '[30, 50]'),
 ('끌로에', '러브 스토리 오 드 퍼퓸', 'https://www.bysuco.com/product/show/140900', '신선하고 감각적인 스테파노티스 자스민 행복의 꽃향기 입니다.', '오 드 퍼퓸', '["화이트", "플로랄", "시트러스", "머스크"]', '["네롤리", "배", "베르가못", "자몽", "레몬"]', '["오렌지", "블라썸", "스테파노티스", "로즈", "피치", "블랙", "커런트"]', '["머스크", "시더", "캐시미어우드", "파출리"]', '{"floral": 100.0, "citrus": 92.7, "musky": 53.7, "fruity": 52.1, "spicy": 50.6, "sweet": 50.5, "woody": 50.0, "rose": 47.3, "fresh": 45.4, "powdery": 45.1}', '{"winter": 16.4, "spring": 32.3, "summer": 1.2, "fall": 17.4}', '{"day": 99.0, "night": 63.9}', 'Female', '[50]'),
 ('끌로에', '아뜰리에 데 플뢰르 나르시서스 포이티쿠스 오 드 퍼퓸', 'https://www.bysuco.com/product/show/30721', '신선하고 약간은 파우더리한 나르시서스 포이티쿠스는 봄날의 기쁨을 담은 즐거운 추억을 떠오르게하는 향수', '오 드 퍼퓸', '["옐로우", "플로랄", "그린", "아로마틱"]', NULL, NULL, NULL, '{"iris": 100.0, "aromatic": 87.6, "powdery": 81.5, "woody": 78.9, "citrus": 78.4, "vanilla": 59.7, "earthy": 58.0, "aldehydic": 56.5, "violet": 54.2, "spicy": 53.2}', '{"winter": 15.6, "spring": 5.4, "summer": 2.1, "fall": 93.8}', '{"day": 93.5, "night": 53.7}', 'Female', '[50]'),
-('끌로에', '아뜰리에 드 플뢰르 로사 다마세나 오 드 퍼퓸', 'https://www.bysuco.com/product/show/30729', '어린 시절 집의 정원에서 만들던 꽃잎과 주름진 이파리의 혼합물에서 영감을 받은 상큼하고 자연스러운 장미 향', '오 드 퍼퓸', '["로즈", "/", "플로랄"]', NULL, NULL, NULL, '{"floral": 77.9, "tropical": 77.7, "sweet": 63.8, "almond": 58.0, "lactonic": 56.6, "fruity": 50.0, "woody": 49.2, "citrus": 47.9, "nutty": 46.8}', '{"winter": 37.6, "spring": 23.8, "summer": 5.0, "fall": 42.5}', '{"day": 95.0, "night": 100.0}', 'Female', '[50]'),
+('끌로에', '아뜰리에 드 플뢰르 로사 다마세나 오 드 퍼퓸', 'https://www.bysuco.com/product/show/30729', '어린 시절 집의 정원에서 만들던 꽃잎과 주름진 이파리의 혼합물에서 영감을 받은 상큼하고 자연스러운 장미 향', '오 드 퍼퓸', '["로즈", "플로랄"]', NULL, NULL, NULL, '{"floral": 77.9, "tropical": 77.7, "sweet": 63.8, "almond": 58.0, "lactonic": 56.6, "fruity": 50.0, "woody": 49.2, "citrus": 47.9, "nutty": 46.8}', '{"winter": 37.6, "spring": 23.8, "summer": 5.0, "fall": 42.5}', '{"day": 95.0, "night": 100.0}', 'Female', '[50]'),
 ('끌로에', '아뜰리에 드 플뢰르 허바 미모사 오 드 퍼퓸', 'https://www.bysuco.com/product/show/140902', '미모사 꽃의 파우더리하고 우디하며 싱그럽고 찬란한 면들이 구성에 풍성한 향', '오 드 퍼퓸', '["옐로우", "플로랄", "파우더리", "플로랄"]', NULL, NULL, NULL, '{"woody": 100.0, "marine": 81.1, "aromatic": 79.6, "salty": 69.9, "camphor": 59.1, "fruity": 53.3, "aquatic": 51.8, "violet": 50.8, "sweet": 49.9, "herbal": 48.9}', '{"winter": 44.1, "spring": 14.7, "summer": 2.9, "fall": 2.6}', '{"day": 73.7, "night": 100.0}', 'Female', '[50]'),
 ('끌로에', '아뜰리에 드 플뢰르 히비스커스 아벨모스커스 오 드 퍼퓸', 'https://www.bysuco.com/product/show/30705', '맑고 가벼운 정원의 여왕의 향', '오 드 퍼퓸', '["플로랄", "프레쉬", "스파이시", "머스크"]', NULL, NULL, NULL, '{"floral": 100.0, "spicy": 56.2, "musky": 47.5}', '{"winter": 43.2, "spring": 25.0, "summer": 2.3, "fall": 24.3}', '{"day": 100.0, "night": 97.3}', 'Female', '[50]'),
 ('나르시소 로드리게즈', '엉브레 오 드 퍼퓸', 'https://www.bysuco.com/product/show/23370', '사막에 드리운 황금빛 태양의 신비롭고 우아한 유혹과 같은 향기입니다.', '오 드 퍼퓸', '["머스크", "파우더리", "플로랄"]', '["푸루메리아", "일랑일랑", "화이트", "플로랄"]', '["머스크", "앰버"]', '["캐쉬미란", "바닐라", "시더"]', '{"spicy": 100.0, "woody": 77.6, "aromatic": 59.3, "sweet": 55.2, "musky": 53.1, "amber": 51.0, "powdery": 49.3, "fruity": 46.0, "balsamic": 45.1, "conifer": 44.5}', '{"winter": 16.8, "spring": 10.3, "summer": 2.8, "fall": 92.1}', '{"day": 41.7, "night": 14.6}', 'Female', '[50]'),
@@ -848,3 +848,11 @@ ON DUPLICATE KEY UPDATE
 commit;
 
 -- rollback;
+
+-- insert 문에서 처리 함 (이미 데이터 채운 상태라면 아래 코드 실행)
+-- name : 아뜰리에 드 플뢰르 로사 다마세나 오 드 퍼퓸
+-- main accord : ["로즈", "/", "플로랄"] → ["로즈", "플로랄"]
+-- UPDATE perfumes
+-- SET main_accords = JSON_ARRAY("로즈", "플로랄")
+-- WHERE name = '아뜰리에 드 플뢰르 로사 다마세나 오 드 퍼퓸';
+
