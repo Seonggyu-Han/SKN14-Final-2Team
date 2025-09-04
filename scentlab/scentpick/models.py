@@ -38,10 +38,10 @@ class Perfume(models.Model):
     middle_notes = models.CharField(max_length=300, blank=True, null=True)
     base_notes = models.CharField(max_length=300, blank=True, null=True)
 
-    # 점수/추천 지표는 구조화 가능한 JSON으로 관리
-    notes_score = models.JSONField(blank=True, null=True)           # {rose(100.0) / ...}
-    season_score = models.JSONField(blank=True, null=True)          # {winter(14.2) / ...}
-    day_night_score = models.JSONField(blank=True, null=True)       # {day(47.1) / night(25.9)}
+    # 점수/추천 지표는 구조화 가능한 JSON dict로 관리
+    notes_score = models.JSONField(blank=True, null=True)           # {"rose": 100.0, "jasmine": 87.5, ...}
+    season_score = models.JSONField(blank=True, null=True)          # {"winter": 14.2, "summer": 22.5, ...}
+    day_night_score = models.JSONField(blank=True, null=True)       # {"day": 47.1, "night": 25.9}
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
