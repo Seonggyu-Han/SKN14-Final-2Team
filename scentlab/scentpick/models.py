@@ -32,11 +32,11 @@ class Perfume(models.Model):
         help_text="마케팅/사용 대상으로 설정한 성별(Male/Female/Unisex)"
     )
 
-    # 노트 / 어코드 (띄어쓰기로 구분하여 저장)
-    main_accords = models.CharField(max_length=300)
-    top_notes = models.CharField(max_length=300, blank=True, null=True)
-    middle_notes = models.CharField(max_length=300, blank=True, null=True)
-    base_notes = models.CharField(max_length=300, blank=True, null=True)
+    # 노트 / 어코드 JSON 리스트 필드
+    main_accords = models.JSONField() 
+    top_notes = models.JSONField(blank=True, null=True)  
+    middle_notes = models.JSONField(blank=True, null=True)
+    base_notes = models.JSONField(blank=True, null=True)
 
     # 점수/추천 지표는 구조화 가능한 JSON dict로 관리
     notes_score = models.JSONField(blank=True, null=True)           # {"rose": 100.0, "jasmine": 87.5, ...}
