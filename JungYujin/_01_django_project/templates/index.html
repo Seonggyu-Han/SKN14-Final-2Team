@@ -1,0 +1,21 @@
+{% load static spinner_tip_tags %}
+
+<html>
+  <head>
+    <script type="module">
+      import { showDuring } from "{% static 'spinner_tip/loader.js' %}";
+      window.runTask = async () => {
+        await showDuring(() => new Promise(r => setTimeout(r, 2000)));
+        document.getElementById("result").textContent = "작업 완료!";
+      };
+    </script>
+  </head>
+  <body>
+    <button onclick="runTask()">긴 작업 실행</button>
+
+    <!-- 스피너 박스 삽입 -->
+    {% spinner_loader_box %}
+
+    <div id="result"></div>
+  </body>
+</html>
