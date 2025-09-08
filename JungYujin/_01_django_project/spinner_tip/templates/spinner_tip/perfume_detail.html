@@ -1,0 +1,676 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ perfume.brand }} - {{ perfume.name }} | ScentPick{% endblock %}
+
+{% block extra_css %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        background: #f5f7fa;
+        font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+        color: #333;
+        line-height: 1.6;
+    }
+    
+    /* Header Section - Purple Gradient */
+    .perfume-header {
+        background: linear-gradient(135deg, #d4d4e7 0%, #e2e2ef 100%);
+        color: #333;
+        padding: 60px 0;
+        min-height: 500px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .perfume-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.1"><circle cx="36" cy="14" r="3"/></g></svg>') repeat;
+        opacity: 0.3;
+    }
+    
+    .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: grid;
+        grid-template-columns: 350px 1fr;
+        gap: 60px;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .perfume-image-container {
+        text-align: center;
+    }
+    
+    .perfume-image {
+        width: 280px;
+        height: 350px;
+        border-radius: 20px;
+        overflow: hidden;
+        margin: 0 auto;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .perfume-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .perfume-image-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        font-weight: 700;
+        color: white;
+        background: rgba(255,255,255,0.1);
+    }
+    
+    .perfume-info {
+        text-align: left;
+    }
+    
+    .brand-name {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+    
+    .perfume-title {
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    
+
+    
+    .description {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #555;
+        margin-bottom: 30px;
+        max-width: 500px;
+    }
+    
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 30px;
+    }
+    
+    .btn-like {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(100,100,100,0.1);
+        border: 1px solid rgba(100,100,100,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+    
+    .btn-like:hover {
+        background: rgba(100,100,100,0.2);
+        transform: scale(1.1);
+    }
+    
+    .btn-like.active {
+        background: #ff6b6b;
+        border-color: #ff6b6b;
+        color: white;
+    }
+    
+    .btn-like.dislike.active {
+        background: #ffa726;
+        border-color: #ffa726;
+        color: white;
+    }
+    
+    .purchase-btn {
+        background: #667eea;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    .purchase-btn:hover {
+        background: #5a6fd8;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        text-decoration: none;
+        color: white;
+    }
+    
+    /* Main Content */
+    .main-content {
+        background: white;
+        border-radius: 30px 30px 0 0;
+        margin-top: -30px;
+        position: relative;
+        z-index: 2;
+        padding: 40px 0;
+    }
+    
+    .content-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .section-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    
+    /* Main Accords Section */
+    .main-accords {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    
+    .accords-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+    }
+    
+    .accord-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 14px;
+        text-align: center;
+        line-height: 1.2;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .accord-circle:hover {
+        transform: scale(1.1);
+    }
+    
+    .accord-circle.floral { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .accord-circle.citrus { background: linear-gradient(135deg, #26de81 0%, #20bf6b 100%); }
+    .accord-circle.woody { background: linear-gradient(135deg, #ff8a50 0%, #ff7675 100%); }
+    .accord-circle.fresh { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .accord-circle.oriental { background: linear-gradient(135deg, #ff8a50 0%, #ff7675 100%); }
+    .accord-circle.spicy { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .accord-circle.default { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    
+    /* Notes Section */
+    .notes-section {
+        margin-bottom: 40px;
+    }
+    
+    .notes-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        margin-top: 30px;
+    }
+    
+    .note-group {
+        text-align: center;
+    }
+    
+    .note-group h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #2d3436;
+    }
+    
+    .note-items {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+    
+    .note-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .note-circle:hover {
+        transform: scale(1.1);
+    }
+    
+    .note-circle.top { background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); }
+    .note-circle.middle { background: linear-gradient(135deg, #00b894 0%, #55efc4 100%); }
+    .note-circle.base { background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%); }
+    
+    .note-image {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(255,255,255,0.8);
+    }
+    
+    .note-label {
+        font-size: 12px;
+        font-weight: 500;
+        color: #636e72;
+        margin-top: 8px;
+        text-align: center;
+        max-width: 80px;
+        line-height: 1.3;
+    }
+    
+    /* Score Sections */
+    .scores-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+    }
+    
+    .score-card {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid #e9ecef;
+    }
+    
+    .score-card h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #2d3436;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .score-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .score-label {
+        min-width: 80px;
+        font-weight: 500;
+        color: #636e72;
+        font-size: 14px;
+    }
+    
+    .score-bar {
+        flex: 1;
+        height: 8px;
+        background: #f1f2f6;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .score-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #6c5ce7 0%, #a29bfe 100%);
+        border-radius: 4px;
+        transition: width 1s ease-out;
+    }
+    
+    .score-value {
+        min-width: 40px;
+        text-align: right;
+        font-weight: 600;
+        color: #2d3436;
+        font-size: 14px;
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .header-content {
+            grid-template-columns: 1fr;
+            gap: 30px;
+            text-align: center;
+        }
+        
+        .perfume-image {
+            width: 220px;
+            height: 280px;
+        }
+        
+        .perfume-title {
+            font-size: 32px;
+        }
+        
+        .notes-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .scores-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="perfume-header">
+    <div class="header-content">
+        <!-- Product Image -->
+        <div class="perfume-image-container">
+            <div class="perfume-image">
+                {% if perfume.get_image_url %}
+                    <img src="{{ perfume.get_image_url }}" alt="{{ perfume.brand }} - {{ perfume.name }}" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="perfume-image-placeholder" style="display: none;">
+                        {{ perfume.brand|slice:":2" }}
+                    </div>
+                {% else %}
+                    <div class="perfume-image-placeholder">
+                        {{ perfume.brand|slice:":2" }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="perfume-info">
+            <div class="brand-name">{{ perfume.brand }}</div>
+            <h1 class="perfume-title">{{ perfume.name }}</h1>
+            
+
+            
+            <div class="description">
+                {{ perfume.description|truncatewords:30 }}
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn-like" onclick="toggleLike(this)">
+                    <i class="fas fa-heart"></i>
+                </button>
+                <button class="btn-like dislike" onclick="toggleDislike(this)">
+                    <i class="fas fa-thumbs-down"></i>
+                </button>
+            </div>
+            
+            {% if perfume.detail_url %}
+            <a href="{{ perfume.detail_url }}" target="_blank" class="purchase-btn">
+                구매 사이트 이동
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="content-container">
+        
+        <!-- Main Accords -->
+        {% if main_accords %}
+        <div class="main-accords">
+            <h2 class="section-title">향수 노트 구성</h2>
+            <div style="text-align: center; margin-bottom: 20px; color: #636e72;">메인 어코드</div>
+            
+            <div class="accords-container">
+                {% for accord in main_accords %}
+                <div class="accord-circle {% if 'floral' in accord.lower or 'rose' in accord.lower %}floral{% elif 'citrus' in accord.lower or 'lemon' in accord.lower %}citrus{% elif 'woody' in accord.lower or 'wood' in accord.lower %}woody{% elif 'fresh' in accord.lower or 'aquatic' in accord.lower %}fresh{% elif 'oriental' in accord.lower or 'amber' in accord.lower %}oriental{% elif 'spicy' in accord.lower %}spicy{% else %}default{% endif %}">
+                    {{ accord }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Notes Section -->
+        <div class="notes-section">
+            <div class="notes-grid">
+                <!-- Top Notes -->
+                <div class="note-group">
+                    <h3>Top Notes</h3>
+                    <div class="note-items">
+                        {% for note in top_notes %}
+                        <div>
+                            <div class="note-circle top">
+                                <img src="{{ note.image_url }}" alt="{{ note.name }}" class="note-image" 
+                                     onerror="this.style.display='none';">
+                            </div>
+                            <div class="note-label">{{ note.name }}</div>
+                        </div>
+                        {% empty %}
+                        <div style="color: #999; font-size: 14px;">정보 없음</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Middle Notes -->
+                <div class="note-group">
+                    <h3>Middle Notes</h3>
+                    <div class="note-items">
+                        {% for note in middle_notes %}
+                        <div>
+                            <div class="note-circle middle">
+                                <img src="{{ note.image_url }}" alt="{{ note.name }}" class="note-image" 
+                                     onerror="this.style.display='none';">
+                            </div>
+                            <div class="note-label">{{ note.name }}</div>
+                        </div>
+                        {% empty %}
+                        <div style="color: #999; font-size: 14px;">정보 없음</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Base Notes -->
+                <div class="note-group">
+                    <h3>Base Notes</h3>
+                    <div class="note-items">
+                        {% for note in base_notes %}
+                        <div>
+                            <div class="note-circle base">
+                                <img src="{{ note.image_url }}" alt="{{ note.name }}" class="note-image" 
+                                     onerror="this.style.display='none';">
+                            </div>
+                            <div class="note-label">{{ note.name }}</div>
+                        </div>
+                        {% empty %}
+                        <div style="color: #999; font-size: 14px;">정보 없음</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Score Sections -->
+        <div class="scores-grid">
+            <!-- Notes Score -->
+            {% if notes_score %}
+            <div class="score-card">
+                <h3>
+                    <i class="fas fa-chart-bar" style="color: #6c5ce7;"></i>
+                    노트 점수
+                </h3>
+                {% for note, score in notes_score.items %}
+                <div class="score-item">
+                    <div class="score-label">{{ note }}</div>
+                    <div class="score-bar">
+                        <div class="score-fill" style="width: {{ score }}%"></div>
+                    </div>
+                    <div class="score-value">{{ score|floatformat:1 }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Season Score -->
+            {% if season_score %}
+            <div class="score-card">
+                <h3>
+                    <i class="fas fa-calendar-alt" style="color: #6c5ce7;"></i>
+                    계절별 적합도
+                </h3>
+                {% for season, score in season_score.items %}
+                <div class="score-item">
+                    <div class="score-label">
+                        {% if season == 'spring' %}봄
+                        {% elif season == 'summer' %}여름
+                        {% elif season == 'fall' %}가을
+                        {% elif season == 'winter' %}겨울
+                        {% else %}{{ season }}
+                        {% endif %}
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-fill" style="width: {{ score }}%"></div>
+                    </div>
+                    <div class="score-value">{{ score|floatformat:1 }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Time Score -->
+            {% if day_night_score %}
+            <div class="score-card">
+                <h3>
+                    <i class="fas fa-clock" style="color: #6c5ce7;"></i>
+                    시간대별 적합도
+                </h3>
+                {% for time, score in day_night_score.items %}
+                <div class="score-item">
+                    <div class="score-label">
+                        {% if time == 'day' %}낮
+                        {% elif time == 'night' %}밤
+                        {% else %}{{ time }}
+                        {% endif %}
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-fill" style="width: {{ score }}%"></div>
+                    </div>
+                    <div class="score-value">{{ score|floatformat:1 }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function toggleLike(button) {
+        button.classList.toggle('active');
+        const dislikeBtn = button.nextElementSibling;
+        if (button.classList.contains('active')) {
+            dislikeBtn.classList.remove('active');
+        }
+    }
+    
+    function toggleDislike(button) {
+        button.classList.toggle('active');
+        const likeBtn = button.previousElementSibling;
+        if (button.classList.contains('active')) {
+            likeBtn.classList.remove('active');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate score bars on scroll
+        const scoreFills = document.querySelectorAll('.score-fill');
+        
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const scoreFill = entry.target;
+                    const width = scoreFill.style.width;
+                    scoreFill.style.width = '0%';
+                    
+                    setTimeout(() => {
+                        scoreFill.style.width = width;
+                    }, 300);
+                    
+                    observer.unobserve(scoreFill);
+                }
+            });
+        }, observerOptions);
+
+        scoreFills.forEach(fill => {
+            observer.observe(fill);
+        });
+
+        // Animate elements on scroll
+        const animatedElements = document.querySelectorAll('.accord-circle, .note-circle, .score-card');
+        animatedElements.forEach((element, index) => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                element.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
+</script>
+{% endblock %}

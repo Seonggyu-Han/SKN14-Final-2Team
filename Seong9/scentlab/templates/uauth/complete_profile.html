@@ -1,0 +1,52 @@
+{% extends "scentpick/base.html" %}
+{% block title %}추가 정보 입력 - ScentPick{% endblock %}
+{% block content %}
+<div class="auth-container">
+  <h2 style="text-align:center;margin-bottom:30px;color:#2d3748;">추가 정보 입력</h2>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% if error %}
+      <p style="color: red; text-align:center;">{{ error }}</p>
+    {% endif %}
+
+    <div class="form-group">
+      <label>출생연도</label>
+      <input type="number" name="birth_year" min="1900" max="2100" value="{{ detail.birth_year }}" placeholder="예: 1995" required>
+    </div>
+
+    <div class="form-group">
+      <label>성별</label>
+      <div class="gender-selection">
+        <button type="button" class="gender-btn {% if detail.gender == 'Male' %}selected{% endif %}" data-gender="Male">남성</button>
+        <button type="button" class="gender-btn {% if detail.gender == 'Female' %}selected{% endif %}" data-gender="Female">여성</button>
+      </div>
+      <input type="hidden" name="gender" id="gender-input" value="{{ detail.gender }}">
+    </div>
+
+    <button type="submit" class="btn-primary" style="margin-top: 20px;">저장</button>
+  </form>
+
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const genderButtons = document.querySelectorAll(".gender-btn");
+    const genderInput = document.getElementById("gender-input");
+
+    genderButtons.forEach((btn) => {
+      btn.addEventListener("click", function () {
+        // 모든 버튼에서 선택 클래스 제거
+        genderButtons.forEach((b) => b.classList.remove("selected"));
+
+        // 현재 버튼에만 선택 클래스 추가
+        this.classList.add("selected");
+
+        // hidden input에 선택된 gender 값 설정
+        genderInput.value = this.dataset.gender;
+      });
+    });
+  });
+</script>
+{% endblock %}
