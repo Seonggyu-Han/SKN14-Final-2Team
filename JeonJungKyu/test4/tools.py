@@ -192,7 +192,7 @@ def price_tool(user_query: str) -> str:
         return re.sub(r"<[^>]+>", "", text)
     
     # 상위 3개만 정리
-    products = data["items"][:3]
+    products = data["items"][:1]
     output = f"🔍 '{search_keyword}' 검색 결과:\n\n"
     
     prices = []  # 가격 정보 수집용

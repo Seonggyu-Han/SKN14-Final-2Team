@@ -137,8 +137,137 @@ def supervisor_node(state: AgentState) -> AgentState:
     }
 
 # ---------- 4) Agent Nodes ----------
+import re, json
+
+BRAND_ALIASES = {
+    # 필요시 계속 추가
+    "입생로랑": ["입생로랑", "이브생로랑", "이브 생 로랑", "생로랑", "YSL", "Yves Saint Laurent"],
+}
+
+CONC_SYNONYMS = {
+    "오 드 퍼퓸": ["오 드 퍼퓸", "오드퍼퓸", "EDP", "eau de parfum"],
+    "오 드 뚜왈렛": ["오 드 뚜왈렛", "오드뚜왈렛", "EDT", "eau de toilette"],
+    "오 드 꼴로뉴": ["오 드 꼴로뉴", "EDC", "eau de cologne"],
+    "파르펭": ["파르펭", "Parfum", "Extrait", "Extrait de Parfum"],
+}
+
+def _normalize_size(size_val):
+    """'50' -> '50ml', '50 ml' -> '50ml'"""
+    if not size_val:
+        return None
+    s = str(size_val).strip().lower().replace(" ", "")
+    if s.endswith("ml"):
+        return s
+    if re.fullmatch(r"\d{1,4}", s):
+        return s + "ml"
+    return s
+
+def _expand_brand(brand):
+    if not brand:
+        return []
+    return BRAND_ALIASES.get(brand, [brand])
+
+def _expand_concentration(conc):
+    if not conc:
+        return []
+    c = str(conc)
+    for k, syns in CONC_SYNONYMS.items():
+        if k.replace(" ", "") in c.replace(" ", "") or c in syns:
+            return syns
+    return [c]
+
+def _extract_matches(search_results: dict):
+    """Pinecone matches -> list of metadata dict"""
+    matches = (search_results or {}).get("matches") or []
+    return [m.get("metadata") or {} for m in matches]
+
+def _make_display_name(meta, size=None):
+    brand = (meta.get("brand") or "").strip()
+    name  = (meta.get("name") or "").strip()
+    conc  = (meta.get("concentration") or "").strip()
+    toks = [brand, name, conc, size]
+    return " ".join([t for t in toks if t])
+
+def build_item_queries_from_vectordb(
+    search_results: dict,
+    facets: dict | None = None,
+    top_n_items: int = 5,
+) -> list[dict]:
+    """
+    반환: [{item_label, queries}] 리스트
+    - item_label: 사용자에게 보여줄 라벨(brand name conc size)
+    - queries: 이 아이템만을 겨냥한 네이버 검색 후보들(문자열 리스트)
+    (※ 브랜드+제품명 필수. 다른 제품으로 샐 여지를 최소화)
+    """
+    facets = facets or {}
+    target_size = _normalize_size(facets.get("sizes"))
+    metas = _extract_matches(search_results)[:top_n_items]
+
+    results = []
+    seen_items = set()  # (brand|name)로 중복 제거
+
+    for meta in metas:
+        brand = meta.get("brand")
+        name  = meta.get("name")
+        conc  = meta.get("concentration")
+        sizes = meta.get("sizes")
+
+        if not brand or not name:
+            continue
+
+        key = f"{brand}|{name}"
+        if key in seen_items:
+            continue
+        seen_items.add(key)
+
+        size_for_query = target_size
+        if not size_for_query:
+            if isinstance(sizes, (list, tuple)) and sizes:
+                if "50" in sizes or "50ml" in sizes:
+                    size_for_query = "50ml"
+                else:
+                    size_for_query = _normalize_size(sizes[0])
+
+        brand_variants = _expand_brand(brand)
+        conc_variants  = _expand_concentration(conc) if conc else []
+
+        def join(*toks): return " ".join([t for t in toks if t and str(t).strip()])
+        qs = []
+
+        # A. 브랜드 + 제품명 + 농도 + 사이즈
+        if brand_variants and name and conc_variants and size_for_query:
+            for b in brand_variants:
+                for c in conc_variants:
+                    qs.append(join(b, name, c, size_for_query))
+
+        # B. 브랜드 + 제품명 + 사이즈
+        if brand_variants and name and size_for_query:
+            for b in brand_variants:
+                qs.append(join(b, name, size_for_query))
+
+        # C. 브랜드 + 제품명 (백업)
+        if brand_variants and name:
+            for b in brand_variants:
+                qs.append(join(b, name))
+
+        # 중복 제거
+        seen, deduped = set(), []
+        for q in qs:
+            if q not in seen:
+                seen.add(q)
+                deduped.append(q)
+
+        results.append({
+            "item_label": _make_display_name(meta, size_for_query),
+            "queries": deduped[:6],
+        })
+
+    return results
+
+
+# ========= LLM_parser_node (가격 검색 파트: vectorDB 아이템만 사용) =========
 def LLM_parser_node(state: AgentState) -> AgentState:
-    """실제 RAG 파이프라인을 실행하는 LLM_parser 노드 + 가격 검색 통합"""
+    """실제 RAG 파이프라인을 실행하는 LLM_parser 노드 + 가격 검색(벡터DB 한정) 통합"""
     user_query = None
     for m in reversed(state["messages"]):
         if isinstance(m, HumanMessage):
@@ -169,43 +298,57 @@ def LLM_parser_node(state: AgentState) -> AgentState:
         # 5단계: 최종 응답 생성
         final_response = generate_response(user_query, search_results)
         
-        # 6단계: 가격 의도 감지 및 가격 정보 추가
-        price_keywords = ['가격', '얼마', '가격대', '구매', '판매', '할인', '어디서 사', '배송비', 'price', 'cost', 'cheapest', 'buy', 'purchase', 'discount']
-        has_price_intent = any(keyword in user_query.lower() for keyword in price_keywords)
+        # 6단계: 가격 의도 감지
+        price_keywords_ko = ['가격', '얼마', '가격대', '구매', '판매', '할인', '어디서 사', '어디서사', '배송비', '최저가']
+        price_keywords_en = ['price', 'cost', 'cheapest', 'buy', 'purchase', 'discount']
+        lower = user_query.lower()
+        has_price_intent = any(k in user_query for k in price_keywords_ko) or any(k in lower for k in price_keywords_en)
         
         if has_price_intent:
-            # 검색된 향수들로부터 가격 검색용 키워드 추출
-            price_search_keywords = extract_price_search_keywords(search_results, user_query, parsed_json)
-            
-            print(f"💰 가격 검색 키워드: {price_search_keywords}")
-            print(f"🔍 검색된 향수 정보: {search_results.get('matches', [{}])[0].get('metadata', {}) if search_results.get('matches') else 'No matches'}")
-            
-            if price_search_keywords and price_search_keywords != "향수":
-                try:
-                    price_info = price_tool.invoke({"user_query": price_search_keywords})
-                    
-                    # 가격 정보를 최종 응답에 추가
-                    final_response_with_price = f"""{final_response}
+            # 🔒 vectorDB에서 검색된 아이템만으로 가격 쿼리 생성
+            item_query_bundles = build_item_queries_from_vectordb(
+                search_results=search_results,
+                facets=parsed_json,
+                top_n_items=5
+            )
+            print("💰 가격 검색(벡터DB 한정) 대상:")
+            for b in item_query_bundles:
+                print(f" - {b['item_label']} :: {b['queries'][:3]}")
+
+            price_sections = []
+            for bundle in item_query_bundles:
+                label = bundle["item_label"]
+                queries = bundle["queries"]
+                found_block = None
+
+                for q in queries:
+                    try:
+                        res = price_tool.invoke({"user_query": q})
+                        if res:  # 필요시 res 포맷에 맞춘 유효성 검사 추가
+                            found_block = f"🔎 **{label}**\n(검색어: `{q}`)\n{res}"
+                            break
+                    except Exception as price_error:
+                        print(f"❌ 가격 검색 오류({q}): {price_error}")
+                        continue
+
+                if found_block:
+                    price_sections.append(found_block)
+
+            if price_sections:
+                final_response_with_price = f"""{final_response}
 
 ---
 
-💰 **가격 정보**
-{price_info}"""
-                except Exception as price_error:
-                    print(f"❌ 가격 검색 오류: {price_error}")
-                    final_response_with_price = f"""{final_response}
-
----
-
-💰 **가격 정보**
-❌ 가격 검색 중 오류가 발생했습니다. 나중에 다시 시도해주세요."""
+💰 **가격 정보 (vectorDB 추천만)**
+{'\n\n'.join(price_sections)}"""
             else:
                 final_response_with_price = f"""{final_response}
 
 ---
 
-💰 **가격 정보**
-🔍 구체적인 향수명이 필요합니다. 위 추천 향수들 중 원하는 제품명을 다시 검색해보세요."""
+💰 **가격 정보 (vectorDB 추천만)**
+🔍 벡터DB에서 추천된 제품명으로 검색했지만, 일치 결과를 찾지 못했어요.
+원하시는 **제품명 + 농도 + 용량(예: 50ml)** 조합으로 다시 알려주세요."""
         else:
             final_response_with_price = final_response
         
@@ -294,17 +437,18 @@ def FAQ_agent_node(state: AgentState) -> AgentState:
     try:
         # LLM에게 향수 지식 전문가로서 답변하도록 프롬프트 설정
         faq_prompt = ChatPromptTemplate.from_messages([
-            ("system", """당신은 향수 전문가입니다. 사용자의 향수 관련 질문에 대해 정확하고 유용한 정보를 제공해주세요.
+            ("system", """You are a perfume expert. Provide accurate and helpful information for users’ perfume-related questions.
 
-다음과 같은 주제들에 대해 답변할 수 있습니다:
-- 향수의 종류와 농도 (EDT, EDP, Parfum 등)
-- 향료와 노트에 대한 설명
-- 브랜드별 특징과 대표 향수
-- 향수 사용법과 보관법
-- 계절별, 상황별 향수 선택 팁
-- 향수의 지속력과 확산력
+You can cover topics such as:
+- Perfume types and concentrations (EDT, EDP, Parfum, etc.)
+- Fragrance notes and ingredients (top/middle/base) and their roles
+- Brand characteristics and signature fragrances
+- How to apply and store perfumes properly
+- Tips for choosing perfumes by season and occasion
+- Longevity (lasting power) and projection/sillage
 
-답변은 친근하고 이해하기 쉽게, 그리고 실용적인 조언을 포함해서 해주세요."""),
+Keep your tone friendly, explanations easy to understand, and include practical, actionable advice.
+Please answer in Korean."""),
             ("user", "{question}")
         ])
         
@@ -346,14 +490,16 @@ def ML_agent_node(state: AgentState) -> AgentState:
         ml_json_str = json.dumps(ml_result, ensure_ascii=False)
 
         # 2) LLM에 컨텍스트로 전달하여 자연어 답변 생성
-        system_prompt = (
-            "너는 향수 추천 설명가야. 아래 JSON은 ML 모델의 추천 결과이니, "
-            "그 정보만 근거로 간결하고 친절한 한국어 답변을 만들어라.\n"
-            "- 사용자의 질문 의도에 맞춰 Top 3를 핵심 이유와 함께 요약\n"
-            "- 예측된 향 특성이 있으면 한 줄로 보여주기\n"
-            "- 비슷한 대안 2개 정도와 다음 행동(예: 시즌/시간/지속력 선호 질문) 제안\n"
-            "- 과장하거나 JSON에 없는 사실은 추측하지 말기"
-        )
+        system_prompt = """
+You are a perfume recommendation explainer. The JSON below is the ML model's recommendation output; base your response solely on that information and craft a concise, friendly answer.
+
+- Summarize the top 3 picks aligned with the user's intent, each with a key reason.
+- If predicted scent attributes are present, show them in one line.
+- Suggest about two similar alternatives and a next step (e.g., ask about season/time-of-day/longevity preferences).
+- Do not exaggerate or invent any facts not present in the JSON.
+
+Please answer in Korean.
+"""
         human_prompt = (
             f"사용자 질문:\n{user_query}\n\n"
             f"ML 추천 JSON:\n```json\n{ml_json_str}\n```"
@@ -418,69 +564,121 @@ app = graph.compile()
 
 
 TEST_QUERIES = [
-    "입생로랑 여성용 50ml 겨울용 향수 추천해줘.가격도 알려줘",                 
-    "디올 EDP로 가을 밤(야간)에 쓸 만한 향수 있어?",                
-    "EDP랑 EDT 차이가 뭐야?",                                       
-    "탑노트·미들노트·베이스노트가 각각 무슨 뜻이야?",               
-    "오늘 점심 뭐 먹을까?",                                         
-    "오늘 서울 날씨 어때?",                                         
-    "샤넬 넘버5 50ml 가격 알려줘.",                               
-    "디올 소바쥬 가격 얼마야? 어디서 사는 게 제일 싸?",             
-    "여름에 시원한 향수 추천해줘.",                                 
+    # 브랜드/농도/사이즈/계절/낮밤 → 복합 조건 질문
+    "입생로랑 여성용 50ml 겨울용 향수 추천해줘. 가격도 알려줘",
+    "디올 EDP로 가을 밤(야간)에 쓸 만한 향수 있어?",
+    "샤넬 남성용 여름용 오 드 뚜왈렛 추천해줘",
+    "조말론 플로럴 계열 가을 낮용 추천해줘",
+    "톰포드 우디 계열 겨울 밤용 100ml 향수 있어?",
+    "크리드 시트러스 향, 여름 낮용 50ml 추천해줘",
+    "구찌 여성용 오 드 퍼퓸 가을용 추천해줄래?",
+    "프라다 남성용 스파이시 향, 봄 밤용 30ml 뭐 있어?",
+    "에르메스 100ml 플로럴 향, 여름 낮용 추천해줘",
+    "입생로랑 여성용 오 드 퍼퓸, 겨울 밤용 향수 추천해줘",
+
+    # 단일 개념 질문
+    "EDP랑 EDT 차이가 뭐야?",
+    "탑노트·미들노트·베이스노트가 각각 무슨 뜻이야?",
+    "니치 향수랑 디자이너 향수 차이가 궁금해",
+    "여성용이랑 남성용 향수는 실제로 성분이 달라?",
+    "잔향이 강한 향수랑 약한 향수의 차이는 뭐야?",
+    "프루티 향수랑 구르망 향수 차이 알려줘",
+    "머스크랑 앰버 향은 어떻게 달라?",
+    "시트러스 계열과 플로럴 계열은 어떤 차이가 있어?",
+    "샤넬 넘버5랑 코코마드모아젤은 어떤 차이가 있어?",
+    "오 드 퍼퓸과 파르펭 차이가 뭐야?",
+
+    # 향수와 무관한 질문
+    "오늘 점심 뭐 먹을까?",
+    "오늘 서울 날씨 어때?",
+    "주말에 어디 갈까?",
+    "넷플릭스에서 뭐 볼만해?",
+    "요즘 주식 어때?",
+    "축구 경기 몇 시에 시작해?",
+    "서울에서 카페 추천해줘",
+    "커피랑 차 중에 뭐가 더 건강해?",
+    "스마트폰 새 모델 나왔어?",
+    "비 올까 내일?",
+
+    # 향만 묻는 질문
+    "여름에 시원한 향수 추천해줘.",
     "달달한 향 추천해줘.",
+    "상큼한 향은 뭐야?",
+    "따뜻한 향 추천해줘.",
+    "우디한 향이 뭐야?",
+    "스파이시한 향수 알려줘.",
+    "바닐라 같은 달콤한 향 있지?",
+    "바다 같은 향은 뭐라 해?",
+    "장미 향 말고 플로럴 향은 뭐 있어?",
+    "커피 같은 향이 나는 향수도 있어?",
+
+    # 가격만 묻는 질문
+    "샤넬 넘버5 50ml 가격 알려줘.",
+    "디올 소바쥬 가격 얼마야? 어디서 사는 게 제일 싸?",
+    "딥티크 도 손 가격 얼마야?",
+    "불가리 옴니아 크리스탈린 가격 알려줘.",
+    "조말론 잉글리쉬 페어 앤 프리지아 최저가 찾아줘.",
+    "톰포드 오드우드 30ml 가격대 알려줘.",
+    "크리드 어벤투스 남성용 가격 알려줘.",
+    "프라다 캔디 EDP 가격 알려줘.",
+    "구찌 블룸 100ml 가격대 알아봐.",
+    "에르메스 떼르데르메스 얼마 정도 해?",
+
+    # 기타 (노이즈성/실험용)
     "바보같은향 추천해줘"
 ]
+OUTPUT_FILE = "results.txt"
 
 def run_tests():
-    for q in TEST_QUERIES:
-        print("="*80)
-        print("Query:", q)
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+        for q in TEST_QUERIES:
+            f.write("="*80 + "\n")
+            f.write("Query: " + q + "\n")
+            init: AgentState = {
+                "messages": [HumanMessage(content=q)],
+                "next": None,
+                "router_json": None
+            }
+            try:
+                out = app.invoke(init)
+                ai_msgs = [m for m in out["messages"] if isinstance(m, AIMessage)]
+                router_raw = ai_msgs[-2].content if len(ai_msgs) >= 2 else "(no router output)"
+                agent_summary = ai_msgs[-1].content if ai_msgs else "(no agent output)"
+                f.write("Router JSON: " + router_raw + "\n")
+                f.write("Agent summary: " + agent_summary + "\n\n")
+            except Exception as e:
+                f.write(f"Error processing query: {e}\n\n")
+
+def run_single_query(query: str):
+    with open(OUTPUT_FILE, "a", encoding="utf-8") as f:
+        f.write(f"🔍 Query: {query}\n")
+        f.write("-" * 50 + "\n")
+        
         init: AgentState = {
-            "messages": [HumanMessage(content=q)],
+            "messages": [HumanMessage(content=query)],
             "next": None,
             "router_json": None
         }
+        
         try:
             out = app.invoke(init)
             ai_msgs = [m for m in out["messages"] if isinstance(m, AIMessage)]
-            router_raw = ai_msgs[-2].content if len(ai_msgs) >= 2 else "(no router output)"
-            agent_summary = ai_msgs[-1].content if ai_msgs else "(no agent output)"
-            print("Router JSON:", router_raw)
-            print("Agent summary:", agent_summary)
-        except Exception as e:
-            print(f"Error processing query: {e}")
-
-def run_single_query(query: str):
-    """단일 쿼리 테스트"""
-    print(f"🔍 Query: {query}")
-    print("-" * 50)
-    
-    init: AgentState = {
-        "messages": [HumanMessage(content=query)],
-        "next": None,
-        "router_json": None
-    }
-    
-    try:
-        out = app.invoke(init)
-        ai_msgs = [m for m in out["messages"] if isinstance(m, AIMessage)]
-        
-        if len(ai_msgs) >= 2:
-            print("🤖 Router Decision:")
-            print(ai_msgs[-2].content)
-            print("\n📝 Final Response:")
-            print(ai_msgs[-1].content)
-        elif len(ai_msgs) == 1:
-            print("📝 Response:")
-            print(ai_msgs[-1].content)
-        else:
-            print("❌ No response generated")
             
-    except Exception as e:
-        print(f"❌ Error: {e}")
+            if len(ai_msgs) >= 2:
+                f.write("🤖 Router Decision:\n")
+                f.write(ai_msgs[-2].content + "\n")
+                f.write("\n📝 Final Response:\n")
+                f.write(ai_msgs[-1].content + "\n\n")
+            elif len(ai_msgs) == 1:
+                f.write("📝 Response:\n")
+                f.write(ai_msgs[-1].content + "\n\n")
+            else:
+                f.write("❌ No response generated\n\n")
+                
+        except Exception as e:
+            f.write(f"❌ Error: {e}\n\n")
 
 if __name__ == "__main__":
-    # 환경 변수 확인
     print("🔧 환경 변수 확인:")
     print(f"OPENAI_API_KEY: {'✅ 설정됨' if os.getenv('OPENAI_API_KEY') else '❌ 미설정'}")
     print(f"PINECONE_API_KEY: {'✅ 설정됨' if os.getenv('PINECONE_API_KEY') else '❌ 미설정'}")
@@ -488,24 +686,7 @@ if __name__ == "__main__":
     print(f"NAVER_CLIENT_SECRET: {'✅ 설정됨' if os.getenv('NAVER_CLIENT_SECRET') else '❌ 미설정'}")
     print()
     
-    print("🚀 향수 추천 시스템 테스트 시작...")
+    print("🚀 향수 추천 시스템 테스트 시작... 결과는 results.txt 파일에 저장됩니다.")
     print()
     
-    # 개별 테스트용 함수 제공
-    print("📋 사용 가능한 함수:")
-    print("- run_tests(): 모든 테스트 쿼리 실행")
-    print("- run_single_query('your query'): 단일 쿼리 테스트")
-    print()
-if __name__ == "__main__":
-    ...
-    print("🚀 향수 추천 시스템 테스트 시작...")
-    print()
-    
-    # 개별 테스트용 함수 제공
-    print("📋 사용 가능한 함수:")
-    print("- run_tests(): 모든 테스트 쿼리 실행")
-    print("- run_single_query('your query'): 단일 쿼리 테스트")
-    print()
-
-    # 🔽 이 부분 추가
-    run_tests()  
+    run_tests()
