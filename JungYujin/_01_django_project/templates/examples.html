@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}향수 지식 시스템 - 사용 예시{% endblock %}
+
+{% block header_title %}📚 사용 예시 모음{% endblock %}
+{% block header_subtitle %}다양한 상황에서 향수 지식 시스템 활용법{% endblock %}
+
+{% block content %}
+<div class="alert alert-info">
+    <strong>💡 팁:</strong> 모든 예시는 실제로 작동합니다. 버튼을 클릭해서 향수 지식을 확인해보세요!
+</div>
+
+<!-- 기본 사용법 -->
+<div class="card">
+    <h3>1. 기본 사용법</h3>
+    <p>가장 간단한 방법으로 향수 지식을 표시합니다.</p>
+    <div class="code-block">
+// 기본 사용법
+await showLoading(async () => {
+    // 여기에 실제 작업 코드
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    return '작업 완료!';
+});
+    </div>
+    <button class="btn" onclick="basicExample()">기본 예시 실행 (3초)</button>
+</div>
+
+<!-- 다양한 테마 -->
+<div class="card">
+    <h3>2. 다양한 테마</h3>
+    <p>다크 테마, 미니멀 테마 등 다양한 스타일을 적용할 수 있습니다.</p>
+    <div class="code-block">
+// 다크 테마
+await showLoading(taskFn, { theme: 'dark' });
+
+// 미니멀 테마  
+await showLoading(taskFn, { theme: 'minimal' });
+    </div>
+    <button class="btn" onclick="darkThemeExample()">다크 테마 (2초)</button>
+    <button class="btn btn-secondary" onclick="minimalThemeExample()">미니멀 테마 (2초)</button>
+</div>
+
+<!-- 위치 조정 -->
+<div class="card">
+    <h3>3. 위치 조정</h3>
+    <p>화면 상단, 중앙, 하단에 표시할 수 있습니다.</p>
+    <div class="code-block">
+// 상단에 표시
+await showLoading(taskFn, { position: 'top' });
+
+// 하단에 표시
+await showLoading(taskFn, { position: 'bottom' });
+    </div>
+    <button class="btn btn-success" onclick="topPositionExample()">상단 표시 (2초)</button>
+    <button class="btn btn-warning" onclick="bottomPositionExample()">하단 표시 (2초)</button>
+</div>
+
+<!-- 실제 API 호출 시뮬레이션 -->
+<div class="card">
+    <h3>4. 실제 API 호출 시뮬레이션</h3>
+    <p>서버와 통신하는 실제 상황을 시뮬레이션합니다.</p>
+    <div class="code-block">
+// API 호출 시뮬레이션
+await showLoading(async () => {
+    const response = await fetch('/api/data');
+    const data = await response.json();
+    return data;
+});
+    </div>
+    <button class="btn btn-danger" onclick="apiSimulationExample()">API 시뮬레이션 (4초)</button>
+</div>
+
+<!-- 연속 작업 -->
+<div class="card">
+    <h3>5. 연속 작업</h3>
+    <p>여러 작업을 연속으로 수행하면서 각각 다른 향수 지식을 표시합니다.</p>
+    <div class="code-block">
+// 연속 작업
+for (let i = 0; i < 3; i++) {
+    await showLoading(async () => {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        return `작업 ${i + 1} 완료`;
+    });
+}
+    </div>
+    <button class="btn" onclick="sequentialTasksExample()">연속 작업 실행 (6초)</button>
+</div>
+
+<!-- 에러 처리 -->
+<div class="card">
+    <h3>6. 에러 처리</h3>
+    <p>작업 중 에러가 발생해도 적절히 처리됩니다.</p>
+    <div class="code-block">
+// 에러 처리
+try {
+    await showLoading(async () => {
+        throw new Error('의도된 에러');
+    });
+} catch (error) {
+    console.log('에러 처리됨:', error.message);
+}
+    </div>
+    <button class="btn btn-warning" onclick="errorHandlingExample()">에러 처리 예시</button>
+</div>
+
+<!-- 커스텀 로더 -->
+<div class="card">
+    <h3>7. 커스텀 로더</h3>
+    <p>특별한 설정으로 로더를 생성하고 재사용할 수 있습니다.</p>
+    <div class="code-block">
+// 커스텀 로더 생성
+const customLoader = createLoader({
+    theme: 'dark',
+    position: 'top',
+    showDelay: 500
+});
+
+// 재사용
+await customLoader.show(taskFn1);
+await customLoader.show(taskFn2);
+    </div>
+    <button class="btn" onclick="customLoaderExample()">커스텀 로더 예시 (3초)</button>
+</div>
+
+<!-- 결과 표시 영역 -->
+<div class="card">
+    <h3>실행 결과</h3>
+    <div id="result-area" style="min-height: 50px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
+        <em>결과가 여기에 표시됩니다...</em>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 결과 표시 함수
+    function showResult(message, type = 'info') {
+        const resultArea = document.getElementById('result-area');
+        const alertClass = type === 'error' ? 'alert-danger' : 'alert-success';
+        resultArea.innerHTML = `<div class="alert ${alertClass}">${message}</div>`;
+    }
+
+    // 1. 기본 사용법
+    async function basicExample() {
+        try {
+            const result = await showLoading(async () => {
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                return '기본 작업이 완료되었습니다!';
+            });
+            showResult(result);
+        } catch (error) {
+            showResult('오류 발생: ' + error.message, 'error');
+        }
+    }
+
+    // 2. 다크 테마
+    async function darkThemeExample() {
+        try {
+            const result = await showLoading(async () => {
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                return '다크 테마 작업 완료!';
+            }, { theme: 'dark' });
+            showResult(result);
+        } catch (error) {
+            showResult('오류 발생: ' + error.message, 'error');
+        }
+    }
+
+    // 2. 미니멀 테마
+    async function minimalThemeExample() {
+        try {
+            const result = await showLoading(async () => {
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                return '미니멀 테마 작업 완료!';
+            }, { theme: 'minimal' });
+            showResult(result);
+        } catch (error) {
+            showResult('오류 발생: ' + error.message, 'error');
+        }
+    }
+
+    // 3. 상단 위치
+    async function topPositionExample() {
+        try {
+            const result = await showLoading(async () => {
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                return '상단 위치 작업 완료!';
+            }, { position: 'top' });
+            showResult(result);
+        } catch (error) {
+            showResult('오류 발생: ' + error.message, 'error');
+        }
+    }
+
+    // 3. 하단 위치
+    async function bottomPositionExample() {
+        try {
+            const result = await showLoading(async () => {
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                return '하단 위치 작업 완료!';
+            }, { position: 'bottom' });
+            showResult(result);
+        } catch (error) {
+            showResult('오류 발생: ' + error.message, 'error');
+        }
+    }
+
+    // 4. API 시뮬레이션
+    async function apiSimulationExample() {
+        try {
+            const result = await showLoading(async () => {
+                // API 호출 시뮬레이션
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // 가상의 API 응답
+                const mockData = {
+                    status: 'success',
+                    data: { message: 'API 호출 성공!' }
+                };
+                
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                return `API 응답: ${mockData.data.message}`;
+            });
+            showResult(result);
+        } catch (error) {
+            showResult('API 오류: ' + error.message, 'error');
+        }
+    }
+
+    // 5. 연속 작업
+    async function sequentialTasksExample() {
+        try {
+            const results = [];
+            
+            for (let i = 0; i < 3; i++) {
+                const result = await showLoading(async () => {
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    return `작업 ${i + 1} 완료`;
+                });
+                results.push(result);
+            }
+            
+            showResult(`모든 작업 완료: ${results.join(', ')}`);
+        } catch (error) {
+            showResult('연속 작업 오류: ' + error.message, 'error');
+        }
+    }
+
+    // 6. 에러 처리
+    async function errorHandlingExample() {
+        try {
+            await showLoading(async () => {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                throw new Error('의도된 에러입니다');
+            });
+        } catch (error) {
+            showResult(`에러가 적절히 처리되었습니다: ${error.message}`, 'error');
+        }
+    }
+
+    // 7. 커스텀 로더
+    async function customLoaderExample() {
+        try {
+            const customLoader = createLoader({
+                theme: 'dark',
+                position: 'top',
+                showDelay: 500
+            });
+            
+            const result = await customLoader.show(async () => {
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                return '커스텀 로더 작업 완료!';
+            });
+            
+            showResult(result);
+        } catch (error) {
+            showResult('커스텀 로더 오류: ' + error.message, 'error');
+        }
+    }
+</script>
+{% endblock %}

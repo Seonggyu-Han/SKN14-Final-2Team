@@ -1,0 +1,149 @@
+{% extends "scentpick/base.html" %}
+{% block title %}향수 리스트 - ScentPick{% endblock %}
+
+{% block content %}
+<h2 style="margin-bottom:20px;color:#111827;">향수 리스트</h2>
+
+<!-- 검색 영역 -->
+<form id="searchForm" method="get" 
+      style="margin-bottom:16px;display:flex;align-items:stretch;gap:0;width:1215px;height:44px;">
+  <input type="text" name="q" value="{{ selected.q }}" class="search-bar"
+         placeholder="향수 이름, 브랜드, 메인 어코드로 검색"
+         style="flex:1;height:100%;padding:0 14px;border:1px solid #e5e7eb;border-right:none;
+                border-radius:12px 0 0 12px;background:#f8fafc;outline:none;box-sizing:border-box;">
+  <button type="submit"
+          style="width:80px;height:100%;border:1px solid #e5e7eb;border-left:none;
+                 border-radius:0 12px 12px 0;background:#6366F1;color:white;
+                 font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-sizing:border-box;">
+    검색
+  </button>
+</form>
+
+
+
+<div style="display:grid;grid-template-columns:260px 1fr;gap:16px;align-items:start;">
+  <!-- 필터 -->
+  <aside style="background:#fff;border-radius:16px;padding:16px;box-shadow:0 8px 24px rgba(0,0,0,.06);position:sticky;top:12px;">
+    <form id="filterForm" method="get" style="display:flex;flex-direction:column;gap:16px;">
+      {% if selected.q %}<input type="hidden" name="q" value="{{ selected.q }}">{% endif %}
+
+      <details class="filter-section">
+        <summary style="cursor:pointer;font-weight:600;">브랜드</summary>
+        <div style="display:flex;flex-direction:column;gap:6px;max-height:180px;overflow:auto;font-size:13px;margin-top:6px;margin-left:6px;">
+          {% for b in brands %}
+            <label>
+              <input type="checkbox" name="brand" value="{{ b }}"
+                     {% if b in selected.brand %}checked{% endif %}>
+              {{ b }}
+            </label>
+          {% endfor %}
+        </div>
+      </details>
+
+      <details class="filter-section">
+        <summary style="cursor:pointer;font-weight:600;">성별</summary>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;margin-top:6px;margin-left:6px;">
+          {% for g in genders %}
+            <label><input type="checkbox" name="gender" value="{{ g }}" {% if g in selected.gender %}checked{% endif %}> {{ g }}</label>
+          {% endfor %}
+        </div>
+      </details>
+
+      <details class="filter-section">
+        <summary style="cursor:pointer;font-weight:600;">농도</summary>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;margin-top:6px;margin-left:6px;">
+          {% for c in concentrations %}
+            <label><input type="checkbox" name="conc" value="{{ c }}" {% if c in selected.conc %}checked{% endif %}> {{ c }}</label>
+          {% endfor %}
+        </div>
+      </details>
+
+      <details class="filter-section">
+        <summary style="cursor:pointer;font-weight:600;">메인어코드</summary>
+        <div style="display:flex;flex-direction:column;gap:6px;max-height:180px;overflow:auto;font-size:13px;margin-top:6px;margin-left:6px;">
+          {% for a in accords %}
+            <label>
+              <input type="checkbox" name="accord" value="{{ a }}"
+                     {% if a in selected.accord %}checked{% endif %}>
+              {{ a }}
+            </label>
+          {% endfor %}
+        </div>
+      </details>
+    </form>
+  </aside>
+
+  <!-- 향수 카드 -->
+  <section id="products">
+    {% include "scentpick/perfumes_grid.html" %}
+  </section>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+(function () {
+  const filterForm = document.getElementById('filterForm');
+  const searchForm = document.getElementById('searchForm');
+  const products   = document.getElementById('products');
+
+  function qsFromForm(form) {
+    const params = new URLSearchParams(new FormData(form));
+    params.set('ajax', '1');
+    return params.toString();
+  }
+  function qsForHistory() {
+    const params = new URLSearchParams(new FormData(filterForm));
+    if (searchForm) {
+      const q = new FormData(searchForm).get('q');
+      if (q) params.set('q', q); else params.delete('q');
+    }
+    return params.toString();
+  }
+  async function refresh() {
+    const url = window.location.pathname + '?' + qsFromForm(filterForm);
+    const res = await fetch(url);
+    const html = await res.text();
+    products.innerHTML = html;
+    history.replaceState(null, '', '?' + qsForHistory());
+  }
+
+  filterForm.addEventListener('change', (e) => {
+    if (e.target && e.target.type === 'checkbox') {
+      e.preventDefault();
+      refresh();
+    }
+  });
+
+  searchForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const q = new FormData(searchForm).get('q') || '';
+    let hidden = filterForm.querySelector('input[name="q"]');
+    if (!hidden) {
+      hidden = document.createElement('input');
+      hidden.type = 'hidden'; hidden.name = 'q';
+      filterForm.appendChild(hidden);
+    }
+    hidden.value = q;
+    refresh();
+  });
+
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[data-ajax-pg]');
+    if (!a) return;
+    e.preventDefault();
+    const params = new URLSearchParams(new FormData(filterForm));
+    const url = new URL(a.href);
+    params.set('page', url.searchParams.get('page') || '1');
+    params.set('ajax', '1');
+    fetch(window.location.pathname + '?' + params.toString())
+      .then(r => r.text())
+      .then(html => {
+        products.innerHTML = html;
+        params.delete('ajax');
+        history.replaceState(null, '', '?' + params.toString());
+      });
+  });
+})();
+</script>
+{% endblock script %}

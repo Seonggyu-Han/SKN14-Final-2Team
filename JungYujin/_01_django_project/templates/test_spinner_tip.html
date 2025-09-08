@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>향수 지식 로더 테스트</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.2s;
+        }
+        .test-button:hover {
+            transform: translateY(-2px);
+        }
+        .test-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .button-group {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #2196f3;
+        }
+        .code-example {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💡 향수 지식 로더 테스트</h1>
+        
+        <div class="info">
+            <strong>기능 설명:</strong> 로딩 스피너 대신 랜덤 향수 지식을 표시하는 시스템입니다.
+            <br><strong>데이터:</strong> 60개의 다양한 향수 관련 지식이 포함되어 있습니다.
+        </div>
+
+        <div class="button-group">
+            <button class="test-button" onclick="testLLMRequest()">LLM 요청 시뮬레이션 (30초)</button>
+            <button class="test-button" onclick="testMediumTask()">중간 작업 (10초)</button>
+            <button class="test-button" onclick="testQuickTask()">빠른 작업 (5초)</button>
+            <button class="test-button" onclick="testDarkTheme()">다크 테마 테스트</button>
+            <button class="test-button" onclick="testMultipleFacts()">지식 확인</button>
+        </div>
+
+        <!-- 사용법, API 엔드포인트, 응답 형식 섹션 숨김 -->
+        <!--
+        <div class="info">
+            <strong>사용법:</strong>
+            <div class="code-example">
+
+
+// 새로운 모듈화된 시스템 사용법
+
+// 기본 사용법 (전역 함수)
+const result = await showLoading(async () => {
+    // 여기에 실제 작업 코드
+    await fetch('/api/some-endpoint');
+    return '작업 완료!';
+});
+
+// 고급 옵션 사용
+await showLoading(taskFn, {
+    theme: 'dark',      // 테마 설정
+    position: 'top',    // 위치 설정
+    showDelay: 1000     // 지연 시간
+});
+
+기존 방식 (더 이상 사용하지 않음)
+import { showDuring } from "/static/spinner_tip/loader.js";
+const result = await showDuring(async () => {
+    // 작업 코드
+});
+
+
+// 현재 사용 중인 방식 (showDuring 함수)
+import { showDuring } from "/static/spinner_tip/loader.js";
+
+const result = await showDuring(async () => {
+    // 여기에 실제 작업 코드
+    await fetch('/api/some-endpoint');
+    return '작업 완료!';
+});
+
+            </div>
+        </div>
+
+        <div class="info">
+            <strong>API 엔드포인트:</strong> <code>GET /spinner-tip/fact/</code>
+            <br><strong>응답 형식:</strong> <code>{"fact": "향수 지식 내용", "status": "success"}</code>
+        </div>
+        -->
+    </div>
+
+    <!-- 향상된 로더 시스템 로드 -->
+    <script type="module" src="/static/spinner_tip/enhanced-perfume-loader.js"></script>
+
+    <script>
+        // LLM 요청 시뮬레이션 (30초)
+        window.testLLMRequest = async function() {
+            const button = event.target;
+            button.disabled = true;
+            const originalText = button.textContent;
+            button.textContent = '실행 중...';
+            
+            try {
+                const result = await showLLMLoading(async () => {
+                    // LLM 요청 시뮬레이션 - 30초 동안 대기
+                    await new Promise(resolve => setTimeout(resolve, 30000));
+                    return 'LLM 응답이 완료되었습니다! 🤖';
+                });
+                
+                alert(result);
+            } catch (error) {
+                alert('오류 발생: ' + error.message);
+            } finally {
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        };
+
+        // 중간 작업 (10초)
+        window.testMediumTask = async function() {
+            const button = event.target;
+            button.disabled = true;
+            const originalText = button.textContent;
+            button.textContent = '실행 중...';
+            
+            try {
+                const result = await showEnhancedLoading(async () => {
+                    // 10초 작업 시뮬레이션
+                    await new Promise(resolve => setTimeout(resolve, 10000));
+                    return '중간 작업이 완료되었습니다!';
+                }, {
+                    progressDuration: 10000,
+                    factChangeInterval: 2500
+                });
+                
+                alert(result);
+            } catch (error) {
+                alert('오류 발생: ' + error.message);
+            } finally {
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        };
+
+        // 빠른 작업 (5초)
+        window.testQuickTask = async function() {
+            const button = event.target;
+            button.disabled = true;
+            const originalText = button.textContent;
+            button.textContent = '실행 중...';
+            
+            try {
+                const result = await showEnhancedLoading(async () => {
+                    // 5초 작업 시뮬레이션
+                    await new Promise(resolve => setTimeout(resolve, 5000));
+                    return '빠른 작업이 완료되었습니다!';
+                }, {
+                    progressDuration: 5000,
+                    factChangeInterval: 2000
+                });
+                
+                alert(result);
+            } catch (error) {
+                alert('오류 발생: ' + error.message);
+            } finally {
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        };
+
+        // 다크 테마 테스트
+        window.testDarkTheme = async function() {
+            const button = event.target;
+            button.disabled = true;
+            const originalText = button.textContent;
+            button.textContent = '실행 중...';
+            
+            try {
+                const result = await showEnhancedLoading(async () => {
+                    // 8초 작업 시뮬레이션
+                    await new Promise(resolve => setTimeout(resolve, 8000));
+                    return '다크 테마 테스트 완료!';
+                }, {
+                    theme: 'dark',
+                    position: 'top',
+                    progressDuration: 8000,
+                    factChangeInterval: 2000
+                });
+                
+                alert(result);
+            } catch (error) {
+                alert('오류 발생: ' + error.message);
+            } finally {
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        };
+
+        window.testMultipleFacts = async function() {
+            const button = event.target;
+            button.disabled = true;
+            button.textContent = '지식 수집 중...';
+            
+            try {
+                const facts = [];
+                for (let i = 0; i < 5; i++) {
+                    const response = await fetch('/spinner-tip/fact/');
+                    const data = await response.json();
+                    facts.push(data.fact);
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+                
+                alert('수집된 향수 지식:\n\n' + facts.join('\n\n'));
+            } catch (error) {
+                alert('오류 발생: ' + error.message);
+            } finally {
+                button.disabled = false;
+                button.textContent = '여러 지식 확인';
+            }
+        };
+    </script>
+</body>
+</html>

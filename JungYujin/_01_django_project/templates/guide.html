@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}향수 지식 시스템 - 사용 가이드{% endblock %}
+
+{% block header_title %}📖 사용 가이드{% endblock %}
+{% block header_subtitle %}향수 지식 시스템을 효과적으로 활용하는 방법{% endblock %}
+
+{% block content %}
+<div class="alert alert-info">
+    <strong>🎯 목표:</strong> 이 가이드를 통해 향수 지식 시스템을 완벽하게 활용할 수 있습니다.
+</div>
+
+<!-- 기본 사용법 -->
+<div class="card">
+    <h3>1. 기본 사용법</h3>
+    <p>가장 간단한 방법으로 향수 지식을 표시합니다.</p>
+    
+    <h4>JavaScript 코드:</h4>
+    <div class="code-block">
+// 기본 사용법
+await showLoading(async () => {
+    // 여기에 실제 작업 코드
+    await fetch('/api/data');
+    return '작업 완료!';
+});
+    </div>
+    
+    <h4>설명:</h4>
+    <ul>
+        <li><code>showLoading()</code> 함수는 비동기 작업을 받습니다</li>
+        <li>작업이 시작되면 자동으로 향수 지식이 표시됩니다</li>
+        <li>작업이 완료되면 결과를 반환하고 지식 창이 사라집니다</li>
+    </ul>
+</div>
+
+<!-- 고급 옵션 -->
+<div class="card">
+    <h3>2. 고급 옵션</h3>
+    <p>다양한 설정으로 향수 지식 시스템을 커스터마이징할 수 있습니다.</p>
+    
+    <h4>사용 가능한 옵션:</h4>
+    <div class="code-block">
+await showLoading(taskFn, {
+    theme: 'dark',           // 'default', 'dark', 'minimal'
+    position: 'top',         // 'center', 'top', 'bottom'
+    showDelay: 1000,         // 지식 표시 지연 시간 (ms)
+    boxId: 'custom-box'      // 커스텀 박스 ID
+});
+    </div>
+    
+    <h4>테마 옵션:</h4>
+    <ul>
+        <li><strong>default:</strong> 기본 스타일 (흰색 배경, 그림자 효과)</li>
+        <li><strong>dark:</strong> 다크 테마 (어두운 배경)</li>
+        <li><strong>minimal:</strong> 미니멀 스타일 (간단한 디자인)</li>
+    </ul>
+    
+    <h4>위치 옵션:</h4>
+    <ul>
+        <li><strong>center:</strong> 화면 중앙 (기본값)</li>
+        <li><strong>top:</strong> 화면 상단</li>
+        <li><strong>bottom:</strong> 화면 하단</li>
+    </ul>
+</div>
+
+<!-- 커스텀 로더 -->
+<div class="card">
+    <h3>3. 커스텀 로더 생성</h3>
+    <p>특별한 설정으로 로더를 생성하고 재사용할 수 있습니다.</p>
+    
+    <div class="code-block">
+// 커스텀 로더 생성
+const customLoader = createLoader({
+    theme: 'dark',
+    position: 'top',
+    showDelay: 500
+});
+
+// 재사용
+await customLoader.show(taskFn1);
+await customLoader.show(taskFn2);
+    </div>
+    
+    <h4>장점:</h4>
+    <ul>
+        <li>일관된 스타일 유지</li>
+        <li>설정 재사용 가능</li>
+        <li>메모리 효율성</li>
+    </ul>
+</div>
+
+<!-- 실제 사용 사례 -->
+<div class="card">
+    <h3>4. 실제 사용 사례</h3>
+    <p>다양한 상황에서의 활용 예시입니다.</p>
+    
+    <h4>API 호출 시:</h4>
+    <div class="code-block">
+// API 호출
+const data = await showLoading(async () => {
+    const response = await fetch('/api/users');
+    return await response.json();
+});
+    </div>
+    
+    <h4>파일 업로드 시:</h4>
+    <div class="code-block">
+// 파일 업로드
+const result = await showLoading(async () => {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+    });
+    
+    return await response.json();
+});
+    </div>
+    
+    <h4>데이터 처리 시:</h4>
+    <div class="code-block">
+// 데이터 처리
+const processedData = await showLoading(async () => {
+    // 복잡한 데이터 처리
+    const result = await processLargeDataset(data);
+    return result;
+});
+    </div>
+</div>
+
+<!-- 에러 처리 -->
+<div class="card">
+    <h3>5. 에러 처리</h3>
+    <p>작업 중 에러가 발생해도 적절히 처리됩니다.</p>
+    
+    <div class="code-block">
+try {
+    const result = await showLoading(async () => {
+        // 작업 코드
+        if (error) {
+            throw new Error('작업 실패');
+        }
+        return '성공!';
+    });
+} catch (error) {
+    console.error('작업 실패:', error.message);
+    // 에러 처리 로직
+}
+    </div>
+    
+    <h4>에러 처리 특징:</h4>
+    <ul>
+        <li>작업 중 에러 발생 시 자동으로 지식 창이 사라집니다</li>
+        <li>에러는 상위로 전파되어 적절히 처리할 수 있습니다</li>
+        <li>네트워크 오류 시에도 폴백 메시지가 표시됩니다</li>
+    </ul>
+</div>
+
+<!-- 성능 최적화 -->
+<div class="card">
+    <h3>6. 성능 최적화</h3>
+    <p>시스템 성능을 최적화하는 방법입니다.</p>
+    
+    <h4>캐시 활용:</h4>
+    <div class="code-block">
+// API는 5분간 캐시됩니다
+// 같은 시간 내에는 같은 지식이 표시될 수 있습니다
+    </div>
+    
+    <h4>메모리 관리:</h4>
+    <div class="code-block">
+// 로더 인스턴스 재사용
+const loader = createLoader();
+await loader.show(task1);
+await loader.show(task2);
+// 자동으로 메모리 정리됨
+    </div>
+    
+    <h4>권장사항:</h4>
+    <ul>
+        <li>짧은 작업(1초 미만)에는 사용하지 마세요</li>
+        <li>너무 자주 호출하지 마세요 (사용자 경험 저하)</li>
+        <li>적절한 지연 시간을 설정하세요 (기본 1초 권장)</li>
+    </ul>
+</div>
+
+<!-- 모바일 대응 -->
+<div class="card">
+    <h3>7. 모바일 대응</h3>
+    <p>모바일 환경에서의 최적화된 사용법입니다.</p>
+    
+    <h4>반응형 디자인:</h4>
+    <ul>
+        <li>자동으로 모바일 화면에 맞게 조정됩니다</li>
+        <li>터치 친화적인 인터페이스</li>
+        <li>적절한 크기와 간격</li>
+    </ul>
+    
+    <h4>모바일 최적화 설정:</h4>
+    <div class="code-block">
+// 모바일에 최적화된 설정
+await showLoading(taskFn, {
+    theme: 'minimal',        // 간단한 스타일
+    position: 'center',      // 중앙 위치
+    showDelay: 800          // 빠른 표시
+});
+    </div>
+</div>
+
+<!-- 문제 해결 -->
+<div class="card">
+    <h3>8. 문제 해결</h3>
+    <p>자주 발생하는 문제와 해결 방법입니다.</p>
+    
+    <h4>Q: 지식이 표시되지 않아요</h4>
+    <div class="code-block">
+// 해결 방법: API 엔드포인트 확인
+// http://localhost:8000/spinner-tip/fact/ 에 접근 가능한지 확인
+    </div>
+    
+    <h4>Q: 스타일이 적용되지 않아요</h4>
+    <div class="code-block">
+// 해결 방법: CSS 파일 로드 확인
+// perfume-knowledge.js 파일이 정상적으로 로드되었는지 확인
+    </div>
+    
+    <h4>Q: 작업이 너무 빨리 끝나요</h4>
+    <div class="code-block">
+// 해결 방법: showDelay 옵션 조정
+await showLoading(taskFn, { showDelay: 2000 }); // 2초 지연
+    </div>
+</div>
+
+<!-- API 참조 -->
+<div class="card">
+    <h3>9. API 참조</h3>
+    <p>향수 지식 시스템의 모든 API와 옵션입니다.</p>
+    
+    <h4>전역 함수:</h4>
+    <div class="code-block">
+// 기본 사용법
+showLoading(taskFn, options)
+
+// 커스텀 로더 생성
+createLoader(options)
+
+// 편의 함수
+showPerfumeKnowledge(taskFn, options)
+createPerfumeKnowledgeLoader(options)
+    </div>
+    
+    <h4>옵션 객체:</h4>
+    <div class="code-block">
+{
+    boxId: 'perfume-knowledge-box',  // 박스 ID
+    endpoint: '/spinner-tip/fact/',  // API 엔드포인트
+    showDelay: 1000,                 // 지연 시간 (ms)
+    theme: 'default',                // 테마
+    position: 'center',              // 위치
+    autoHide: true                   // 자동 숨김
+}
+    </div>
+</div>
+
+<div class="alert alert-success">
+    <strong>🎉 완료!</strong> 이제 향수 지식 시스템을 완벽하게 활용할 수 있습니다. 
+    <a href="/examples/" class="btn" style="margin-left: 10px;">예시 보기</a>
+    <a href="/demo/" class="btn btn-secondary" style="margin-left: 5px;">데모 체험</a>
+</div>
+{% endblock %}

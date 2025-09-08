@@ -1,0 +1,60 @@
+<div id="{{ id|default:'spinner-tip-box' }}" class="loader-box" style="display:none;">
+  <div class="loader-content">
+    <div class="loader-icon">💡</div>
+    <span class="loader-text">로딩 중...</span>
+  </div>
+</div>
+
+<style>
+.loader-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-width: 400px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.loader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.loader-icon {
+  font-size: 24px;
+  animation: pulse 2s infinite;
+}
+
+.loader-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  font-weight: 500;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* 모바일 대응 */
+@media (max-width: 480px) {
+  .loader-box {
+    margin: 0 20px;
+    padding: 15px 20px;
+  }
+  
+  .loader-text {
+    font-size: 13px;
+  }
+}
+</style>

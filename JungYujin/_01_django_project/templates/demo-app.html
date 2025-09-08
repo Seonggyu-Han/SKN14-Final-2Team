@@ -1,0 +1,385 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}향수 추천 앱 - 데모{% endblock %}
+
+{% block header_title %}🌸 향수 추천 앱 데모{% endblock %}
+{% block header_subtitle %}실제 앱에서 향수 지식 시스템 활용 예시{% endblock %}
+
+{% block content %}
+<div class="alert alert-info">
+    <strong>🎯 데모 앱:</strong> 실제 향수 추천 앱의 주요 기능들을 시뮬레이션합니다. 각 기능을 사용할 때마다 관련된 향수 지식이 표시됩니다.
+</div>
+
+<!-- 사용자 정보 입력 -->
+<div class="card">
+    <h3>👤 사용자 정보 입력</h3>
+    <p>향수 추천을 위한 개인 정보를 입력하세요.</p>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
+        <div>
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">성별</label>
+            <select id="gender" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="">선택하세요</option>
+                <option value="male">남성</option>
+                <option value="female">여성</option>
+                <option value="unisex">유니섹스</option>
+            </select>
+        </div>
+        
+        <div>
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">나이대</label>
+            <select id="age" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="">선택하세요</option>
+                <option value="20s">20대</option>
+                <option value="30s">30대</option>
+                <option value="40s">40대</option>
+                <option value="50s">50대 이상</option>
+            </select>
+        </div>
+        
+        <div>
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">선호 계절</label>
+            <select id="season" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="">선택하세요</option>
+                <option value="spring">봄</option>
+                <option value="summer">여름</option>
+                <option value="autumn">가을</option>
+                <option value="winter">겨울</option>
+            </select>
+        </div>
+        
+        <div>
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">선호 향조</label>
+            <select id="note" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="">선택하세요</option>
+                <option value="floral">플로럴</option>
+                <option value="woody">우디</option>
+                <option value="citrus">시트러스</option>
+                <option value="oriental">오리엔탈</option>
+            </select>
+        </div>
+    </div>
+    
+    <button class="btn" onclick="saveUserInfo()">정보 저장</button>
+</div>
+
+<!-- 향수 검색 -->
+<div class="card">
+    <h3>🔍 향수 검색</h3>
+    <p>브랜드나 향수명으로 검색해보세요.</p>
+    
+    <div style="display: flex; gap: 10px; margin: 20px 0;">
+        <input type="text" id="searchInput" placeholder="향수명 또는 브랜드명 입력" 
+               style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+        <button class="btn" onclick="searchPerfumes()">검색</button>
+    </div>
+    
+    <div id="searchResults" style="margin-top: 20px;"></div>
+</div>
+
+<!-- 향수 추천 -->
+<div class="card">
+    <h3>💎 맞춤 향수 추천</h3>
+    <p>입력한 정보를 바탕으로 개인화된 향수를 추천해드립니다.</p>
+    
+    <button class="btn btn-success" onclick="getRecommendations()">추천 받기</button>
+    
+    <div id="recommendations" style="margin-top: 20px;"></div>
+</div>
+
+<!-- 향수 비교 -->
+<div class="card">
+    <h3>⚖️ 향수 비교</h3>
+    <p>여러 향수를 선택하여 비교해보세요.</p>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin: 20px 0;">
+        <select id="perfume1" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <option value="">첫 번째 향수</option>
+            <option value="chanel-no5">샤넬 No.5</option>
+            <option value="dior-sauvage">디올 소바주</option>
+            <option value="tom-ford-black-orchid">톰 포드 블랙 오키드</option>
+        </select>
+        
+        <select id="perfume2" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <option value="">두 번째 향수</option>
+            <option value="chanel-no5">샤넬 No.5</option>
+            <option value="dior-sauvage">디올 소바주</option>
+            <option value="tom-ford-black-orchid">톰 포드 블랙 오키드</option>
+        </select>
+        
+        <button class="btn btn-warning" onclick="comparePerfumes()">비교하기</button>
+    </div>
+    
+    <div id="comparison" style="margin-top: 20px;"></div>
+</div>
+
+<!-- 향수 지식 퀴즈 -->
+<div class="card">
+    <h3>🧠 향수 지식 퀴즈</h3>
+    <p>향수에 대한 지식을 테스트해보세요!</p>
+    
+    <button class="btn btn-danger" onclick="startQuiz()">퀴즈 시작</button>
+    
+    <div id="quiz" style="margin-top: 20px;"></div>
+</div>
+
+<!-- 결과 표시 영역 -->
+<div class="card">
+    <h3>📊 실행 결과</h3>
+    <div id="demo-result" style="min-height: 100px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
+        <em>앱 기능을 사용하면 결과가 여기에 표시됩니다...</em>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 결과 표시 함수
+    function showDemoResult(message, type = 'info') {
+        const resultArea = document.getElementById('demo-result');
+        const alertClass = type === 'error' ? 'alert-danger' : 'alert-success';
+        resultArea.innerHTML = `<div class="alert ${alertClass}">${message}</div>`;
+    }
+
+    // 사용자 정보 저장
+    async function saveUserInfo() {
+        const gender = document.getElementById('gender').value;
+        const age = document.getElementById('age').value;
+        const season = document.getElementById('season').value;
+        const note = document.getElementById('note').value;
+        
+        if (!gender || !age || !season || !note) {
+            showDemoResult('모든 정보를 입력해주세요.', 'error');
+            return;
+        }
+        
+        try {
+            const result = await showLoading(async () => {
+                // 사용자 정보 저장 시뮬레이션
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                const userInfo = { gender, age, season, note };
+                localStorage.setItem('userInfo', JSON.stringify(userInfo));
+                
+                return '사용자 정보가 성공적으로 저장되었습니다!';
+            });
+            
+            showDemoResult(result);
+        } catch (error) {
+            showDemoResult('정보 저장 중 오류가 발생했습니다: ' + error.message, 'error');
+        }
+    }
+
+    // 향수 검색
+    async function searchPerfumes() {
+        const query = document.getElementById('searchInput').value.trim();
+        
+        if (!query) {
+            showDemoResult('검색어를 입력해주세요.', 'error');
+            return;
+        }
+        
+        try {
+            const results = await showLoading(async () => {
+                // 검색 시뮬레이션
+                await new Promise(resolve => setTimeout(resolve, 2500));
+                
+                const mockResults = [
+                    { name: `${query} - 클래식`, brand: '브랜드A', price: '150,000원' },
+                    { name: `${query} - 모던`, brand: '브랜드B', price: '200,000원' },
+                    { name: `${query} - 프리미엄`, brand: '브랜드C', price: '300,000원' }
+                ];
+                
+                return mockResults;
+            });
+            
+            const resultsHtml = results.map(perfume => 
+                `<div style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; margin: 5px 0;">
+                    <strong>${perfume.name}</strong><br>
+                    브랜드: ${perfume.brand} | 가격: ${perfume.price}
+                </div>`
+            ).join('');
+            
+            document.getElementById('searchResults').innerHTML = resultsHtml;
+            showDemoResult(`"${query}"에 대한 ${results.length}개의 결과를 찾았습니다.`);
+            
+        } catch (error) {
+            showDemoResult('검색 중 오류가 발생했습니다: ' + error.message, 'error');
+        }
+    }
+
+    // 향수 추천
+    async function getRecommendations() {
+        const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+        
+        if (!userInfo.gender) {
+            showDemoResult('먼저 사용자 정보를 입력해주세요.', 'error');
+            return;
+        }
+        
+        try {
+            const recommendations = await showLoading(async () => {
+                // 실제 API 호출
+                const params = new URLSearchParams({
+                    gender: userInfo.gender,
+                    season: userInfo.season || ''
+                });
+                
+                const response = await fetch(`/spinner-tip/api/perfume-recommendations/?${params}`);
+                const data = await response.json();
+                
+                return data.recommendations || [];
+            });
+            
+            if (recommendations.length === 0) {
+                document.getElementById('recommendations').innerHTML = 
+                    '<p style="text-align: center; color: #666;">추천할 향수가 없습니다.</p>';
+                showDemoResult('추천 조건에 맞는 향수를 찾을 수 없습니다.', 'error');
+                return;
+            }
+            
+            const recommendationsHtml = recommendations.map((rec, index) => 
+                `<div style="padding: 20px; border: 1px solid #ddd; border-radius: 12px; margin: 15px 0; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); box-shadow: 0 3px 10px rgba(0,0,0,0.1); transition: transform 0.2s ease;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                        <h4 style="margin: 0; color: #333;">${index + 1}. ${rec.brand} - ${rec.name}</h4>
+                        <span style="background: #e3f2fd; color: #1976d2; padding: 4px 8px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">${rec.concentration}</span>
+                    </div>
+                    <p style="margin: 8px 0; color: #666; font-style: italic;">${rec.reason}</p>
+                    <p style="margin: 8px 0; color: #555; line-height: 1.4;">${rec.description}</p>
+                    <div style="margin-top: 15px;">
+                        <a href="${rec.url}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-weight: 600; display: inline-block; transition: transform 0.2s ease;" 
+                           onmouseover="this.style.transform='translateY(-2px)'" 
+                           onmouseout="this.style.transform='translateY(0)'">
+                            <i class="fas fa-eye"></i> 상세보기
+                        </a>
+                    </div>
+                </div>`
+            ).join('');
+            
+            document.getElementById('recommendations').innerHTML = recommendationsHtml;
+            showDemoResult(`${recommendations.length}개의 맞춤 향수를 추천했습니다!`);
+            
+        } catch (error) {
+            showDemoResult('추천 생성 중 오류가 발생했습니다: ' + error.message, 'error');
+        }
+    }
+
+    // 향수 비교
+    async function comparePerfumes() {
+        const perfume1 = document.getElementById('perfume1').value;
+        const perfume2 = document.getElementById('perfume2').value;
+        
+        if (!perfume1 || !perfume2) {
+            showDemoResult('비교할 두 향수를 모두 선택해주세요.', 'error');
+            return;
+        }
+        
+        if (perfume1 === perfume2) {
+            showDemoResult('서로 다른 향수를 선택해주세요.', 'error');
+            return;
+        }
+        
+        try {
+            const comparison = await showLoading(async () => {
+                // 비교 분석 시뮬레이션
+                await new Promise(resolve => setTimeout(resolve, 2500));
+                
+                return {
+                    perfume1: { name: perfume1, longevity: '8시간', sillage: '중간', price: '200,000원' },
+                    perfume2: { name: perfume2, longevity: '6시간', sillage: '강함', price: '180,000원' }
+                };
+            });
+            
+            const comparisonHtml = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                    <div style="padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: #f8f9fa;">
+                        <h4>${comparison.perfume1.name}</h4>
+                        <p>지속력: ${comparison.perfume1.longevity}</p>
+                        <p>확산력: ${comparison.perfume1.sillage}</p>
+                        <p>가격: ${comparison.perfume1.price}</p>
+                    </div>
+                    <div style="padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: #f8f9fa;">
+                        <h4>${comparison.perfume2.name}</h4>
+                        <p>지속력: ${comparison.perfume2.longevity}</p>
+                        <p>확산력: ${comparison.perfume2.sillage}</p>
+                        <p>가격: ${comparison.perfume2.price}</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('comparison').innerHTML = comparisonHtml;
+            showDemoResult('향수 비교 분석이 완료되었습니다!');
+            
+        } catch (error) {
+            showDemoResult('비교 분석 중 오류가 발생했습니다: ' + error.message, 'error');
+        }
+    }
+
+    // 향수 지식 퀴즈
+    async function startQuiz() {
+        const questions = [
+            {
+                question: "향수의 톱 노트는 보통 얼마나 지속되나요?",
+                options: ["10분", "1시간", "3시간", "하루"],
+                correct: 0
+            },
+            {
+                question: "EDP는 무엇의 줄임말인가요?",
+                options: ["Eau de Parfum", "Extra de Parfum", "Elegant de Parfum", "Essential de Parfum"],
+                correct: 0
+            },
+            {
+                question: "향수를 보관할 때 가장 좋은 장소는?",
+                options: ["햇빛이 드는 곳", "어둡고 서늘한 곳", "냉장고", "욕실"],
+                correct: 1
+            }
+        ];
+        
+        let currentQuestion = 0;
+        let score = 0;
+        
+        async function showQuestion() {
+            if (currentQuestion >= questions.length) {
+                showDemoResult(`퀴즈 완료! 점수: ${score}/${questions.length}`, 'success');
+                return;
+            }
+            
+            const q = questions[currentQuestion];
+            const quizHtml = `
+                <div style="padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: #f8f9fa;">
+                    <h4>문제 ${currentQuestion + 1}: ${q.question}</h4>
+                    ${q.options.map((option, index) => 
+                        `<button class="btn" style="display: block; width: 100%; margin: 5px 0;" 
+                                onclick="answerQuestion(${index})">${option}</button>`
+                    ).join('')}
+                </div>
+            `;
+            
+            document.getElementById('quiz').innerHTML = quizHtml;
+        }
+        
+        window.answerQuestion = async function(selectedIndex) {
+            const q = questions[currentQuestion];
+            const isCorrect = selectedIndex === q.correct;
+            
+            if (isCorrect) score++;
+            
+            try {
+                await showLoading(async () => {
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    return isCorrect ? '정답입니다!' : '틀렸습니다.';
+                });
+                
+                currentQuestion++;
+                showQuestion();
+                
+            } catch (error) {
+                showDemoResult('퀴즈 중 오류가 발생했습니다: ' + error.message, 'error');
+            }
+        };
+        
+        showQuestion();
+    }
+</script>
+{% endblock %}
