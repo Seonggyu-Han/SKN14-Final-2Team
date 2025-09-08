@@ -4,6 +4,9 @@ import re
 import os
 from dotenv import load_dotenv
 from langchain.tools import tool
+from langgraph.graph import StateGraph, END
+from openai import OpenAI
+from langgraph import State, StateNode, StateEdge
 
 # === .env 불러오기 ===
 load_dotenv()
@@ -62,5 +65,53 @@ def human_fallback(state: dict) -> str:
         f"👉 질문을 구체적으로 다시 작성해 주세요.\n"
         f"💡 또는 향수에 관한 멋진 질문을 해보시는 건 어떨까요?"
     )
-def perfume_recommendation_tool():
-    pass
+
+# -------------------------------
+# LLM 파서 함수
+# -------------------------------
+def query_parser_node(state: AgentState) -> AgentState:
+    user_query = state["messages"][-1] if state.get("messages") else ""
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{
+            "role": "user",
+            "content": f"""
+            너는 향수 쿼리 파서야.
+            사용자의 질문에서 brand, concentration, day_night_score, gender,
+            name, season_score, sizes 같은 정보를 JSON 형식으로 뽑아줘.
+            없는 값은 null로 두고, 반드시 JSON만 출력해.
+
+            질문: {user_query}
+            """
+        }],
+        response_format={
+            "type": "json_schema",
+            "json_schema": {
+                "name": "PerfumeQuery",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "brand": {"type": ["string", "null"]},
+                        "concentration": {"type": ["string", "null"]},
+                        "day_night_score": {"type": ["string", "null"]},
+                        "gender": {"type": ["string", "null"]},
+                        "name": {"type": ["string", "null"]},
+                        "season_score": {"type": ["string", "null"]},
+                        "sizes": {"type": ["string", "null"]}
+                    }
+                }
+            }
+        }
+    )
+
+    parsed = response.choices[0].message.parsed
+    state["parsed"] = parsed
+    return state
+
+
+    parsed = response.choices[0].message.parsed
+
+    # state에 파싱 결과 저장
+    state["parsed"] = parsed
+    return state
