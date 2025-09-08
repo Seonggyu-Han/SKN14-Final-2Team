@@ -12,5 +12,7 @@ urlpatterns = [
     path("product/<slug:slug>/", views.product_detail, name="product_detail"),  # 상세는 slug 사용 예시
     path("offlines/", views.offlines, name="offlines"),
     path("mypage/", views.mypage, name="mypage"),
+    path("mypage/profile/", views.profile_edit, name="profile_edit"),
+    path("mypage/password/", views.password_change_view, name="password_change"),
 
 ]
