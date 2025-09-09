@@ -1,9 +1,1379 @@
 ================================================================================
-Query: 딥티끄 no5 추천해줘
+Query: 입생로랑 여성용 50ml 겨울용 향수 추천해줘. 가격도 알려줘
+Router JSON: {
+  "next": "LLM_parser",
+  "reason": "The query contains multiple facets including brand, gender, size, and season.",
+  "facet_count": 4,
+  "facets": {
+    "brand": "입생로랑",
+    "season": "겨울",
+    "gender": "여성",
+    "sizes": "50ml",
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "other"
+}
+Agent summary: [LLM_parser] RAG 파이프라인 완료 ✅
+
+📊 파싱 결과: {"brand": "입생로랑", "gender": "Female", "sizes": "50", "season_score": "winter", "concentration": null, "day_night_score": null}
+🔍 필터링 결과: {"brand": "입생로랑", "concentration": null, "day_night_score": null, "gender": "Female", "season_score": "winter", "sizes": "50"}
+🎯 검색된 향수 개수: 1
+
+💬 추천 결과:
+안녕하세요! 겨울에 잘 어울리는 입생로랑 여성용 향수를 추천해드릴게요. 
+
+### 추천 향수: 입생로랑 오 드 뚜왈렛 (50ml)
+
+#### 1. 왜 이 향수를 추천하는지
+입생로랑은 고급스러움과 세련됨을 동시에 갖춘 브랜드로, 특히 겨울철에 잘 어울리는 따뜻하고 매력적인 향을 제공합니다. 이 오 드 뚜왈렛은 겨울의 차가운 공기 속에서도 따뜻함을 느낄 수 있는 향으로, 일상에서 사용하기에 적합합니다.
+
+#### 2. 향의 특징과 느낌
+이 향수는 부드럽고 따뜻한 플로럴 노트와 함께 약간의 스파이시함이 조화를 이루어, 겨울철에 포근한 느낌을 줍니다. 상큼한 과일 향이 첫 향을 열어주고, 중간에는 꽃향기가 부각되며, 마지막에는 우디한 베이스 노트가 남아 깊이 있는 여운을 남깁니다. 전체적으로 세련되면서도 따뜻한 느낌을 주는 향입니다.
+
+#### 3. 어떤 상황에 적합한지
+이 향수는 데일리로 사용하기 좋으며, 특히 겨울철의 낮 시간에 잘 어울립니다. 친구들과의 모임이나 데이트, 혹은 직장에서의 사용에도 적합해요. 따뜻한 느낌 덕분에 차가운 날씨 속에서도 기분을 좋게 만들어 줄 것입니다.
+
+#### 4. 가격대나 용량 관련 조언
+50ml 용량의 오 드 뚜왈렛은 대체로 70,000원에서 100,000원 사이의 가격대에 판매되고 있습니다. 가격은 매장이나 온라인 쇼핑몰에 따라 다를 수 있으니, 여러 곳을 비교해보시는 것도 좋습니다. 
+
+이 향수가 겨울철에 당신의 매력을 한층 더해줄 것이라 믿어요! 궁금한 점이 있으면 언제든지 물어보세요.
+
+---
+
+💰 **가격 정보 (vectorDB 추천만)**
+🔎 **입생로랑 몽 파리 루미에르 오 드 뚜왈렛 오 드 뚜왈렛 50ml**
+(검색어: `입생로랑 몽 파리 루미에르 오 드 뚜왈렛 오 드 뚜왈렛 50ml`)
+🔍 '입생로랑 몽 파리 루미에르' 검색 결과:
+
+📦 1. 입생로랑 몽 파리 루미에르 오 드 뚜왈렛 루미에르 아쿠아틱플로럴향, 30ml, 1개
+   💰 가격: 84,900원
+   🏪 판매처: 네이버
+   🔗 링크: https://search.shopping.naver.com/catalog/53733087097
+
+💡 **참고사항**
+   ⚠️ 더 많은 가격 비교를 원하시면 여러 쇼핑몰을 직접 확인해보세요.
+
+
+================================================================================
+Query: 디올 EDP로 가을 밤(야간)에 쓸 만한 향수 있어?
+Router JSON: {
+  "next": "LLM_parser",
+  "reason": "The query contains multiple facets including brand, season, and day/night score.",
+  "facet_count": 3,
+  "facets": {
+    "brand": "Dior",
+    "season": "fall",
+    "gender": null,
+    "sizes": null,
+    "day_night_score": "night",
+    "concentration": "EDP"
+  },
+  "scent_vibe": null,
+  "query_intent": "scent_pref"
+}
+Agent summary: [LLM_parser] RAG 파이프라인 완료 ✅
+
+📊 파싱 결과: {"brand": "디올", "gender": null, "sizes": null, "season_score": "fall", "concentration": "오 드 퍼퓸", "day_night_score": "night"}
+🔍 필터링 결과: {"brand": "디올", "concentration": "오 드 퍼퓸", "day_night_score": "night", "gender": null, "season_score": "fall", "sizes": null}
+🎯 검색된 향수 개수: 0
+
+💬 추천 결과:
+안녕하세요! 가을 밤에 어울리는 디올의 EDP를 찾고 계시군요. 제가 추천드리고 싶은 향수는 **디올 '미스 디올 오드 퍼퓸'**입니다.
+
+### 1. 왜 이 향수를 추천하는지
+'미스 디올 오드 퍼퓸'은 가을 밤의 우아함과 신비로움을 잘 표현해주는 향수입니다. 이 향수는 따뜻하고 매혹적인 느낌을 주어, 가을의 차가운 공기 속에서도 포근함을 느낄 수 있게 해줍니다.
+
+### 2. 향의 특징과 느낌
+이 향수는 상큼한 베르가못과 장미의 조화로 시작해, 중간에는 우디한 노트와 파촐리의 깊이 있는 향이 더해집니다. 마지막에는 머스크와 앰버의 따뜻한 베이스가 남아, 부드럽고 세련된 느낌을 줍니다. 전체적으로 여성스러우면서도 강렬한 인상을 남기는 향입니다.
+
+### 3. 어떤 상황에 적합한지
+가을 밤의 특별한 데이트나 저녁 모임, 혹은 친구들과의 소중한 시간에 잘 어울립니다. 이 향수는 특히 저녁에 착용했을 때 그 매력을 더욱 발산하므로, 특별한 순간을 더욱 특별하게 만들어 줄 것입니다.
+
+### 4. 가격대나 용량 관련 조언
+'미스 디올 오드 퍼퓸'은 보통 50ml 기준으로 약 100,000원에서 150,000원 사이에 판매됩니다. 용량은 개인의 사용 빈도에 따라 선택하시면 좋겠지만, 처음 사용해보신다면 50ml를 추천드립니다. 적당한 크기로 휴대하기도 좋고, 가격도 부담스럽지 않아서 좋습니다.
+
+가을 밤에 어울리는 이 향수로 특별한 순간을 만들어보세요! 궁금한 점이 더 있으시면 언제든지 물어보세요.
+
+================================================================================
+Query: 샤넬 남성용 여름용 오 드 뚜왈렛 추천해줘
+Router JSON: {
+  "next": "LLM_parser",
+  "reason": "The query contains multiple facets including brand, gender, season, and concentration.",
+  "facet_count": 4,
+  "facets": {
+    "brand": "Chanel",
+    "season": "summer",
+    "gender": "male",
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": "EDT"
+  },
+  "scent_vibe": null,
+  "query_intent": "scent_pref"
+}
+Agent summary: [LLM_parser] RAG 파이프라인 완료 ✅
+
+📊 파싱 결과: {"brand": "샤넬", "gender": "Male", "sizes": null, "season_score": "summer", "concentration": "오 드 뚜왈렛", "day_night_score": null}
+🔍 필터링 결과: {"brand": "샤넬", "concentration": "오 드 뚜왈렛", "day_night_score": null, "gender": "Male", "season_score": "summer", "sizes": null}
+🎯 검색된 향수 개수: 0
+
+💬 추천 결과:
+안녕하세요! 여름에 잘 어울리는 샤넬 남성용 오 드 뚜왈렛을 찾고 계시군요. 제가 추천드리고 싶은 향수는 **샤넬 블루 드 샤넬 오 드 뚜왈렛**입니다.
+
+### 1. 왜 이 향수를 추천하는지
+블루 드 샤넬은 여름철에 특히 잘 어울리는 향수로, 상쾌하면서도 세련된 느낌을 줍니다. 샤넬의 클래식한 품격을 유지하면서도 현대적인 감각을 더한 향수로, 다양한 상황에서 활용할 수 있어요.
+
+### 2. 향의 특징과 느낌
+이 향수는 상큼한 시트러스와 민트의 조화로 시작해, 중간에는 스파이시한 생강과 우디한 향이 어우러집니다. 마지막에는 부드러운 샌달우드와 파출리의 깊이 있는 향이 남아, 남성적인 매력을 한층 더해줍니다. 전체적으로 신선하면서도 강렬한 인상을 주는 향입니다.
+
+### 3. 어떤 상황에 적합한지
+블루 드 샤넬은 데일리로 사용하기 좋고, 특히 여름철의 더운 날씨에 잘 어울립니다. 캐주얼한 외출이나 비즈니스 미팅, 저녁 데이트 등 다양한 상황에서 자신감을 주는 향수입니다. 
+
+### 4. 가격대나 용량 관련 조언
+블루 드 샤넬 오 드 뚜왈렛은 보통 100ml 기준으로 약 100,000원에서 150,000원 사이에 판매되고 있습니다. 용량에 따라 가격이 다르니, 본인의 사용 빈도에 맞춰 적절한 용량을 선택하시면 좋을 것 같아요. 
+
+여름에 잘 어울리는 이 향수로 멋진 하루를 만들어보세요! 궁금한 점이 더 있으면 언제든지 물어보세요. 😊
+
+================================================================================
+Query: 조말론 플로럴 계열 가을 낮용 추천해줘
 Router JSON: {
   "next": "ML_agent",
-  "reason": "User is asking for a scent recommendation.",
+  "reason": "Single preference recommendation for a specific scent vibe.",
+  "facet_count": 3,
+  "facets": {
+    "brand": "조말론",
+    "season": "가을",
+    "day_night_score": "낮"
+  },
+  "scent_vibe": "플로럴",
+  "query_intent": "scent_pref"
+}
+Agent summary: 안녕하세요! 가을 낮에 어울리는 조말론 플로럴 계열 향수를 추천해드릴게요.
+
+1. **Charlie Original / Charlie Blue (Charlie)**  
+   - **이유**: 상쾌하고 생기 넘치는 플로럴 향으로, 가벼운 기분을 느낄 수 있습니다.  
+   - **향 특성**: Floral Crisp Green
+
+2. **Omnia Crystalline L'Eau De Parfum (Bulgari)**  
+   - **이유**: 부드러운 플로럴과 시트러스의 조화로, 우아하고 깊이 있는 향을 제공합니다.  
+   - **향 특성**: Soft Floral Fresher Citrus
+
+3. **007 For Women Ii (James Bond 007)**  
+   - **이유**: 신선하고 여성스러운 플로럴 오리엔탈 향으로, 낮에 잘 어울립니다.  
+   - **향 특성**: Floral Amber Fresher Fruity
+
+비슷한 대안으로는 **Perpetual Silver Pearl (Jeanne Arthes)**와 **Urban Life Man (Tom Tailor)**를 추천드립니다. 
+
+다음 단계로, 어떤 계절이나 시간대에 사용할지, 또는 지속 시간에 대한 선호가 있는지 알려주시면 더 맞춤형 추천을 드릴 수 있습니다!
+
+================================================================================
+Query: 톰포드 우디 계열 겨울 밤용 100ml 향수 있어?
+Router JSON: {
+  "next": "LLM_parser",
+  "reason": "The query contains multiple facets including brand, season, size, and day/night score.",
+  "facet_count": 4,
+  "facets": {
+    "brand": "톰포드",
+    "season": "겨울",
+    "gender": null,
+    "sizes": "100ml",
+    "day_night_score": "밤",
+    "concentration": null
+  },
+  "scent_vibe": "우디",
+  "query_intent": "other"
+}
+Agent summary: [LLM_parser] RAG 파이프라인 완료 ✅
+
+📊 파싱 결과: {"brand": "톰 포드", "gender": null, "sizes": "100", "season_score": "winter", "concentration": null, "day_night_score": ["night"]}
+🔍 필터링 결과: {"brand": "톰 포드", "concentration": null, "day_night_score": null, "gender": null, "season_score": "winter", "sizes": "100"}
+🎯 검색된 향수 개수: 2
+
+💬 추천 결과:
+안녕하세요! 겨울 밤에 어울리는 톰 포드의 우디 계열 향수를 찾고 계시군요. 제가 추천드릴 수 있는 향수는 톰 포드의 오 드 뚜왈렛 타입의 향수입니다. 
+
+### 추천 향수: 톰 포드 (Unisex, 100ml)
+
+1. **추천 이유**: 톰 포드는 고급스러운 향수로 유명하며, 특히 우디 계열의 향수는 깊이 있는 매력을 지니고 있습니다. 겨울 밤에 잘 어울리는 따뜻하고 포근한 느낌을 주기 때문에 추천드립니다.
+
+2. **향의 특징과 느낌**: 이 향수는 우디 노트가 주를 이루며, 스파이시한 향과 함께 부드러운 머스크가 조화를 이루어 깊고 풍부한 향을 만들어냅니다. 겨울의 차가운 공기 속에서도 따뜻함을 느낄 수 있는 향으로, 고급스러움과 세련됨을 동시에 느낄 수 있습니다.
+
+3. **적합한 상황**: 이 향수는 특별한 저녁 외출이나 연말 모임, 혹은 로맨틱한 데이트에 적합합니다. 차가운 겨울밤에 따뜻한 느낌을 주어, 주변 사람들에게 깊은 인상을 남길 수 있을 것입니다.
+
+4. **가격대 및 용량 조언**: 100ml 용량의 오 드 뚜왈렛은 일반적으로 150,000원에서 250,000원 사이의 가격대에 판매됩니다. 용량이 넉넉하니, 겨울 시즌 동안 충분히 사용하실 수 있을 거예요. 
+
+이 향수가 마음에 드셨으면 좋겠네요! 추가적인 질문이 있으시면 언제든지 말씀해 주세요.
+
+================================================================================
+Query: 크리드 시트러스 향, 여름 낮용 50ml 추천해줘
+Router JSON: {
+  "next": "LLM_parser",
+  "reason": "The query contains multiple facets including brand, season, gender, and size.",
+  "facet_count": 4,
+  "facets": {
+    "brand": "Creed",
+    "season": "summer",
+    "gender": "null",
+    "sizes": "50 ml",
+    "day_night_score": "day",
+    "concentration": "null"
+  },
+  "scent_vibe": "citrus",
+  "query_intent": "scent_pref"
+}
+Agent summary: [LLM_parser] RAG 파이프라인 완료 ✅
+
+📊 파싱 결과: {"brand": "크리드", "gender": null, "sizes": "50", "season_score": ["summer"], "concentration": null, "day_night_score": ["day"]}
+🔍 필터링 결과: {"brand": "크리드", "concentration": null, "day_night_score": null, "gender": null, "season_score": null, "sizes": "50"}
+🎯 검색된 향수 개수: 5
+
+💬 추천 결과:
+안녕하세요! 여름 낮에 사용할 수 있는 크리드의 시트러스 향수를 찾고 계시군요. 현재 검색된 정보에는 여름에 적합한 시트러스 향수는 없지만, 크리드의 다른 향수 중에서 여름에 잘 어울릴 수 있는 제품을 추천해드릴게요.
+
+### 추천 향수: 크리드 어벤투스 (Creed Aventus)
+
+1. **왜 이 향수를 추천하는지**: 어벤투스는 크리드의 가장 유명한 향수 중 하나로, 상큼한 과일 향과 우디한 베이스가 조화를 이루어 여름에 특히 잘 어울립니다. 많은 사람들이 여름에 사용하기에 적합하다고 평가하는 향수입니다.
+
+2. **향의 특징과 느낌**: 어벤투스는 파인애플, 블랙커런트, 사과의 상큼한 탑 노트로 시작하여, 장미와 자작나무의 중간 노트로 이어집니다. 마지막으로 머스크와 오크모스의 깊이 있는 베이스 노트가 남아, 시원하면서도 세련된 느낌을 줍니다. 이 조화로운 향은 자신감과 매력을 더해줍니다.
+
+3. **어떤 상황에 적합한지**: 어벤투스는 데일리로 사용하기 좋으며, 특히 여름의 낮 시간에 외출할 때나 특별한 자리에서 자신을 표현하고 싶을 때 적합합니다. 친구들과의 모임이나 데이트에도 잘 어울립니다.
+
+4. **가격대나 용량 관련 조언**: 크리드 어벤투스는 50ml와 100ml 용량으로 제공되며, 가격대는 대체로 고급스러운 편입니다. 50ml는 약 300,000원에서 400,000원 사이로 구매할 수 있습니다. 처음 사용해보신다면 50ml 용량을 추천드리며, 사용해보시고 마음에 드시면 100ml로 추가 구매하시는 것도 좋습니다.
+
+여름에 잘 어울리는 시원한 향을 찾으신다면 크리드 어벤투스를 고려해보세요! 향수에 대한 더 궁금한 점이 있으시면 언제든지 물어보세요.
+
+================================================================================
+Query: 구찌 여성용 오 드 퍼퓸 가을용 추천해줄래?
+Router JSON: {
+  "next": "LLM_parser",
+  "reason": "The query contains multiple facets including brand, gender, season, and concentration.",
+  "facet_count": 4,
+  "facets": {
+    "brand": "Gucci",
+    "season": "fall",
+    "gender": "female",
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": "EDP"
+  },
+  "scent_vibe": null,
+  "query_intent": "scent_pref"
+}
+Agent summary: [LLM_parser] RAG 파이프라인 완료 ✅
+
+📊 파싱 결과: {"brand": "구찌", "gender": "Female", "sizes": null, "season_score": "fall", "concentration": "오 드 퍼퓸", "day_night_score": null}
+🔍 필터링 결과: {"brand": "구찌", "concentration": "오 드 퍼퓸", "day_night_score": null, "gender": "Female", "season_score": "fall", "sizes": null}
+🎯 검색된 향수 개수: 5
+
+💬 추천 결과:
+안녕하세요! 가을에 잘 어울리는 구찌 여성용 오 드 퍼퓸을 추천해드릴게요. 구찌는 고급스러움과 세련됨을 잘 표현하는 브랜드로, 가을의 분위기와 잘 어울리는 향수를 찾는다면 정말 좋은 선택이 될 거예요.
+
+### 추천 향수: 구찌 여성용 오 드 퍼퓸
+
+1. **추천 이유**: 구찌의 오 드 퍼퓸은 가을의 따뜻한 느낌을 잘 살려주는 향으로, 우아하면서도 매력적인 이미지를 연출할 수 있습니다. 특히, 구찌는 다양한 향조를 통해 개성을 표현할 수 있는 브랜드이기 때문에, 가을에 잘 어울리는 향을 찾는 데 적합합니다.
+
+2. **향의 특징과 느낌**: 구찌의 오 드 퍼퓸은 일반적으로 플로럴과 우디 노트가 조화를 이루며, 따뜻하고 부드러운 느낌을 줍니다. 가을의 차분한 분위기와 잘 어울리며, 은은하게 퍼지는 향이 매력적입니다. 특히, 가을의 낙엽과 함께하는 산책이나 따뜻한 커피 한 잔과 잘 어울리는 향이죠.
+
+3. **적합한 상황**: 이 향수는 데일리로 사용하기 좋으며, 특히 가을의 낮 시간에 잘 어울립니다. 친구들과의 만남, 데이트, 혹은 직장에서의 중요한 미팅 등 다양한 상황에서 자신감을 주는 향으로 활용할 수 있습니다.
+
+4. **가격대 및 용량 조언**: 구찌의 오 드 퍼퓸은 보통 30ml, 50ml, 90ml의 용량으로 제공됩니다. 처음 사용해보신다면 30ml 용량으로 시작해보시는 것도 좋고, 자주 사용하실 계획이라면 50ml나 90ml를 고려해보시는 것도 추천드립니다. 가격대는 브랜드 특성상 다소 높은 편이지만, 품질과 지속력을 고려하면 충분히 가치 있는 선택이 될 것입니다.
+
+가을에 잘 어울리는 구찌의 오 드 퍼퓸으로 멋진 하루를 만들어보세요! 궁금한 점이 더 있으시면 언제든지 물어보세요. 😊
+
+================================================================================
+Query: 프라다 남성용 스파이시 향, 봄 밤용 30ml 뭐 있어?
+Router JSON: {
+  "next": "LLM_parser",
+  "reason": "Multiple product facets detected.",
+  "facet_count": 3,
+  "facets": {
+    "brand": "Prada",
+    "season": "spring",
+    "gender": "male",
+    "sizes": "30 ml",
+    "day_night_score": "night",
+    "concentration": null
+  },
+  "scent_vibe": "spicy",
+  "query_intent": "other"
+}
+Agent summary: [LLM_parser] RAG 파이프라인 완료 ✅
+
+📊 파싱 결과: {"brand": "프라다", "gender": "Male", "sizes": "30", "season_score": "spring", "concentration": null, "day_night_score": ["night"]}
+🔍 필터링 결과: {"brand": "프라다", "concentration": null, "day_night_score": null, "gender": "Male", "season_score": "spring", "sizes": "30"}
+🎯 검색된 향수 개수: 0
+
+💬 추천 결과:
+안녕하세요! 봄밤에 어울리는 스파이시한 남성용 향수를 찾고 계시군요. 프라다의 향수는 아니지만, 비슷한 느낌을 줄 수 있는 몇 가지 향수를 추천해드릴게요.
+
+### 1. **톰 포드 블랙 오키드 (Tom Ford Black Orchid)**
+- **추천 이유**: 이 향수는 스파이시하면서도 우아한 느낌을 주어, 봄밤의 매력을 한층 더해줄 수 있습니다.
+- **향의 특징과 느낌**: 블랙 오키드는 블랙 트러플, 베르가못, 블랙 오키드의 조화로 깊고 풍부한 향을 자랑합니다. 스파이시한 노트와 함께 플로럴한 느낌이 어우러져 세련된 매력을 발산합니다.
+- **적합한 상황**: 저녁 외출이나 특별한 자리에서 자신감을 주는 향수로, 데이트나 파티에 잘 어울립니다.
+- **가격대 및 용량**: 30ml 기준으로 약 100,000원에서 150,000원 사이로 구매할 수 있습니다.
+
+### 2. **디올 소바쥬 (Dior Sauvage)**
+- **추천 이유**: 현대적인 스파이시 향수로, 남성적인 매력을 강조해줍니다.
+- **향의 특징과 느낌**: 시트러스와 스파이스가 조화를 이루며, 후각을 자극하는 강렬한 향이 특징입니다. 신선하면서도 강렬한 느낌을 주어, 봄밤의 상쾌함과 잘 어울립니다.
+- **적합한 상황**: 일상적인 외출부터 특별한 자리까지 다양하게 활용할 수 있어, 데일리 향수로도 좋습니다.
+- **가격대 및 용량**: 30ml는 약 80,000원에서 120,000원 정도로 구매할 수 있습니다.
+
+이 두 가지 향수는 스파이시한 매력을 지니고 있어 봄밤에 잘 어울릴 것입니다. 향수를 선택할 때는 개인의 취향도 중요하니, 가능하다면 샘플을 시향해보시는 것도 추천드립니다! 궁금한 점이 더 있으시면 언제든지 물어보세요!
+
+================================================================================
+Query: 에르메스 100ml 플로럴 향, 여름 낮용 추천해줘
+Router JSON: {
+  "next": "LLM_parser",
+  "reason": "The query contains multiple facets including brand, size, season, and day/night score.",
+  "facet_count": 4,
+  "facets": {
+    "brand": "Hermès",
+    "season": "summer",
+    "gender": null,
+    "sizes": "100 ml",
+    "day_night_score": "day",
+    "concentration": null
+  },
+  "scent_vibe": "floral",
+  "query_intent": "scent_pref"
+}
+Agent summary: [LLM_parser] RAG 파이프라인 완료 ✅
+
+📊 파싱 결과: {"brand": "에르메스", "gender": null, "sizes": "100", "season_score": ["summer"], "concentration": null, "day_night_score": ["day"]}
+🔍 필터링 결과: {"brand": "에르메스", "concentration": null, "day_night_score": null, "gender": null, "season_score": null, "sizes": "100"}
+🎯 검색된 향수 개수: 5
+
+💬 추천 결과:
+안녕하세요! 여름 낮에 사용할 수 있는 에르메스의 플로럴 향수를 찾고 계시군요. 제가 추천드릴 향수는 에르메스의 **오 드 퍼퓸** 타입의 유니섹스 향수입니다. 
+
+### 추천 이유
+이 향수는 여름철 낮에 사용하기에 적합한 플로럴 계열의 향으로, 상쾌하고 기분 좋은 느낌을 줍니다. 에르메스는 고급스러운 브랜드로, 그들의 향수는 품질이 뛰어나고 독창적인 조합으로 유명합니다.
+
+### 향의 특징과 느낌
+이 향수는 플로럴 노트가 주를 이루며, 여름의 따뜻한 햇살 아래에서 느낄 수 있는 생기와 활력을 담고 있습니다. 상큼한 꽃향기가 기분을 좋게 하고, 부드러운 우디 노트가 더해져 세련된 느낌을 줍니다. 여름의 더위 속에서도 가볍고 산뜻하게 사용할 수 있는 향입니다.
+
+### 적합한 상황
+이 향수는 일상적인 데일리 룩에 잘 어울리며, 친구들과의 외출이나 여름 바캉스, 또는 가벼운 데이트에 적합합니다. 특히 낮 시간에 사용하면 더욱 좋습니다.
+
+### 가격대 및 용량 조언
+에르메스의 향수는 보통 100ml 기준으로 가격대가 중상급에 해당합니다. 100ml 용량은 여름철에 자주 사용할 수 있어 경제적이기도 하며, 오 드 퍼퓸 농도라서 지속력도 좋습니다. 만약 처음 사용해보신다면, 50ml 용량으로 시작해보시는 것도 좋은 선택입니다.
+
+이 향수가 여러분의 여름을 더욱 특별하게 만들어줄 것이라 믿습니다! 궁금한 점이 있으면 언제든지 물어보세요. 😊
+
+================================================================================
+Query: 입생로랑 여성용 오 드 퍼퓸, 겨울 밤용 향수 추천해줘
+Router JSON: {
+  "next": "LLM_parser",
+  "reason": "Multiple product facets detected.",
+  "facet_count": 3,
+  "facets": {
+    "brand": "입생로랑",
+    "season": "겨울",
+    "gender": "여성",
+    "sizes": null,
+    "day_night_score": "밤",
+    "concentration": "오 드 퍼퓸"
+  },
+  "scent_vibe": null,
+  "query_intent": "scent_pref"
+}
+Agent summary: [LLM_parser] RAG 파이프라인 완료 ✅
+
+📊 파싱 결과: {"brand": "입생로랑", "gender": "Female", "sizes": null, "season_score": "winter", "concentration": "오 드 퍼퓸", "day_night_score": "night"}
+🔍 필터링 결과: {"brand": "입생로랑", "concentration": "오 드 퍼퓸", "day_night_score": "night", "gender": "Female", "season_score": "winter", "sizes": null}
+🎯 검색된 향수 개수: 0
+
+💬 추천 결과:
+안녕하세요! 겨울 밤에 잘 어울리는 입생로랑 여성용 오 드 퍼퓸을 찾고 계시군요. 제가 추천드리고 싶은 향수는 **입생로랑 '블랙 오피움'**입니다.
+
+### 1. 왜 이 향수를 추천하는지
+블랙 오피움은 입생로랑의 대표적인 향수 중 하나로, 겨울 밤의 매력을 한껏 끌어올려주는 깊고 따뜻한 향을 가지고 있어요. 특히, 이 향수는 세련된 느낌과 함께 강렬한 매력을 지니고 있어, 특별한 날이나 저녁 외출에 잘 어울립니다.
+
+### 2. 향의 특징과 느낌
+블랙 오피움은 커피와 바닐라의 조화로운 조합이 특징입니다. 첫 향에서는 달콤한 바닐라와 함께 커피의 쌉싸름한 향이 느껴지며, 시간이 지나면서 화이트 플로럴과 앰버의 따뜻한 느낌이 더해져 부드럽고 매혹적인 향으로 변해갑니다. 이 조화는 겨울의 차가운 공기 속에서도 따뜻함을 느끼게 해줍니다.
+
+### 3. 어떤 상황에 적합한지
+이 향수는 특히 저녁 외출이나 특별한 모임에 적합합니다. 친구들과의 저녁 식사, 연인과의 데이트, 또는 연말 파티와 같은 특별한 순간에 자신감을 더해줄 거예요. 또한, 겨울철의 따뜻한 옷차림과 잘 어울려서 더욱 매력적인 분위기를 연출할 수 있습니다.
+
+### 4. 가격대나 용량 관련 조언
+블랙 오피움은 보통 30ml, 50ml, 90ml 용량으로 출시되며, 가격대는 약 70,000원에서 150,000원 사이입니다. 처음 사용해보신다면 30ml 용량으로 시작해보시는 것도 좋고, 자주 사용하신다면 50ml나 90ml를 고려해보시는 것도 추천드립니다.
+
+겨울 밤에 잘 어울리는 이 매혹적인 향수로 특별한 순간을 만들어보세요! 궁금한 점이 더 있으시면 언제든지 물어보세요.
+
+================================================================================
+Query: EDP랑 EDT 차이가 뭐야?
+Router JSON: {
+  "next": "FAQ_agent",
+  "reason": "User is asking for definitions and differences.",
   "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "faq"
+}
+Agent summary: 📚 **향수 지식**
+
+EDP(오 드 퍼퓸)와 EDT(오 드 뚜왈렛)의 차이는 주로 향수의 농도와 지속력에 있습니다. 
+
+1. **농도**: 
+   - EDP는 일반적으로 15%에서 20%의 향료 농도를 가지고 있습니다. 이로 인해 향이 더 강하고 깊이 있는 느낌을 줍니다.
+   - 반면, EDT는 5%에서 15%의 향료 농도를 가지고 있어 상대적으로 가볍고 신선한 느낌을 줍니다.
+
+2. **지속력**:
+   - EDP는 보통 4시간에서 8시간 정도 지속되며, 향이 시간이 지남에 따라 변하는 복합적인 향을 즐길 수 있습니다.
+   - EDT는 3시간에서 5시간 정도 지속되며, 더 가벼운 느낌으로 자주 뿌려주기 좋은 선택입니다.
+
+3. **사용 용도**:
+   - EDP는 저녁 외출이나 특별한 자리에서 사용하기 좋고, 깊고 풍부한 향을 원할 때 적합합니다.
+   - EDT는 일상적인 상황이나 낮 시간에 사용하기 좋으며, 상쾌한 느낌을 원할 때 적합합니다.
+
+결론적으로, 어떤 것을 선택할지는 개인의 취향과 사용 상황에 따라 다릅니다. 가벼운 향을 원하신다면 EDT를, 좀 더 깊고 지속적인 향을 원하신다면 EDP를 선택하시면 좋습니다!
+
+================================================================================
+Query: 탑노트·미들노트·베이스노트가 각각 무슨 뜻이야?
+Router JSON: {
+  "next": "FAQ_agent",
+  "reason": "User is asking for definitions of perfume notes.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "faq"
+}
+Agent summary: 📚 **향수 지식**
+
+탑노트, 미들노트, 베이스노트는 향수의 구조를 설명하는 용어로, 각각의 노트는 향수의 다른 단계에서 느껴지는 향을 나타냅니다. 각 노트의 역할은 다음과 같습니다:
+
+1. **탑노트 (Top Note)**: 향수를 처음 뿌렸을 때 가장 먼저 느껴지는 향입니다. 일반적으로 신선하고 가벼운 향이 많으며, 레몬, 베르가못, 민트 같은 시트러스 계열의 향이 포함됩니다. 탑노트는 보통 15분에서 30분 정도 지속되며, 향수의 첫인상을 결정짓는 중요한 역할을 합니다.
+
+2. **미들노트 (Middle Note)**: 탑노트가 사라진 후 나타나는 향으로, 향수의 본질적인 성격을 나타냅니다. 일반적으로 꽃, 향신료, 과일 등의 향이 포함되며, 지속 시간은 몇 시간 정도입니다. 미들노트는 향수의 중심을 이루며, 탑노트와 베이스노트를 연결하는 역할을 합니다.
+
+3. **베이스노트 (Base Note)**: 향수의 마지막 단계에서 느껴지는 향으로, 가장 오래 지속되는 향입니다. 일반적으로 우디, 머스크, 바닐라 같은 깊고 풍부한 향이 포함됩니다. 베이스노트는 향수의 전체적인 깊이와 무게감을 더해주며, 몇 시간에서 하루 이상 지속될 수 있습니다.
+
+이렇게 각 노트는 향수의 복합적인 향을 만들어내며, 서로 조화를 이루어 향수의 전체적인 경험을 제공합니다. 향수를 선택할 때는 이 세 가지 노트를 고려하여 자신이 선호하는 향을 찾는 것이 좋습니다!
+
+================================================================================
+Query: 니치 향수랑 디자이너 향수 차이가 궁금해
+Router JSON: {
+  "next": "FAQ_agent",
+  "reason": "User is asking for definitions and differences between niche and designer perfumes.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "faq"
+}
+Agent summary: 📚 **향수 지식**
+
+니치 향수와 디자이너 향수는 여러 면에서 차이가 있습니다. 각각의 특징을 살펴보면 다음과 같습니다.
+
+### 1. 정의
+- **니치 향수**: 일반적으로 소규모 향수 브랜드에서 제작하며, 독창적이고 예술적인 접근을 통해 만들어집니다. 향수의 조합이 독특하고, 대량 생산되지 않아 희소성이 높습니다.
+- **디자이너 향수**: 유명 패션 브랜드나 디자이너가 만든 향수로, 대중적인 시장을 겨냥하여 제작됩니다. 브랜드의 이미지와 스타일을 반영하며, 대량 생산됩니다.
+
+### 2. 향의 독창성
+- **니치 향수**: 향의 조합이 매우 독창적이고 실험적입니다. 다양한 재료를 사용하여 복잡한 향을 만들어내며, 특정한 테마나 스토리를 담고 있는 경우가 많습니다.
+- **디자이너 향수**: 대중적인 취향을 고려하여 만들어지기 때문에, 비교적 안전하고 친숙한 향을 가지고 있습니다. 대중적인 인기를 끌기 위해 향이 부드럽고 쉽게 접근할 수 있도록 설계됩니다.
+
+### 3. 가격대
+- **니치 향수**: 일반적으로 가격이 비쌉니다. 이는 고급 재료를 사용하고, 소량 생산되기 때문입니다.
+- **디자이너 향수**: 가격대는 다양하지만, 대체로 니치 향수보다는 저렴한 편입니다. 대량 생산으로 인해 가격이 낮아질 수 있습니다.
+
+### 4. 구매 경로
+- **니치 향수**: 주로 전문 향수 매장이나 온라인에서 구매할 수 있으며, 특정한 부티크에서만 찾을 수 있는 경우가 많습니다.
+- **디자이너 향수**: 백화점, 대형 마트, 온라인 쇼핑몰 등에서 쉽게 구할 수 있습니다.
+
+### 5. 향수의 경험
+- **니치 향수**: 향수의 사용 경험이 더 개인적이고 독특합니다. 자신만의 개성을 표현할 수 있는 기회를 제공합니다.
+- **디자이너 향수**: 대중적인 향을 통해 사회적 인식을 반영하며, 많은 사람들이 사용하기 때문에 공통된 경험을 제공합니다.
+
+이러한 차이점을 고려하여, 자신의 취향과 필요에 맞는 향수를 선택하는 것이 중요합니다. 니치 향수는 독특한 경험을 원할 때, 디자이너 향수는 대중적인 매력을 원할 때 선택하면 좋습니다.
+
+================================================================================
+Query: 여성용이랑 남성용 향수는 실제로 성분이 달라?
+Router JSON: {
+  "next": "FAQ_agent",
+  "reason": "User is asking about the differences in ingredients between male and female perfumes.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "faq"
+}
+Agent summary: 📚 **향수 지식**
+
+여성용 향수와 남성용 향수는 성분이 다를 수 있지만, 기본적으로 사용하는 원료는 비슷합니다. 주로 성별에 따라 향의 조합과 향의 느낌이 다르게 구성됩니다.
+
+여성용 향수는 일반적으로 꽃, 과일, 바닐라와 같은 부드럽고 달콤한 노트를 많이 사용합니다. 예를 들어, 장미, 재스민, 복숭아, 그리고 바닐라 같은 향이 자주 포함됩니다. 이러한 향은 여성스러운 느낌을 주고, 부드럽고 우아한 이미지를 연출합니다.
+
+반면, 남성용 향수는 나무, 향신료, 시트러스와 같은 더 강하고 남성적인 노트를 많이 사용합니다. 예를 들어, 샌달우드, 파촐리, 레몬, 그리고 후추 같은 향이 포함되어 있습니다. 이러한 향은 대개 더 강렬하고 세련된 느낌을 줍니다.
+
+결론적으로, 성별에 따라 향수의 조합과 느낌이 다르지만, 사용되는 성분 자체는 크게 다르지 않습니다. 향수를 선택할 때는 자신의 취향과 스타일에 맞는 향을 찾는 것이 가장 중요합니다!
+
+================================================================================
+Query: 잔향이 강한 향수랑 약한 향수의 차이는 뭐야?
+Router JSON: {
+  "next": "FAQ_agent",
+  "reason": "User is asking for definitions and differences.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "faq"
+}
+Agent summary: 📚 **향수 지식**
+
+잔향이 강한 향수와 약한 향수의 차이는 주로 향수의 농도와 성분에 따라 결정됩니다. 여기서 몇 가지 주요 요소를 설명해 드릴게요.
+
+1. **향수 농도**: 향수는 일반적으로 여러 농도로 제공됩니다. 가장 일반적인 농도는 다음과 같습니다:
+   - **퍼퓸(Parfum)**: 가장 높은 농도로, 향의 지속력이 가장 강합니다. 보통 20-30%의 향료가 포함되어 있어 잔향이 오래 남습니다.
+   - **오드퍼퓸(EDP)**: 향료 농도가 15-20%로, 퍼퓸보다는 약하지만 여전히 강한 잔향을 제공합니다.
+   - **오드뚜왈렛(EDT)**: 향료 농도가 5-15%로, 상대적으로 가벼운 향입니다. 잔향이 짧고, 자주 덧뿌리기 좋습니다.
+   - **오드코롱(EDC)**: 향료 농도가 2-5%로, 가장 가벼운 향수입니다. 잔향이 짧고, 주로 여름철에 사용됩니다.
+
+2. **향수 성분**: 향수의 성분도 잔향에 큰 영향을 미칩니다. 일반적으로 베이스 노트(기본 노트)는 향수의 잔향을 결정짓는 중요한 요소입니다. 예를 들어, 우디, 머스크, 앰버 같은 성분은 잔향이 오래 남는 경향이 있습니다. 반면, 시트러스나 플로럴 노트는 상대적으로 빨리 사라지는 경향이 있습니다.
+
+3. **프로젝션과 시야지**: 잔향이 강한 향수는 공기 중에 퍼지는 정도(프로젝션)와 주변 사람들에게 느껴지는 정도(시야지)가 높습니다. 이는 향수의 성분과 농도에 따라 달라지며, 강한 향수는 더 멀리 퍼지는 경향이 있습니다.
+
+**실용적인 조언**: 
+- 잔향이 강한 향수를 원하신다면 퍼퓸이나 오드퍼퓸을 선택하는 것이 좋습니다.
+- 향수를 선택할 때는 자신의 취향과 사용하고자 하는 상황(예: 일상, 특별한 행사 등)을 고려하세요.
+- 향수를 뿌릴 때는 피부에 직접 뿌리거나, 옷에 뿌리는 것도 좋은 방법입니다. 하지만 옷에 뿌릴 경우, 원단에 따라 변색이 있을 수 있으니 주의하세요.
+
+이런 요소들을 고려하여 자신에게 맞는 향수를 선택하시면 좋을 것 같습니다!
+
+================================================================================
+Query: 프루티 향수랑 구르망 향수 차이 알려줘
+Router JSON: {
+  "next": "FAQ_agent",
+  "reason": "User is asking for the difference between two types of scents.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "faq"
+}
+Agent summary: 📚 **향수 지식**
+
+프루티 향수와 구르망 향수는 각각 다른 특성과 매력을 가진 향수 유형입니다. 아래에서 두 가지의 차이점을 설명해드릴게요.
+
+### 프루티 향수 (Fruity Fragrance)
+- **특징**: 프루티 향수는 과일의 향을 주로 사용하여 상큼하고 경쾌한 느낌을 줍니다. 주로 사과, 배, 복숭아, 베리류 등의 과일 노트가 포함됩니다.
+- **사용감**: 일반적으로 가벼운 느낌을 주며, 여름이나 봄과 같은 따뜻한 계절에 잘 어울립니다. 일상적인 사용이나 캐주얼한 자리에서 인기가 많습니다.
+- **예시**: DKNY의 'Be Delicious'와 같은 향수는 프루티 노트를 잘 살린 예입니다.
+
+### 구르망 향수 (Gourmand Fragrance)
+- **특징**: 구르망 향수는 달콤한 음식의 향을 모티브로 하여 만들어진 향수입니다. 바닐라, 초콜릿, 캐러멜, 아몬드 등의 노트가 포함되어 있습니다.
+- **사용감**: 따뜻하고 포근한 느낌을 주며, 주로 가을이나 겨울에 잘 어울립니다. 특별한 자리나 저녁 외출 시 사용하기 좋습니다.
+- **예시**: Thierry Mugler의 'Angel'은 구르망 향수의 대표적인 예로, 달콤한 향이 특징입니다.
+
+### 요약
+- **프루티 향수**는 상큼하고 경쾌한 과일 향이 주를 이루며, 주로 캐주얼한 자리에서 사용됩니다.
+- **구르망 향수**는 달콤한 음식의 향을 담고 있어 따뜻하고 포근한 느낌을 주며, 특별한 자리에서 잘 어울립니다.
+
+각 향수의 특성을 고려하여 상황에 맞는 향수를 선택해 보세요!
+
+================================================================================
+Query: 머스크랑 앰버 향은 어떻게 달라?
+Router JSON: {
+  "next": "FAQ_agent",
+  "reason": "User is asking for differences between two scent notes.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "faq"
+}
+Agent summary: 📚 **향수 지식**
+
+머스크와 앰버는 둘 다 향수에서 자주 사용되는 베이스 노트이지만, 그들의 향과 특성은 상당히 다릅니다.
+
+### 머스크 (Musk)
+- **향의 특징**: 머스크는 일반적으로 따뜻하고 부드러운 향을 가지고 있으며, 약간의 동물적인 느낌이 있습니다. 현대의 향수에서는 주로 합성 머스크가 사용되며, 이는 자연 머스크보다 더 깨끗하고 지속력이 좋습니다.
+- **역할**: 머스크는 향수의 깊이를 더하고, 다른 향을 잘 결합해주는 역할을 합니다. 또한, 향수의 지속력을 높여주는 효과도 있습니다.
+
+### 앰버 (Amber)
+- **향의 특징**: 앰버는 달콤하고 따뜻한 향으로, 보통 바닐라, 레진, 그리고 약간의 스파이시한 노트가 혼합되어 있습니다. 앰버는 부드럽고 감각적인 느낌을 주며, 종종 우아하고 세련된 이미지를 연출합니다.
+- **역할**: 앰버는 향수에 풍부함과 깊이를 더해주며, 따뜻한 느낌을 주는 데 도움을 줍니다. 또한, 다른 향들과 잘 어우러져 조화로운 향을 만들어냅니다.
+
+### 요약
+- **머스크**는 부드럽고 동물적인 느낌을 주며, 지속력을 높이는 역할을 합니다.
+- **앰버**는 달콤하고 따뜻한 느낌을 주며, 향수에 깊이와 우아함을 더해줍니다.
+
+이 두 가지 향은 서로 다른 특성을 가지고 있으므로, 향수를 선택할 때 어떤 느낌을 원하시는지에 따라 조합해보시면 좋습니다!
+
+================================================================================
+Query: 시트러스 계열과 플로럴 계열은 어떤 차이가 있어?
+Router JSON: {
+  "next": "FAQ_agent",
+  "reason": "User is asking for differences between scent families.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "faq"
+}
+Agent summary: 📚 **향수 지식**
+
+시트러스 계열과 플로럴 계열은 향수의 주요 향 노트로, 각각의 특징이 다릅니다. 아래에서 두 계열의 차이점을 설명해 드릴게요.
+
+### 시트러스 계열
+- **주요 성분**: 레몬, 오렌지, 자몽, 라임 등과 같은 감귤류 과일에서 추출한 향이 포함됩니다.
+- **특징**: 상쾌하고 밝은 느낌을 주며, 주로 여름이나 따뜻한 날씨에 잘 어울립니다. 기분을 좋게 하고 에너지를 주는 효과가 있습니다.
+- **사용 예**: 일상적인 외출이나 캐주얼한 자리에서 많이 사용되며, 특히 아침이나 낮에 적합합니다.
+
+### 플로럴 계열
+- **주요 성분**: 장미, 자스민, 백합, 라벤더 등 다양한 꽃에서 추출한 향이 포함됩니다.
+- **특징**: 부드럽고 여성스러운 느낌을 주며, 감정적인 깊이를 더해줍니다. 다양한 꽃의 조합으로 인해 복잡하고 풍부한 향을 느낄 수 있습니다.
+- **사용 예**: 로맨틱한 자리나 특별한 이벤트, 저녁 모임에 잘 어울립니다.
+
+### 요약
+- **시트러스**: 상쾌하고 경쾌한 느낌, 주로 낮에 사용.
+- **플로럴**: 부드럽고 감성적인 느낌, 주로 저녁이나 특별한 자리에서 사용.
+
+향수를 선택할 때, 계절이나 상황에 맞춰 이 두 계열을 고려해 보세요. 여름에는 시트러스 계열이 좋고, 가을이나 겨울에는 플로럴 계열이 따뜻한 느낌을 줄 수 있습니다.
+
+================================================================================
+Query: 샤넬 넘버5랑 코코마드모아젤은 어떤 차이가 있어?
+Router JSON: {
+  "next": "FAQ_agent",
+  "reason": "User is asking for differences between two specific perfumes.",
+  "facet_count": 0,
+  "facets": {
+    "brand": "Chanel",
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "faq"
+}
+Agent summary: 📚 **향수 지식**
+
+샤넬 넘버 5(Chanel No. 5)와 코코 마드모아젤(Coco Mademoiselle)은 두 가지 모두 샤넬의 대표적인 향수이지만, 그 향과 느낌은 상당히 다릅니다. 아래에서 각각의 특징을 살펴보겠습니다.
+
+### 샤넬 넘버 5
+- **향의 특징**: 샤넬 넘버 5는 플로럴 알데하이드 계열의 향수로, 복잡하고 클래식한 향을 가지고 있습니다. 주로 장미, 재스민, 알데하이드가 조화를 이루며, 우디한 베이스 노트가 깊이를 더합니다.
+- **대상**: 이 향수는 성숙하고 우아한 느낌을 주며, 전통적인 여성성을 강조합니다. 
+- **사용 시기**: 주로 저녁이나 특별한 행사에 어울리며, 포멀한 자리에서 잘 어울립니다.
+
+### 코코 마드모아젤
+- **향의 특징**: 코코 마드모아젤은 프루티 플로럴 계열로, 상큼하고 현대적인 느낌을 줍니다. 오렌지, 자몽과 같은 과일 노트가 상쾌함을 주고, 재스민과 로즈가 여성스러움을 더하며, 파출리와 바닐라가 따뜻함을 더합니다.
+- **대상**: 젊고 세련된 이미지를 주며, 좀 더 캐주얼하고 일상적인 상황에서도 잘 어울립니다.
+- **사용 시기**: 데일리로 사용하기 좋고, 낮이나 저녁 모두 적합합니다.
+
+### 요약
+- **샤넬 넘버 5**는 클래식하고 우아한 향수로, 특별한 자리에서 사용하기 좋습니다.
+- **코코 마드모아젤**은 현대적이고 상큼한 향수로, 일상적인 상황에서도 잘 어울립니다.
+
+각 향수의 특징을 고려하여, 자신의 스타일과 상황에 맞는 향수를 선택하는 것이 좋습니다!
+
+================================================================================
+Query: 오 드 퍼퓸과 파르펭 차이가 뭐야?
+Router JSON: {
+  "next": "FAQ_agent",
+  "reason": "User is asking for definitions and differences.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "faq"
+}
+Agent summary: 📚 **향수 지식**
+
+오 드 퍼퓸(EDP)과 파르펭(Parfum)은 향수의 농도와 지속력에서 차이가 있습니다. 
+
+1. **농도**: 
+   - **오 드 퍼퓸 (EDP)**: 일반적으로 향수의 농도가 15%에서 20% 정도입니다. 이로 인해 향이 강하고, 지속력도 좋은 편입니다.
+   - **파르펭 (Parfum)**: 향수의 농도가 20%에서 30% 이상으로, 가장 높은 농도를 가진 형태입니다. 그래서 향이 매우 강하고, 지속력도 가장 뛰어납니다.
+
+2. **지속력**:
+   - **오 드 퍼퓸**: 보통 4시간에서 8시간 정도 지속됩니다.
+   - **파르펭**: 8시간 이상 지속될 수 있으며, 경우에 따라 하루 종일 향이 남아있기도 합니다.
+
+3. **향의 발산**:
+   - **오 드 퍼퓸**: 향이 부드럽고, 여러 시간에 걸쳐 변화하는 경향이 있습니다. 
+   - **파르펭**: 향이 강렬하고, 처음 뿌렸을 때의 향이 오랜 시간 동안 유지됩니다.
+
+4. **가격**: 
+   - 일반적으로 파르펭이 오 드 퍼퓸보다 가격이 더 비쌉니다. 이는 농도가 높고, 원료가 더 많이 사용되기 때문입니다.
+
+결론적으로, 만약 향의 지속력과 강렬함을 원하신다면 파르펭을 선택하는 것이 좋고, 좀 더 부드럽고 일상적인 향을 원하신다면 오 드 퍼퓸이 적합합니다. 사용하실 상황이나 기분에 따라 선택하시면 좋습니다!
+
+================================================================================
+Query: 오늘 점심 뭐 먹을까?
+Router JSON: {
+  "next": "human_fallback",
+  "reason": "The query is off-topic and not related to perfume.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "non_perfume"
+}
+Agent summary: ❓ '오늘 점심 뭐 먹을까?' 더 명확한 설명이 필요합니다.
+👉 질문을 구체적으로 다시 작성해 주세요.
+💡 또는 향수에 관한 멋진 질문을 해보시는 건 어떨까요?
+
+================================================================================
+Query: 오늘 서울 날씨 어때?
+Router JSON: {
+  "next": "human_fallback",
+  "reason": "The query is off-topic and not related to perfume.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "non_perfume"
+}
+Agent summary: ❓ '오늘 서울 날씨 어때?' 더 명확한 설명이 필요합니다.
+👉 질문을 구체적으로 다시 작성해 주세요.
+💡 또는 향수에 관한 멋진 질문을 해보시는 건 어떨까요?
+
+================================================================================
+Query: 주말에 어디 갈까?
+Router JSON: {
+  "next": "human_fallback",
+  "reason": "The query is off-topic and not related to perfume.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "non_perfume"
+}
+Agent summary: ❓ '주말에 어디 갈까?' 더 명확한 설명이 필요합니다.
+👉 질문을 구체적으로 다시 작성해 주세요.
+💡 또는 향수에 관한 멋진 질문을 해보시는 건 어떨까요?
+
+================================================================================
+Query: 넷플릭스에서 뭐 볼만해?
+Router JSON: {
+  "next": "human_fallback",
+  "reason": "The query is off-topic and not related to perfume.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "non_perfume"
+}
+Agent summary: ❓ '넷플릭스에서 뭐 볼만해?' 더 명확한 설명이 필요합니다.
+👉 질문을 구체적으로 다시 작성해 주세요.
+💡 또는 향수에 관한 멋진 질문을 해보시는 건 어떨까요?
+
+================================================================================
+Query: 요즘 주식 어때?
+Router JSON: {
+  "next": "human_fallback",
+  "reason": "The query is off-topic and not related to perfume.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "non_perfume"
+}
+Agent summary: ❓ '요즘 주식 어때?' 더 명확한 설명이 필요합니다.
+👉 질문을 구체적으로 다시 작성해 주세요.
+💡 또는 향수에 관한 멋진 질문을 해보시는 건 어떨까요?
+
+================================================================================
+Query: 축구 경기 몇 시에 시작해?
+Router JSON: {
+  "next": "human_fallback",
+  "reason": "The query is off-topic and not related to perfume.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "non_perfume"
+}
+Agent summary: ❓ '축구 경기 몇 시에 시작해?' 더 명확한 설명이 필요합니다.
+👉 질문을 구체적으로 다시 작성해 주세요.
+💡 또는 향수에 관한 멋진 질문을 해보시는 건 어떨까요?
+
+================================================================================
+Query: 서울에서 카페 추천해줘
+Router JSON: {
+  "next": "human_fallback",
+  "reason": "The query is off-topic and not related to perfume.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "non_perfume"
+}
+Agent summary: ❓ '서울에서 카페 추천해줘' 더 명확한 설명이 필요합니다.
+👉 질문을 구체적으로 다시 작성해 주세요.
+💡 또는 향수에 관한 멋진 질문을 해보시는 건 어떨까요?
+
+================================================================================
+Query: 커피랑 차 중에 뭐가 더 건강해?
+Router JSON: {
+  "next": "human_fallback",
+  "reason": "The query is off-topic and not related to perfume.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "non_perfume"
+}
+Agent summary: ❓ '커피랑 차 중에 뭐가 더 건강해?' 더 명확한 설명이 필요합니다.
+👉 질문을 구체적으로 다시 작성해 주세요.
+💡 또는 향수에 관한 멋진 질문을 해보시는 건 어떨까요?
+
+================================================================================
+Query: 스마트폰 새 모델 나왔어?
+Router JSON: {
+  "next": "human_fallback",
+  "reason": "The query is off-topic and not related to perfume.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "non_perfume"
+}
+Agent summary: ❓ '스마트폰 새 모델 나왔어?' 더 명확한 설명이 필요합니다.
+👉 질문을 구체적으로 다시 작성해 주세요.
+💡 또는 향수에 관한 멋진 질문을 해보시는 건 어떨까요?
+
+================================================================================
+Query: 비 올까 내일?
+Router JSON: {
+  "next": "human_fallback",
+  "reason": "The query is off-topic and not related to perfume.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "non_perfume"
+}
+Agent summary: ❓ '비 올까 내일?' 더 명확한 설명이 필요합니다.
+👉 질문을 구체적으로 다시 작성해 주세요.
+💡 또는 향수에 관한 멋진 질문을 해보시는 건 어떨까요?
+
+================================================================================
+Query: 여름에 시원한 향수 추천해줘.
+Router JSON: {
+  "next": "ML_agent",
+  "reason": "User is asking for a single preference recommendation for summer.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": "summer",
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": "cool",
+  "query_intent": "scent_pref"
+}
+Agent summary: 여름에 시원한 향수를 찾고 계시군요! 다음은 추천하는 세 가지 향수입니다:
+
+1. **Charlie Original / Charlie Blue (Charlie)**  
+   - **이유**: 상쾌하고 깨끗한 플로럴 향으로, 여름에 잘 어울리는 기분 좋은 향입니다.  
+   - **향 특성**: Floral Crisp Green
+
+2. **Omnia Crystalline L'Eau De Parfum (Bulgari)**  
+   - **이유**: 부드러운 플로럴과 시트러스 향이 조화를 이루어 여름에 적합한 상쾌함을 제공합니다.  
+   - **향 특성**: Soft Floral Fresher Citrus
+
+3. **Urban Life Man (Tom Tailor)**  
+   - **이유**: 현대적이고 자신감 넘치는 남성을 위한 향수로, 상쾌한 과일 향이 여름에 잘 어울립니다.  
+   - **향 특성**: Aromatic Fougère Crisp Fruity
+
+비슷한 대안으로는 **007 For Women Ii (James Bond 007)**와 **Perpetual Silver Pearl (Jeanne Arthes)**를 추천드립니다. 
+
+다음 단계로, 어떤 계절이나 시간대에 사용할지, 또는 지속력에 대한 선호가 있는지 알려주시면 더 맞춤형 추천을 드릴 수 있습니다!
+
+================================================================================
+Query: 달달한 향 추천해줘.
+Router JSON: {
+  "next": "ML_agent",
+  "reason": "User is asking for a sweet scent recommendation.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": "sweet",
+  "query_intent": "scent_pref"
+}
+Agent summary: 안녕하세요! 달달한 향을 찾고 계시군요. 다음은 추천드리는 세 가지 향수입니다:
+
+1. **Charlie Original / Charlie Blue (Charlie)**  
+   - **이유**: 상큼하고 깨끗한 플로럴 향으로, 독립적이고 자신감 있는 당신에게 잘 어울립니다.  
+   - **향 특성**: Floral Crisp Green
+
+2. **Omnia Crystalline L'Eau De Parfum (Bulgari)**  
+   - **이유**: 순수한 크리스탈의 빛을 담은 부드러운 플로럴 향으로, 깊이와 풍부함이 느껴집니다.  
+   - **향 특성**: Soft Floral Fresher Citrus
+
+3. **Urban Life Man (Tom Tailor)**  
+   - **이유**: 현대적이고 자신감 넘치는 남성을 위한 향수로, 신선하고 과일 같은 향이 매력적입니다.  
+   - **향 특성**: Aromatic Fougère Crisp Fruity
+
+비슷한 대안으로는 **007 For Women Ii (James Bond 007)**와 **Perpetual Silver Pearl (Jeanne Arthes)**를 추천드립니다. 
+
+다음 단계로, 어떤 계절이나 시간대에 사용하고 싶은지, 또는 지속력에 대한 선호가 있는지 알려주시면 더 맞춤형 추천을 드릴 수 있습니다!
+
+================================================================================
+Query: 상큼한 향은 뭐야?
+Router JSON: {
+  "next": "ML_agent",
+  "reason": "User is asking for a recommendation for a fresh scent.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": "fresh",
+  "query_intent": "scent_pref"
+}
+Agent summary: 상큼한 향을 찾고 계시군요! 다음은 추천하는 세 가지 향수입니다:
+
+1. **Charlie Original / Charlie Blue (Charlie)**  
+   - **이유**: 상큼하고 깨끗한 플로럴 향으로, 신선한 꽃다발을 받은 듯한 기분을 줍니다.  
+   - **향 특성**: Floral Crisp Green
+
+2. **Omnia Crystalline L'Eau De Parfum (Bulgari)**  
+   - **이유**: 부드러운 플로럴과 시트러스의 조화로, 순수한 크리스탈의 빛을 연상시킵니다.  
+   - **향 특성**: Soft Floral Fresher Citrus
+
+3. **Urban Life Man (Tom Tailor)**  
+   - **이유**: 현대적인 남성을 위한 상큼한 과일 향으로, 도시의 활기를 느낄 수 있습니다.  
+   - **향 특성**: Aromatic Fougère Crisp Fruity
+
+비슷한 대안으로는 **007 For Women Ii (James Bond 007)**와 **Perpetual Silver Pearl (Jeanne Arthes)**를 추천드립니다. 
+
+다음 단계로, 어떤 계절이나 시간대에 사용할 향수를 원하시는지 알려주시면 더 맞춤형 추천을 드릴 수 있습니다!
+
+================================================================================
+Query: 따뜻한 향 추천해줘.
+Router JSON: {
+  "next": "ML_agent",
+  "reason": "User is asking for a warm scent recommendation.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": "warm",
+  "query_intent": "scent_pref"
+}
+Agent summary: 안녕하세요! 따뜻한 향을 찾고 계시군요. 다음은 추천드리는 세 가지 향수입니다:
+
+1. **Charlie Original / Charlie Blue (Charlie)**  
+   - **이유**: 상쾌하고 생기 넘치는 플로럴 향으로, 독립적이고 자신감 있는 당신에게 잘 어울립니다.  
+   - **향 특성**: Floral Crisp Green
+
+2. **Omnia Crystalline L'Eau De Parfum (Bulgari)**  
+   - **이유**: 순수한 크리스탈의 빛을 담은 부드러운 플로럴 향으로, 깊이와 풍부함이 느껴집니다.  
+   - **향 특성**: Soft Floral Fresher Citrus
+
+3. **Urban Life Man (Tom Tailor)**  
+   - **이유**: 현대적인 도시 남성을 위한 향수로, 자신감 있고 다양한 매력을 지닌 향입니다.  
+   - **향 특성**: Aromatic Fougère Crisp Fruity
+
+비슷한 대안으로는 **007 For Women Ii (James Bond 007)**와 **Perpetual Silver Pearl (Jeanne Arthes)**를 추천드립니다. 
+
+다음 단계로, 어떤 계절이나 시간대에 사용하고 싶은지, 또는 지속력에 대한 선호가 있는지 알려주시면 더 맞춤형 추천을 드릴 수 있습니다!
+
+================================================================================
+Query: 우디한 향이 뭐야?
+Router JSON: {
+  "next": "FAQ_agent",
+  "reason": "User is asking for a definition or explanation of a scent type.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": "woody",
+  "query_intent": "faq"
+}
+Agent summary: 📚 **향수 지식**
+
+우디한 향은 나무에서 유래한 향기를 의미합니다. 주로 샌달우드, 시더우드, 파출리, 베티버와 같은 나무 성분이 포함되어 있습니다. 이러한 향은 따뜻하고 안정감 있는 느낌을 주며, 종종 남성적인 향으로 여겨지기도 하지만, 여성용 향수에서도 많이 사용됩니다.
+
+우디한 향의 특징은 다음과 같습니다:
+
+1. **따뜻함과 깊이**: 우디한 향은 대개 따뜻하고 깊은 느낌을 주어, 안정감과 편안함을 느끼게 합니다.
+2. **지속력**: 우디 노트는 일반적으로 지속력이 좋고, 다른 향과 잘 어우러져 베이스 노트로 자주 사용됩니다.
+3. **다양한 조합**: 우디한 향은 플로럴, 스파이시, 프루티 등 다양한 향과 조화를 이루어 복합적인 향을 만들어냅니다.
+
+우디한 향을 좋아하신다면, 샌달우드나 시더우드가 포함된 향수를 찾아보세요. 이러한 향수는 일상적인 사용뿐만 아니라 특별한 자리에서도 잘 어울립니다.
+
+================================================================================
+Query: 스파이시한 향수 알려줘.
+Router JSON: {
+  "next": "ML_agent",
+  "reason": "User is asking for a single preference recommendation.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": "spicy",
+  "query_intent": "scent_pref"
+}
+Agent summary: 안녕하세요! 스파이시한 향수를 찾고 계시군요. 다음은 추천드리는 세 가지 향수입니다:
+
+1. **Charlie Original / Charlie Blue (Charlie)**  
+   - **이유**: 독립적이고 자신감 있는 여성에게 잘 어울리는 상쾌하고 생기 있는 향입니다.  
+   - **향 특성**: Floral Crisp Green
+
+2. **Omnia Crystalline L'Eau De Parfum (Bulgari)**  
+   - **이유**: 순수한 크리스탈의 빛을 영감으로 한 깊고 풍부한 향으로, 부드러운 플로럴과 시트러스의 조화가 매력적입니다.  
+   - **향 특성**: Soft Floral Fresher Citrus
+
+3. **Urban Life Man (Tom Tailor)**  
+   - **이유**: 현대적인 도시 남성을 위한 향수로, 자신감 있고 다양한 매력을 지닌 향입니다.  
+   - **향 특성**: Aromatic Fougère Crisp Fruity
+
+비슷한 대안으로는 **007 For Women Ii (James Bond 007)**와 **Perpetual Silver Pearl (Jeanne Arthes)**를 추천드립니다. 
+
+다음 단계로, 어떤 계절이나 시간대에 사용할 향수를 원하시는지, 또는 지속력에 대한 선호가 있으신지 알려주시면 더 맞춤형 추천을 드릴 수 있습니다!
+
+================================================================================
+Query: 바닐라 같은 달콤한 향 있지?
+Router JSON: {
+  "next": "ML_agent",
+  "reason": "User is looking for a sweet scent with a specific vibe.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": "sweet",
+  "query_intent": "scent_pref"
+}
+Agent summary: 안녕하세요! 바닐라 같은 달콤한 향을 찾고 계시군요. 여기 추천드리는 세 가지 향수입니다:
+
+1. **Charlie Original / Charlie Blue (Charlie)**  
+   - **이유**: 상큼하고 깨끗한 플로럴 향으로, 바닐라가 포함되어 있어 달콤함을 느낄 수 있습니다.  
+   - **향 특성**: Floral Crisp Green
+
+2. **Omnia Crystalline L'Eau De Parfum (Bulgari)**  
+   - **이유**: 부드러운 플로럴과 시트러스 향이 조화를 이루며, 깊이 있는 향을 제공합니다.  
+   - **향 특성**: Soft Floral Fresher Citrus
+
+3. **007 For Women Ii (James Bond 007)**  
+   - **이유**: 바닐라와 핑크 페퍼의 조화로, 여성스러운 매력을 강조하는 향입니다.  
+   - **향 특성**: Floral Amber Fresher Fruity
+
+비슷한 대안으로는 **Perpetual Silver Pearl (Jeanne Arthes)**와 **Urban Life Man (Tom Tailor)**를 추천드립니다. 
+
+다음 단계로, 어떤 계절이나 시간대에 사용하고 싶은지, 또는 지속력에 대한 선호가 있는지 알려주시면 더 맞춤형 추천을 드릴 수 있습니다!
+
+================================================================================
+Query: 바다 같은 향은 뭐라 해?
+Router JSON: {
+  "next": "FAQ_agent",
+  "reason": "User is asking for a definition or description of a scent type.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": "oceanic",
+  "query_intent": "faq"
+}
+Agent summary: 📚 **향수 지식**
+
+바다 같은 향은 일반적으로 "오션 노트" 또는 "아쿠아틱 노트"라고 불립니다. 이러한 향은 바다, 해양, 신선한 공기와 같은 느낌을 주며, 주로 청량감과 상쾌함을 강조합니다. 아쿠아틱 노트는 종종 다른 향과 조화를 이루어 사용되며, 여름철이나 따뜻한 날씨에 잘 어울립니다.
+
+바다 같은 향을 찾고 있다면, 다음과 같은 성분을 포함한 향수를 고려해 보세요:
+
+1. **바다 노트**: 바다의 신선함을 표현하는 성분으로, 해양의 느낌을 줍니다.
+2. **시트러스 노트**: 레몬, 자몽, 오렌지와 같은 상큼한 과일 향이 청량감을 더해줍니다.
+3. **그린 노트**: 풀이나 잎사귀의 향으로 자연의 신선함을 느낄 수 있습니다.
+
+추천하는 향수 브랜드로는 **Dolce & Gabbana의 Light Blue**, **Chanel의 Allure Homme Sport**, **Issey Miyake의 L'Eau d'Issey** 등이 있습니다. 이들은 모두 바다와 관련된 상쾌한 느낌을 잘 표현하고 있습니다.
+
+향수를 선택할 때는 자신의 피부 타입과 개인적인 취향을 고려하는 것이 중요합니다. 매장에서 테스트해보고, 자신의 체온과 피부 화학 반응에 따라 향이 어떻게 변하는지 확인해 보세요.
+
+================================================================================
+Query: 장미 향 말고 플로럴 향은 뭐 있어?
+Router JSON: {
+  "next": "ML_agent",
+  "reason": "User is looking for floral scents excluding rose.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": "floral",
+  "query_intent": "scent_pref"
+}
+Agent summary: 안녕하세요! 장미 향이 아닌 플로럴 향을 찾고 계시군요. 다음은 추천드리는 세 가지 향수입니다:
+
+1. **Charlie Original / Charlie Blue (Charlie)**  
+   - **이유**: 상쾌하고 생기 넘치는 플로럴 향으로, 독립적이고 자신감 있는 당신에게 잘 어울립니다.  
+   - **향 특성**: Floral Crisp Green
+
+2. **Omnia Crystalline L'Eau De Parfum (Bulgari)**  
+   - **이유**: 부드러운 플로럴과 시트러스의 조화로, 깊이 있는 향을 제공합니다.  
+   - **향 특성**: Soft Floral Fresher Citrus
+
+3. **Urban Life Man (Tom Tailor)**  
+   - **이유**: 현대적인 남성을 위한 아로마틱한 향으로, 도시적인 라이프스타일을 잘 표현합니다.  
+   - **향 특성**: Aromatic Fougère Crisp Fruity
+
+비슷한 대안으로는 **007 For Women Ii (James Bond 007)**와 **Perpetual Silver Pearl (Jeanne Arthes)**를 추천드립니다. 
+
+다음 단계로, 어떤 계절이나 시간대에 사용할 향수를 원하시는지, 또는 지속력에 대한 선호가 있으신지 알려주시면 더 맞춤형 추천을 드릴 수 있습니다!
+
+================================================================================
+Query: 커피 같은 향이 나는 향수도 있어?
+Router JSON: {
+  "next": "ML_agent",
+  "reason": "User is looking for a specific scent preference.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": "coffee",
+  "query_intent": "scent_pref"
+}
+Agent summary: 안녕하세요! 커피 같은 향을 찾고 계시군요. 추천드리는 향수는 다음과 같습니다:
+
+1. **Charlie Original / Charlie Blue (Charlie)**  
+   - **이유**: 상쾌하고 생기 있는 플로럴 향으로, 독립적이고 자신감 있는 느낌을 줍니다.  
+   - **향 특성**: Floral Crisp Green
+
+2. **Omnia Crystalline L'Eau De Parfum (Bulgari)**  
+   - **이유**: 순수한 크리스탈의 빛을 담은 부드러운 플로럴 향으로, 깊이와 풍부함이 특징입니다.  
+   - **향 특성**: Soft Floral Fresher Citrus
+
+3. **Urban Life Man (Tom Tailor)**  
+   - **이유**: 현대적인 남성을 위한 향수로, 도시의 다양한 라이프스타일을 반영합니다.  
+   - **향 특성**: Aromatic Fougère Crisp Fruity
+
+비슷한 대안으로는 **007 For Women Ii (James Bond 007)**와 **Perpetual Silver Pearl (Jeanne Arthes)**를 추천드립니다. 
+
+다음 단계로, 어떤 계절이나 시간대에 사용할 향수를 원하시는지, 또는 지속력에 대한 선호가 있으신지 알려주시면 더 맞춤형 추천을 드릴 수 있습니다!
+
+================================================================================
+Query: 샤넬 넘버5 50ml 가격 알려줘.
+Router JSON: {
+  "next": "price_agent",
+  "reason": "Pure price query with specific product.",
+  "facet_count": 1,
+  "facets": {
+    "brand": "Chanel",
+    "season": null,
+    "gender": null,
+    "sizes": "50 ml",
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "price"
+}
+Agent summary: 💰 **가격 정보**
+
+🔍 '샤넬 넘버5' 검색 결과:
+
+📦 1. [국내백화점/선물포장] 샤넬 넘버5 NO5 오드빠르펭 여성 향수 35ml
+   💰 가격: 136,000원
+   🏪 판매처: 라이크컴퍼니
+   🔗 링크: https://smartstore.naver.com/main/products/11549340601
+
+💡 **참고사항**
+   ⚠️ 더 많은 가격 비교를 원하시면 여러 쇼핑몰을 직접 확인해보세요.
+
+
+================================================================================
+Query: 디올 소바쥬 가격 얼마야? 어디서 사는 게 제일 싸?
+Router JSON: {
+  "next": "price_agent",
+  "reason": "Pure price query with specific brand.",
+  "facet_count": 1,
+  "facets": {
+    "brand": "Dior",
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "price"
+}
+Agent summary: 💰 **가격 정보**
+
+🔍 '디올 소바쥬' 검색 결과:
+
+📦 1. (국내백화점) 디올 소바쥬 오드퍼퓸 남성향수 60ml
+   💰 가격: 134,900원
+   🏪 판매처: 럭스리밋
+   🔗 링크: https://smartstore.naver.com/main/products/11512674629
+
+💡 **참고사항**
+   ⚠️ 더 많은 가격 비교를 원하시면 여러 쇼핑몰을 직접 확인해보세요.
+
+
+================================================================================
+Query: 딥티크 도 손 가격 얼마야?
+Router JSON: {
+  "next": "price_agent",
+  "reason": "Pure price query with specific brand.",
+  "facet_count": 1,
   "facets": {
     "brand": "Diptyque",
     "season": null,
@@ -13,23 +1383,263 @@ Router JSON: {
     "concentration": null
   },
   "scent_vibe": null,
+  "query_intent": "price"
+}
+Agent summary: 💰 **가격 정보**
+
+🔍 '딥티크 도 손' 검색 결과:
+
+📦 1. 딥디크 도손 오드뚜왈렛 100ml
+   💰 가격: 189,800원
+   🏪 판매처: TK솔루션
+   🔗 링크: https://smartstore.naver.com/main/products/5020824192
+
+💡 **참고사항**
+   ⚠️ 더 많은 가격 비교를 원하시면 여러 쇼핑몰을 직접 확인해보세요.
+
+
+================================================================================
+Query: 불가리 옴니아 크리스탈린 가격 알려줘.
+Router JSON: {
+  "next": "price_agent",
+  "reason": "Pure price query with specific brand/product.",
+  "facet_count": 1,
+  "facets": {
+    "brand": "Bvlgari",
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "price"
+}
+Agent summary: 💰 **가격 정보**
+
+🔍 '불가리 옴니아 크리스탈린' 검색 결과:
+
+📦 1. 불가리 옴니아 크리스탈린 우먼 오 드 뚜왈렛 플로럴우디향, 50ml, 1개
+   💰 가격: 109,000원
+   🏪 판매처: 네이버
+   🔗 링크: https://search.shopping.naver.com/catalog/53530269514
+
+💡 **참고사항**
+   ⚠️ 더 많은 가격 비교를 원하시면 여러 쇼핑몰을 직접 확인해보세요.
+
+
+================================================================================
+Query: 조말론 잉글리쉬 페어 앤 프리지아 최저가 찾아줘.
+Router JSON: {
+  "next": "price_agent",
+  "reason": "User is asking for the lowest price of a specific perfume.",
+  "facet_count": 1,
+  "facets": {
+    "brand": "Jo Malone",
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "price"
+}
+Agent summary: 💰 **가격 정보**
+
+🔍 '조말론 잉글리쉬 페어 앤 프리지아' 검색 결과:
+
+📦 1. 조말론 잉글리쉬 페어 앤 프리지아 코롱 100ml
+   💰 가격: 124,060원
+   🏪 판매처: 현대Hmall
+   🔗 링크: https://www.hmall.com/md/pda/itemPtc?ReferCode=429&slitmCd=2238794498&utm_source=naver&utm_medium=cps_pcs&utm_campaign=sale
+
+💡 **참고사항**
+   ⚠️ 더 많은 가격 비교를 원하시면 여러 쇼핑몰을 직접 확인해보세요.
+
+
+================================================================================
+Query: 톰포드 오드우드 30ml 가격대 알려줘.
+Router JSON: {
+  "next": "price_agent",
+  "reason": "Pure price query with specific product.",
+  "facet_count": 1,
+  "facets": {
+    "brand": "Tom Ford",
+    "season": null,
+    "gender": null,
+    "sizes": "30 ml",
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "price"
+}
+Agent summary: 💰 **가격 정보**
+
+🔍 '톰포드 오드우드' 검색 결과:
+
+📦 1. 톰포드 오드 우드 오 드 퍼퓸 100ml(관부가세포함)
+   💰 가격: 332,900원
+   🏪 판매처: 듀이스몰
+   🔗 링크: https://smartstore.naver.com/main/products/6683530284
+
+💡 **참고사항**
+   ⚠️ 더 많은 가격 비교를 원하시면 여러 쇼핑몰을 직접 확인해보세요.
+
+
+================================================================================
+Query: 크리드 어벤투스 남성용 가격 알려줘.
+Router JSON: {
+  "next": "price_agent",
+  "reason": "Pure price query with specific brand/product.",
+  "facet_count": 1,
+  "facets": {
+    "brand": "Creed",
+    "season": null,
+    "gender": "male",
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "price"
+}
+Agent summary: 💰 **가격 정보**
+
+🔍 '크리드 어벤투스' 검색 결과:
+
+📦 1. 크리드 어벤투스 오 드 퍼퓸 레몬향, 100ml, 1개
+   💰 가격: 349,900원
+   🏪 판매처: 네이버
+   🔗 링크: https://search.shopping.naver.com/catalog/53073650060
+
+💡 **참고사항**
+   ⚠️ 더 많은 가격 비교를 원하시면 여러 쇼핑몰을 직접 확인해보세요.
+
+
+================================================================================
+Query: 프라다 캔디 EDP 가격 알려줘.
+Router JSON: {
+  "next": "price_agent",
+  "reason": "Pure price query with specific product.",
+  "facet_count": 1,
+  "facets": {
+    "brand": "Prada",
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": "EDP"
+  },
+  "scent_vibe": null,
+  "query_intent": "price"
+}
+Agent summary: 💰 **가격 정보**
+
+🔍 '프라다 캔디 EDP' 검색 결과:
+
+📦 1. 프라다 캔디 키스 EDP 80ml
+   💰 가격: 133,100원
+   🏪 판매처: 엘로라
+   🔗 링크: https://smartstore.naver.com/main/products/5179342960
+
+💡 **참고사항**
+   ⚠️ 더 많은 가격 비교를 원하시면 여러 쇼핑몰을 직접 확인해보세요.
+
+
+================================================================================
+Query: 구찌 블룸 100ml 가격대 알아봐.
+Router JSON: {
+  "next": "price_agent",
+  "reason": "Pure price query with specific brand/product.",
+  "facet_count": 1,
+  "facets": {
+    "brand": "Gucci",
+    "season": null,
+    "gender": null,
+    "sizes": "100 ml",
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "price"
+}
+Agent summary: 💰 **가격 정보**
+
+🔍 '구찌 블룸' 검색 결과:
+
+📦 1. 구찌 블룸 오드 퍼퓸 100ml
+   💰 가격: 99,000원
+   🏪 판매처: 포에버홍콩
+   🔗 링크: https://shopping.naver.com/outlink/itemdetail/2898486823
+
+💡 **참고사항**
+   ⚠️ 더 많은 가격 비교를 원하시면 여러 쇼핑몰을 직접 확인해보세요.
+
+
+================================================================================
+Query: 에르메스 떼르데르메스 얼마 정도 해?
+Router JSON: {
+  "next": "price_agent",
+  "reason": "Pure price query for a specific product.",
+  "facet_count": 1,
+  "facets": {
+    "brand": "Hermès",
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": null,
+  "query_intent": "price"
+}
+Agent summary: 💰 **가격 정보**
+
+🔍 '에르메스 떼르데르메스' 검색 결과:
+
+📦 1. 에르메스 향수 떼르 데르메스 오드뚜왈렛 EDT 100ml
+   💰 가격: 119,800원
+   🏪 판매처: 오드퍼퓸
+   🔗 링크: https://smartstore.naver.com/main/products/759260916
+
+💡 **참고사항**
+   ⚠️ 더 많은 가격 비교를 원하시면 여러 쇼핑몰을 직접 확인해보세요.
+
+
+================================================================================
+Query: 바보같은향 추천해줘
+Router JSON: {
+  "next": "ML_agent",
+  "reason": "User is asking for a scent recommendation.",
+  "facet_count": 0,
+  "facets": {
+    "brand": null,
+    "season": null,
+    "gender": null,
+    "sizes": null,
+    "day_night_score": null,
+    "concentration": null
+  },
+  "scent_vibe": "foolish",
   "query_intent": "scent_pref"
 }
-Agent summary: 안녕하세요! 딥티끄 No5와 비슷한 향수를 추천해드릴게요.
+Agent summary: 안녕하세요! 바보같은 향을 찾고 계시군요. 다음은 추천드리는 세 가지 향수입니다:
 
 1. **Charlie Original / Charlie Blue (Charlie)**  
-   - **이유**: 독립적이고 자신감 있는 느낌을 주며, 신선한 꽃다발 같은 상쾌함을 느낄 수 있습니다.  
+   - **이유**: 독립적이고 자신감 있는 당신에게 잘 어울리는 상쾌하고 생기 넘치는 향입니다.  
    - **향 특성**: Floral Crisp Green
 
 2. **Omnia Crystalline L'Eau De Parfum (Bulgari)**  
-   - **이유**: 순수한 크리스탈의 빛을 담은 부드러운 플로럴 향으로, 깊이와 풍부함이 느껴집니다.  
+   - **이유**: 순수한 크리스탈의 빛을 담은 부드럽고 풍부한 향으로, 특별한 순간에 잘 어울립니다.  
    - **향 특성**: Soft Floral Fresher Citrus
 
 3. **Urban Life Man (Tom Tailor)**  
-   - **이유**: 현대적인 도시 남성을 위한 향수로, 자신감 있고 다양한 매력을 지니고 있습니다.  
+   - **이유**: 현대적인 도시 남성을 위한 향수로, 자신감 있고 다양한 매력을 지닌 향입니다.  
    - **향 특성**: Aromatic Fougère Crisp Fruity
 
 비슷한 대안으로는 **007 For Women Ii (James Bond 007)**와 **Perpetual Silver Pearl (Jeanne Arthes)**를 추천드립니다. 
 
-다음 단계로, 어떤 계절이나 시간대에 사용할 향수를 원하시는지, 또는 지속력에 대한 선호가 있으신지 말씀해주시면 더 맞춤형 추천을 드릴 수 있습니다!
+다음 단계로, 어떤 계절이나 시간대에 사용할 향수를 원하시는지, 또는 지속력에 대한 선호가 있으신지 알려주시면 더 맞춤 추천을 드릴 수 있습니다!
 
