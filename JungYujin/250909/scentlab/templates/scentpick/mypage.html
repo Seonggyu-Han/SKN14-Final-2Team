@@ -1,0 +1,330 @@
+{% extends "scentpick/base.html" %}
+{% block title %}마이페이지 - ScentPick{% endblock %}
+{% block content %}
+
+<div class="mypage-container">
+    <h2>마이페이지</h2>
+    
+    <div class="main-content-container">
+        <div class="favorites-section">
+            <h3>⭐ 즐겨찾기 ({{ favorites_count }}개)</h3>
+            {% if favorite_perfumes %}
+                <div class="perfume-grid">
+                    {% for perfume in favorite_perfumes %}
+                        <div class="perfume-card">
+                            <a href="{% url 'scentpick:product_detail' perfume.id %}">
+                                <div class="perfume-image" style="background-image: url('https://scentpick-images.s3.ap-northeast-2.amazonaws.com/perfumes/{{ perfume.id }}.jpg')"></div>
+                                <div class="perfume-info">
+                                    <h4>{{ perfume.name }}</h4>
+                                    <p>{{ perfume.brand }}</p>
+                                </div>
+                            </a>
+                            <button class="remove-favorite" data-perfume-id="{{ perfume.id }}">
+                                ⭐ 즐겨찾기 해제
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>즐겨찾기한 향수가 없습니다.</p>
+            {% endif %}
+        </div>
+
+        <div class="like-dislike-container">
+            <div class="likes-section">
+                <h3>👍 좋아요 ({{ likes_count }}개)</h3>
+                {% if liked_perfumes %}
+                    <div class="perfume-grid">
+                        {% for perfume in liked_perfumes %}
+                            <div class="perfume-card like-card">
+                                <a href="{% url 'scentpick:product_detail' perfume.id %}">
+                                    <div class="perfume-image" style="background-image: url('https://scentpick-images.s3.ap-northeast-2.amazonaws.com/perfumes/{{ perfume.id }}.jpg')"></div>
+                                    <div class="perfume-info">
+                                        <h4>{{ perfume.name }}</h4>
+                                        <p>{{ perfume.brand }}</p>
+                                    </div>
+                                </a>
+                                <div class="like-badge">👍 좋아요</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>좋아요한 향수가 없습니다.</p>
+                {% endif %}
+            </div>
+
+            <div class="dislikes-section">
+                <h3>👎 싫어요 ({{ dislikes_count }}개)</h3>
+                {% if disliked_perfumes %}
+                    <div class="perfume-grid">
+                        {% for perfume in disliked_perfumes %}
+                            <div class="perfume-card dislike-card">
+                                <a href="{% url 'scentpick:product_detail' perfume.id %}">
+                                    <div class="perfume-image" style="background-image: url('https://scentpick-images.s3.ap-northeast-2.amazonaws.com/perfumes/{{ perfume.id }}.jpg')"></div>
+                                    <div class="perfume-info">
+                                        <h4>{{ perfume.name }}</h4>
+                                        <p>{{ perfume.brand }}</p>
+                                    </div>
+                                </a>
+                                <div class="dislike-badge">👎 싫어요</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>싫어요한 향수가 없습니다.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.mypage-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    background: white;
+    min-height: 100vh;
+}
+
+.mypage-container h2 {
+    font-size: 2.5em;
+    color: #2d3748;
+    margin-bottom: 40px;
+    text-align: center;
+    font-weight: 300;
+}
+
+.main-content-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.favorites-section {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.like-dislike-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.likes-section, .dislikes-section {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* 모바일 반응형 */
+@media (max-width: 968px) {
+    .main-content-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .like-dislike-container {
+        flex-direction: row;
+        gap: 20px;
+    }
+    
+    .likes-section, .dislikes-section {
+        flex: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .like-dislike-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+.favorites-section h3, .likes-section h3, .dislikes-section h3 {
+    font-size: 1.4em;
+    margin-bottom: 25px;
+    color: #4a5568;
+    font-weight: 500;
+    text-align: center;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.perfume-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 25px;
+}
+
+/* 좋아요/싫어요 섹션 내부 그리드 조정 */
+.likes-section .perfume-grid,
+.dislikes-section .perfume-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
+}
+
+/* 즐겨찾기 섹션 그리드 */
+.favorites-section .perfume-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.perfume-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #f1f5f9;
+}
+
+.perfume-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.perfume-card a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.perfume-image {
+    width: 100%;
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    background-color: #f7fafc;
+}
+
+.perfume-info h4 {
+    margin: 0 0 8px 0;
+    font-size: 1.1em;
+    color: #2d3748;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.perfume-info p {
+    margin: 0;
+    color: #718096;
+    font-size: 0.9em;
+}
+
+.remove-favorite {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.remove-favorite:hover {
+    background: linear-gradient(135deg, #5a67d8, #6b46c1);
+    transform: translateY(-1px);
+}
+
+/* 좋아요/싫어요 카드 통일된 스타일 */
+.like-card, .dislike-card {
+    border: 1px solid #f1f5f9;
+}
+
+.like-badge, .dislike-badge {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.9em;
+    border: none;
+}
+
+.like-badge {
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    color: white;
+}
+
+.dislike-badge {
+    background: linear-gradient(135deg, #f56565, #e53e3e);
+    color: white;
+}
+
+/* 빈 상태 스타일 */
+.favorites-section p, .likes-section p, .dislikes-section p {
+    text-align: center;
+    color: #a0aec0;
+    font-style: italic;
+    margin: 40px 0;
+    font-size: 1.1em;
+}
+</style>
+
+{% endblock content %}
+
+{% block script %}
+<script>
+document.querySelectorAll('.remove-favorite').forEach(button => {
+    button.addEventListener('click', async (e) => {
+        const perfumeId = e.target.dataset.perfumeId;
+        try {
+            const response = await fetch('/scentpick/api/toggle-favorite/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    perfume_id: perfumeId
+                })
+            });
+
+            if (response.ok) {
+                // 카드 제거 애니메이션 후 요소 삭제
+                const card = e.target.closest('.perfume-card');
+                card.style.opacity = '0';
+                setTimeout(() => {
+                    card.remove();
+                    // 더 이상 즐겨찾기 항목이 없으면 메시지 표시
+                    if (!document.querySelector('.perfume-card')) {
+                        document.querySelector('.perfume-grid').innerHTML = 
+                            '<p>즐겨찾기한 향수가 없습니다.</p>';
+                    }
+                }, 300);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('즐겨찾기 해제 중 오류가 발생했습니다.');
+        }
+    });
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock script %}

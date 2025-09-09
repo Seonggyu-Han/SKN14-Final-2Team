@@ -25,6 +25,9 @@ class UserDetail(models.Model):
         validators=[MinValueValidator(1900), MaxValueValidator(2100)]
     )  # int
 
+    # 프로필 이미지의 절대 URL (S3 등 외부 스토리지 주소)
+    profile_image_url = models.URLField(blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)                   # timestamp
     updated_at = models.DateTimeField(auto_now=True)                       # timestamp
 
@@ -42,6 +45,20 @@ class UserDetail(models.Model):
         # 이메일은 auth_user 테이블에 있으므로 user.email 사용
         base = self.name or (self.user.email or self.user.username)
         return f"{base} (#{self.pk})"
+
+    @property
+    def avatar_url(self) -> str:
+        """프로필 이미지 URL이 없으면 기본 이미지를 반환"""
+        base = "https://scentpick-images.s3.ap-northeast-2.amazonaws.com/profiles/default.jpg"
+        if self.profile_image_url:
+            # Cache-busting using updated_at timestamp
+            try:
+                ts = int(self.updated_at.timestamp()) if self.updated_at else 0
+            except Exception:
+                ts = 0
+            sep = '&' if '?' in self.profile_image_url else '?'
+            return f"{self.profile_image_url}{sep}v={ts}"
+        return base
 
 
 class OAuthAccount(models.Model):
