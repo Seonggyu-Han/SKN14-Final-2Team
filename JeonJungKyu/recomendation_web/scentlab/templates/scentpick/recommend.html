@@ -13,7 +13,8 @@
     <!-- 오늘의 날씨 기반 추천 -->
     <div class="recommendation-card" style="background:linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);border-radius:24px;padding:32px;margin-bottom:32px;box-shadow:0 20px 64px rgba(30,64,175,0.3);position:relative;overflow:hidden;">
       <!-- 배경 패턴 -->
-      <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"60\" height=\"60\" viewBox=\"0 0 60 60\"><g fill=\"none\" fill-rule=\"evenodd\"><g fill=\"%23ffffff\" fill-opacity=\"0.05\"><circle cx=\"7\" cy=\"7\" r=\"7\"/><circle cx=\"53\" cy=\"53\" r=\"7\"/></g></svg></div>
+      <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"60\" height=\"60\" viewBox=\"0 0 60 60\"><g fill=\"none\" fill-rule=\"evenodd\"><g fill=\"%23ffffff\" fill-opacity=\"0.05\"><circle cx=\"7\" cy=\"7\" r=\"7\"/><circle cx=\"53\" cy=\"53\" r=\"7\"/></g></svg>
+      </div>
       
 
       <div style="position:relative;z-index:1;">
@@ -89,7 +90,7 @@
     <!-- 계절 맞춤 추천 -->
     <div class="recommendation-card" style="background:linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #3b82f6 100%);border-radius:24px;padding:32px;box-shadow:0 20px 64px rgba(30,64,175,0.25);position:relative;overflow:hidden;">
       <!-- 배경 패턴 -->
-      <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"40\" height=\"40\" viewBox=\"0 0 40 40\"><g fill=\"none\" fill-rule=\"evenodd\"><g fill=\"%23ffffff\" fill-opacity=\"0.08\"><rect width=\"2\" height=\"40\" x=\"19\"/><rect width=\"40\" height=\"2\" y=\"19\"/></g></svg>;"></div>
+      <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"40\" height=\"40\" viewBox=\"0 0 40 40\"><g fill=\"none\" fill-rule=\"evenodd\"><g fill=\"%23ffffff\" fill-opacity=\"0.08\"><rect width=\"2\" height=\"40\" x=\"19\"/><rect width=\"40\" height=\"2\" y=\"19\"/></g></svg></div>
       
       <div style="position:relative;z-index:1;">
         <h2 style="color:white;margin-bottom:24px;font-size:26px;font-weight:800;text-align:center;">🍂 {{ season_title|default:"지금 계절 추천 Top 3" }}</h2>
