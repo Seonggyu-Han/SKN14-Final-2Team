@@ -16,12 +16,15 @@ def login_view(request):
 def register(request):
     return render(request, "scentpick/register.html")
 
+@login_required
 def chat(request):
     return render(request, "scentpick/chat.html")
 
+@login_required
 def recommend(request):
     return render(request, "scentpick/recommend.html")
 
+@login_required
 def perfumes(request):
     return render(request, "scentpick/perfumes.html")
 
@@ -35,6 +38,7 @@ def product_detail(request, slug):
     }
     return render(request, "scentpick/product_detail.html", ctx)
 
+@login_required
 def offlines(request):
     return render(request, "scentpick/offlines.html")
 

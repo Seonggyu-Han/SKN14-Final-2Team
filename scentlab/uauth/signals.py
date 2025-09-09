@@ -8,9 +8,7 @@ from .models import UserDetail
 
 @receiver(user_signed_up)
 def create_user_detail_on_social_signup(request, user, sociallogin=None, **kwargs):
-    """Ensure UserDetail exists and backfill fields after social signup."""
     detail, _ = UserDetail.objects.get_or_create(user=user)
-
     if sociallogin is not None:
         provider = sociallogin.account.provider
         extra = sociallogin.account.extra_data or {}
@@ -37,10 +35,6 @@ def create_user_detail_on_social_signup(request, user, sociallogin=None, **kwarg
 
 @receiver(post_save, sender=User)
 def ensure_user_detail(sender, instance: User, created: bool, **kwargs):
-    """Ensure every User has a corresponding UserDetail.
-
-    If name is empty, initialize from first_name/last_name when available.
-    """
     detail, _ = UserDetail.objects.get_or_create(user=instance)
     if not detail.name:
         full = " ".join(part for part in [instance.first_name, instance.last_name] if part).strip()
