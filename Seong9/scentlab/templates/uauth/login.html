@@ -15,6 +15,7 @@
   <!-- 일반 로그인 폼 -->
   <form method="post">
     {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next|default:'' }}">
     
     <div class="form-group">
       <label>아이디</label>
@@ -46,9 +47,12 @@
   
   <!-- Social login -->
   <div class="social-login">
-    <a href="/accounts/naver/login/" class="social-btn brand-naver">naver</a>
-    <a href="/accounts/kakao/login/" class="social-btn brand-kakao">kakao</a>
-    <a href="/accounts/google/login/" class="social-btn brand-google">google</a>
+    <a href="/accounts/naver/login/?process=login{% if next %}&next={{ next|urlencode }}{% endif %}"
+       class="social-btn brand-naver">naver</a>
+    <a href="/accounts/kakao/login/?process=login{% if next %}&next={{ next|urlencode }}{% endif %}"
+       class="social-btn brand-kakao">kakao</a>
+    <a href="/accounts/google/login/?process=login{% if next %}&next={{ next|urlencode }}{% endif %}"
+       class="social-btn brand-google">google</a>
   </div>
 </div>
 {% endblock %}

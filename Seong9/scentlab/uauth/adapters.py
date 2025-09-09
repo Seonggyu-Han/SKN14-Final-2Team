@@ -3,6 +3,7 @@ from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.shortcuts import resolve_url
 from django.urls import reverse
 from urllib.parse import urlencode
+from django.utils.http import url_has_allowed_host_and_scheme
 
 def _redir_with_next(next_url: str | None = None) -> str:
     base = reverse("account_login_redirect")  # /accounts/login/redirect/
@@ -26,8 +27,18 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         else:
             target = "/chat/"  # home 대신 chat으로 변경
 
+        requested_next = (
+            request.GET.get("next")
+            or request.POST.get("next")
+            or request.session.get("next")
+        )
+        final_target = (
+            requested_next
+            if requested_next and url_has_allowed_host_and_scheme(requested_next, allowed_hosts={request.get_host()}, require_https=request.is_secure())
+            else target
+        )
         redirector = reverse("account_login_redirect")
-        return f"{redirector}?next={target}"
+        return f"{redirector}?next={final_target}"
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     """소셜 로그인 후 사용자 정보를 커스터마이징"""
 
@@ -52,8 +63,18 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
             target = reverse("home")
 
         # ✅ 반드시 중간 페이지로 보내서 팝업 닫기
+        requested_next = (
+            request.GET.get("next")
+            or request.POST.get("next")
+            or request.session.get("next")
+        )
+        final_target = (
+            requested_next
+            if requested_next and url_has_allowed_host_and_scheme(requested_next, allowed_hosts={request.get_host()}, require_https=request.is_secure())
+            else target
+        )
         redirector = reverse("account_login_redirect")
-        return f"{redirector}?next={target}"
+        return f"{redirector}?next={final_target}"
     
     def save_user(self, request, sociallogin, form=None):
         user = super().save_user(request, sociallogin, form)

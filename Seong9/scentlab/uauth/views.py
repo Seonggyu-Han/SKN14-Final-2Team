@@ -7,6 +7,7 @@ from django.contrib import messages
 from .models import UserDetail
 from .utils import process_profile_image, upload_to_s3_and_get_url
 import imghdr
+from django.utils.http import url_has_allowed_host_and_scheme
 
 @login_required
 def complete_profile(request):
@@ -48,6 +49,7 @@ def complete_profile(request):
     return render(request, "uauth/complete_profile.html", {"detail": detail})
 
 def login_view(request):
+    next_url = request.GET.get("next") or request.POST.get("next", "")
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
@@ -56,6 +58,8 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
+                if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+                    return redirect(next_url)
                 messages.success(request, "로그인되었습니다.")
                 return redirect("/")  # 메인 페이지로 리디렉션
             else:
@@ -69,7 +73,7 @@ def login_view(request):
                 "form_data": request.POST
             })
     
-    return render(request, "uauth/login.html")
+    return render(request, "uauth/login.html", {"next": next_url})
 
 def register(request):
     if request.method == "POST":
@@ -137,12 +141,11 @@ def register(request):
             return render(request, "uauth/register.html", {"error": "회원가입 중 오류가 발생했습니다.", "form_data": request.POST})
 
         # UserDetail 생성 (여기서 예외 발생 가능성 낮음)
-        detail = UserDetail.objects.create(
-            user=user,
-            name=name,
-            gender=gender,
-            birth_year=birth_year
-        )
+        detail, _ = UserDetail.objects.get_or_create(user=user)
+        detail.name = name
+        detail.gender = gender
+        detail.birth_year = birth_year
+        detail.save()
 
         # 프로필 이미지 처리 (실패해도 가입은 진행)
         if file:
