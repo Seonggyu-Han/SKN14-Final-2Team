@@ -76,21 +76,22 @@ SOCIALACCOUNT_ADAPTER = "uauth.adapters.CustomSocialAccountAdapter"
 
 # 환경변수 관리
 import os
-from dotenv import load_dotenv
-load_dotenv()
+from dotenv import load_dotenv, find_dotenv
+# Load .env from current or any parent directory to ensure keys are found
+load_dotenv(find_dotenv(), override=False)
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "APP": {
-            "client_id": os.getenv("GOOGLE_CLIENT_ID"),
-            "secret": os.getenv("GOOGLE_CLIENT_SECRET"),
+            "client_id": os.getenv("GOOGLE_CLIENT_ID", ""),
+            "secret": os.getenv("GOOGLE_CLIENT_SECRET", ""),
             "key": "",
         },
     },
     "naver": {
         "APP": {
-            "client_id": os.getenv("NAVER_CLIENT_ID"),
-            "secret": os.getenv("NAVER_CLIENT_SECRET"),
+            "client_id": os.getenv("NAVER_CLIENT_ID", ""),
+            "secret": os.getenv("NAVER_CLIENT_SECRET", ""),
             "key": "",
         },
         # 옵션: scope 확장 (성별, 나이)
@@ -210,3 +211,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "django-app-env.eba-q3jam8c8.ap-northeast-2.elasticbeanstalk.com",
 ]
+
+# S3 storage settings (used by uauth.utils upload)
+AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME", "")
+AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "")

@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>{% block title %}ScentPick{% endblock %}</title>
-  <link rel="stylesheet" href="{% static 'css/scentpick.css' %}">
+  <link rel="stylesheet" href="{% static 'css/scentpick.css' %}?v=20250908-4">
   <style>
     /* 인증 관련 스타일 추가 */
     .auth-container {
@@ -181,6 +181,11 @@
         padding: 8px 16px;
         border-radius: 6px;
     }
+    .nav-avatar {
+        width: 32px; height: 32px; border-radius: 50%;
+        object-fit: cover; border: 1px solid #e2e8f0; margin-right: 8px;
+        vertical-align: middle;
+    }
   </style>
 </head>
 <body>
@@ -196,11 +201,12 @@
         <li class="nav-item"><a class="{% if request.resolver_match.url_name == 'mypage' %}active{% endif %}" href="{% url 'scentpick:mypage' %}">My Page</a></li>
         
         <!-- 사용자 인증 관련 메뉴 추가 -->
-        <li class="nav-item">
+        <li class="nav-item nav-auth">
           {% if user.is_authenticated %}
+            <img class="nav-avatar" src="{{ user.detail.avatar_url }}" alt="avatar">
             <span class="user-info">{{ user.detail.name|default:user.username }}님</span>
             <div class="user-menu">
-              <button class="user-menu-btn" id="userMenuBtn">메뉴</button>
+              <button class="user-menu-btn" id="userMenuBtn">Menu</button>
               <div class="user-dropdown" id="userDropdown">
                 <a href="{% url 'scentpick:mypage' %}">마이페이지</a>
                 <a href="{% url 'uauth:logout' %}">로그아웃</a>
