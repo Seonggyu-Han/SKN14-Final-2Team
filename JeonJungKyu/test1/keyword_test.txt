@@ -1,0 +1,259 @@
+PERFUME RECOMMENDATION SYSTEM - COMPREHENSIVE TEST RESULTS
+================================================================================
+
+Total queries tested: 15
+Timestamp: 2025-09-08 17:31:15.611023
+
+SUMMARY STATISTICS:
+----------------------------------------
+Successful recommendations: 6
+Rejected queries: 9
+Fallback used: 0
+Errors: 0
+
+DETAILED RESULTS:
+----------------------------------------
+
+[TEST 1] Query: 'I want a fresh and citrusy perfume for summer'
+Status: SUCCESS
+Predicted Labels (2): ['Citrus', 'Fresher']
+Recommendations (5):
+  1. Molton Brown - Sunlit Clementine & Vetiver Eau De Parfum (Score: 3.398)
+  2. Nishane Istanbul - Wulóng Chá (Score: 3.398)
+  3. Abercrombie & Fitch - Away Man (Score: 3.398)
+Meta: {
+  "model_name": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "device": "cpu",
+  "max_len": 256,
+  "db_size": 26319,
+  "threshold_mode": "per-label",
+  "global_threshold": 0.5,
+  "min_labels": 0,
+  "max_labels": 3,
+  "rejected": false
+}
+
+============================================================
+
+[TEST 2] Query: 'Looking for something woody and masculine'
+Status: SUCCESS
+Predicted Labels (3): ['Aromatic', 'Fougère', 'Fresher']
+Recommendations (5):
+  1. Avon - Full Speed Max Turbo (Score: 6.598)
+  2. Givenchy - Pi Air (Score: 6.598)
+  3. Cyzone - Nitro (Score: 6.598)
+Meta: {
+  "model_name": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "device": "cpu",
+  "max_len": 256,
+  "db_size": 26319,
+  "threshold_mode": "per-label",
+  "global_threshold": 0.5,
+  "min_labels": 0,
+  "max_labels": 3,
+  "rejected": false
+}
+
+============================================================
+
+[TEST 3] Query: 'Sweet vanilla scent for evening wear'
+Status: SUCCESS
+Predicted Labels (3): ['Floral', 'Fresher', 'Gourmand']
+Recommendations (5):
+  1. Ramón Monegal - Flower Power (Score: 4.587)
+  2. Manila Grace - Manila Grace (Score: 4.587)
+  3. Burberry - Burberry Her (Score: 4.587)
+Meta: {
+  "model_name": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "device": "cpu",
+  "max_len": 256,
+  "db_size": 26319,
+  "threshold_mode": "per-label",
+  "global_threshold": 0.5,
+  "min_labels": 0,
+  "max_labels": 3,
+  "rejected": false
+}
+
+============================================================
+
+[TEST 4] Query: 'Floral fragrance for romantic dates'
+Status: SUCCESS
+Predicted Labels (2): ['Floral', 'Fresher']
+Recommendations (5):
+  1. Al Haramain - Coupé (Score: 2.134)
+  2. Maison Francis Kurkdjian - L'Homme À La Rose (Score: 2.134)
+  3. Superdry - Neon Blue (Score: 2.134)
+Meta: {
+  "model_name": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "device": "cpu",
+  "max_len": 256,
+  "db_size": 26319,
+  "threshold_mode": "per-label",
+  "global_threshold": 0.5,
+  "min_labels": 0,
+  "max_labels": 3,
+  "rejected": false
+}
+
+============================================================
+
+[TEST 5] Query: 'Clean and powdery scent for office'
+Status: SUCCESS
+Predicted Labels (2): ['Fresher', 'Woods']
+Recommendations (5):
+  1. Axe - Axe Wild (Score: 3.165)
+  2. Rasasi - Shuhrah Pour Homme (Score: 3.165)
+  3. Bench. - Sound For Him (Score: 3.165)
+Meta: {
+  "model_name": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "device": "cpu",
+  "max_len": 256,
+  "db_size": 26319,
+  "threshold_mode": "per-label",
+  "global_threshold": 0.5,
+  "min_labels": 0,
+  "max_labels": 3,
+  "rejected": false
+}
+
+============================================================
+
+[TEST 6] Query: 'something light and airy'
+Status: SUCCESS
+Predicted Labels (2): ['Amber', 'Fresher']
+Recommendations (5):
+  1. Tabac - Tabac Man Fire Power (Score: 2.448)
+  2. Zadig & Voltaire - This Is Him! Undressed (Score: 2.448)
+  3. Guerlain - Habit Rouge Sport (Score: 2.448)
+Meta: {
+  "model_name": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "device": "cpu",
+  "max_len": 256,
+  "db_size": 26319,
+  "threshold_mode": "per-label",
+  "global_threshold": 0.5,
+  "min_labels": 0,
+  "max_labels": 3,
+  "rejected": false
+}
+
+============================================================
+
+[TEST 7] Query: 'I need good smell'
+Status: REJECTED
+Predicted Labels (0): []
+Recommendations (0):
+Meta: {
+  "rejected": true,
+  "reason": "LOW_CONFIDENCE_MAXP",
+  "max_proba": 0.4809011611390509,
+  "max_proba_min": 0.7
+}
+
+============================================================
+
+[TEST 8] Query: 'nice scent please'
+Status: REJECTED
+Predicted Labels (0): []
+Recommendations (0):
+Meta: {
+  "rejected": true,
+  "reason": "LOW_CONFIDENCE_MAXP",
+  "max_proba": 0.5149209573238536,
+  "max_proba_min": 0.7
+}
+
+============================================================
+
+[TEST 9] Query: 'perfume for special occasion'
+Status: REJECTED
+Predicted Labels (0): []
+Recommendations (0):
+Meta: {
+  "rejected": true,
+  "reason": "LOW_CONFIDENCE_MAXP",
+  "max_proba": 0.6709657380807359,
+  "max_proba_min": 0.7
+}
+
+============================================================
+
+[TEST 10] Query: 'fragrance recommendation'
+Status: REJECTED
+Predicted Labels (0): []
+Recommendations (0):
+Meta: {
+  "rejected": true,
+  "reason": "LOW_CONFIDENCE_MAXP",
+  "max_proba": 0.5233144023502804,
+  "max_proba_min": 0.7
+}
+
+============================================================
+
+[TEST 11] Query: 'I want to cook pasta today'
+Status: REJECTED
+Predicted Labels (0): []
+Recommendations (0):
+Meta: {
+  "rejected": true,
+  "reason": "DOMAIN_SIM_LOW",
+  "cos_sim": 0.001728605479001999,
+  "domain_tau": 0.17
+}
+
+============================================================
+
+[TEST 12] Query: 'How to fix my car engine'
+Status: REJECTED
+Predicted Labels (0): []
+Recommendations (0):
+Meta: {
+  "rejected": true,
+  "reason": "DOMAIN_SIM_LOW",
+  "cos_sim": -0.006537962704896927,
+  "domain_tau": 0.17
+}
+
+============================================================
+
+[TEST 13] Query: 'Best programming language to learn'
+Status: REJECTED
+Predicted Labels (0): []
+Recommendations (0):
+Meta: {
+  "rejected": true,
+  "reason": "DOMAIN_SIM_LOW",
+  "cos_sim": 0.0391550213098526,
+  "domain_tau": 0.17
+}
+
+============================================================
+
+[TEST 14] Query: 'Weather forecast for tomorrow'
+Status: REJECTED
+Predicted Labels (0): []
+Recommendations (0):
+Meta: {
+  "rejected": true,
+  "reason": "DOMAIN_SIM_LOW",
+  "cos_sim": -0.018355460837483406,
+  "domain_tau": 0.17
+}
+
+============================================================
+
+[TEST 15] Query: 'Math homework help needed'
+Status: REJECTED
+Predicted Labels (0): []
+Recommendations (0):
+Meta: {
+  "rejected": true,
+  "reason": "DOMAIN_SIM_LOW",
+  "cos_sim": -0.12158377468585968,
+  "domain_tau": 0.17
+}
+
+============================================================
+

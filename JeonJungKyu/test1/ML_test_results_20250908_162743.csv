@@ -1,0 +1,28 @@
+﻿query,rejected,reason,labels,vector_fallback_used,top1_brand,top1_name,top1_score
+상큼한 시트러스 비누향 추천,False,,Fresher,False,Dolce & Gabbana,Light Blue Sun Pour Homme 2019,1.6456789611296945
+달달하고 바닐라 머스크 겨울 밤,True,DOMAIN_SIM_LOW,,False,,,
+봄 낮에 무난한 플로럴 시향용,True,DOMAIN_SIM_LOW,,False,,,
+우디 앰버 스파이시 남성용 가을,False,,Fresher,False,Dolce & Gabbana,Light Blue Sun Pour Homme 2019,1.6456789611296945
+잔잔한 화이트 머스크 비누향,False,,Fresher,False,Dolce & Gabbana,Light Blue Sun Pour Homme 2019,1.6456789611296945
+여름에 시원한 아쿠아틱 시트러스,False,,"Floral,Fresher",False,Al Haramain,Coupé,2.1337497698623444
+로즈 자스민 화이트 플로럴 여성용,False,,"Floral,Fresher,Fruity",False,Repetto,Pop Repetto,3.5214708148084926
+사무실에서 무난한 파우더리 향,True,DOMAIN_SIM_LOW,,False,,,
+니치 우디 스모키 레더,True,DOMAIN_SIM_LOW,,False,,,
+라이트 블루 계열 상큼한 남성,True,DOMAIN_SIM_LOW,,False,,,
+딥한 바닐라 앰버 스위트 잔향,True,DOMAIN_SIM_LOW,,False,,,
+자몽 베르가못 상쾌한 향,False,,Fresher,False,Dolce & Gabbana,Light Blue Sun Pour Homme 2019,1.6456789611296945
+피부에 잔향이 오래가는 머스크,False,,Fresher,False,Dolce & Gabbana,Light Blue Sun Pour Homme 2019,1.6456789611296945
+코코넛 바닷바람 여름 바캉스 향,True,LOW_CONFIDENCE_MAXP,,False,,,
+초콜릿 커피 구르망 겨울용,False,,Amber,False,House Of Sillage,Wonder Woman 1984™ 2020,0.8021261261256902
+라벤더 허벌 아로마틱,False,,"Floral,Fresher",False,Al Haramain,Coupé,2.1337497698623444
+패출리 베티버 어스한 우디,True,DOMAIN_SIM_LOW,,False,,,
+샌달우드 크리미 우디,True,DOMAIN_SIM_LOW,,False,,,
+무난한 향 원해,False,,"Amber,Fresher",False,Tabac,Tabac Man Fire Power,2.447805087255385
+적당한 느낌 추천,True,DOMAIN_SIM_LOW,,False,,,
+부드러운 느낌,False,,Fresher,False,Dolce & Gabbana,Light Blue Sun Pour Homme 2019,1.6456789611296945
+오늘 서울 날씨 어때?,True,DOMAIN_SIM_LOW,,False,,,
+삼겹살 맛집 추천,False,,"Amber,Fresher",False,Tabac,Tabac Man Fire Power,2.447805087255385
+배포 로그 보여줘,True,DOMAIN_SIM_LOW,,False,,,
+ㅋㅋㅋㅋㅋㅋㅋㅋ,True,DOMAIN_SIM_LOW,,False,,,
+asdlkfjqwer zxcvbn,True,DOMAIN_SIM_LOW,,False,,,
+그거,True,DOMAIN_SIM_LOW,,False,,,
