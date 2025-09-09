@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from django.urls import reverse_lazy
+import os
+from dotenv import load_dotenv, find_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,21 +28,84 @@ SECRET_KEY = 'django-insecure-31b$+n59%yn@%@y(*3w#kyv8m2xo@1vc^3+=tyosyisr0!s60*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS: list[str] = []
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # allauth
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.naver',
+    'allauth.socialaccount.providers.kakao',
+
     'scentpick',
-    'uauth',
+    'uauth.apps.UauthConfig',
 ]
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# 로그인/로그아웃 및 리다이렉트 경로
+LOGIN_URL = reverse_lazy('uauth:login')
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_LOGIN_REDIRECT_URL = '/accounts/login/redirect/'
+SOCIALACCOUNT_LOGIN_REDIRECT_URL = '/accounts/login/redirect/'
+
+ACCOUNT_SIGNUP_REDIRECT_URL = reverse_lazy('uauth:complete_profile')
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_UNIQUE_EMAIL = False
+
+ACCOUNT_ADAPTER = 'uauth.adapters.CustomAccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'uauth.adapters.CustomSocialAccountAdapter'
+
+# 환경변수 로드
+load_dotenv(find_dotenv(), override=False)
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': os.getenv('GOOGLE_CLIENT_ID', ''),
+            'secret': os.getenv('GOOGLE_CLIENT_SECRET', ''),
+            'key': '',
+        },
+    },
+    'naver': {
+        'APP': {
+            'client_id': os.getenv('NAVER_CLIENT_ID', ''),
+            'secret': os.getenv('NAVER_CLIENT_SECRET', ''),
+            'key': '',
+        },
+        'SCOPE': ['name', 'email', 'gender', 'age'],
+    },
+    'kakao': {
+        'APP': {
+            'client_id': os.getenv('KAKAO_CLIENT_ID', ''),
+            'secret': os.getenv('KAKAO_CLIENT_SECRET', ''),
+            'key': '',
+        },
+        'SCOPE': ['account_email', 'profile_nickname'],
+        'AUTH_PARAMS': {'prompt': 'consent'},
+    },
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -47,6 +113,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -78,10 +145,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'scentpickdb',
-        'USER' : 'django',
-        'PASSWORD' : 'django', 
-        'HOST' : '127.0.0.1',
-        'PORT' : '3306',
+        'USER': 'django',
+        'PASSWORD': 'django',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
         'OPTIONS': {
             'charset': 'utf8mb4',
         },
@@ -124,36 +191,42 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-
 STATICFILES_DIRS = [
-    BASE_DIR / 'static', # 정적 파일 경로
+    BASE_DIR / 'static',
 ]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# 로그인 성공 후, 리다이렉트 URL (기본값: /accuounts/profile/)
-LOGIN_REDIRECT_URL = '/scentpick/'
+# Additional allowed hosts (optional)
+ALLOWED_HOSTS.extend([
+    '127.0.0.1',
+    'localhost',
+])
 
-# 파일 업로드 관련 설정
+# S3 storage settings (used by uauth.utils upload)
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', '')
+AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', '')
+
+# Media
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# ORM 쿼리 로그 출력 -> 이후 주석 필요
+# SQL debug logging (optional)
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
+        'console': {'class': 'logging.StreamHandler'},
     },
     'loggers': {
         'django.db.backends': {
-            'level': 'DEBUG',
+            'level': 'WARNING',
             'handlers': ['console'],
         },
     },
 }
+

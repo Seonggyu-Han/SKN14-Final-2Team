@@ -1,4 +1,4 @@
--- Active: 1753665113642@@127.0.0.1@3306@scentpickdb
+-- Active: 1753665099225@@127.0.0.1@3306@scentpickdb
 use scentpickdb;
 
 # created_at, created_at 기본값 설정
