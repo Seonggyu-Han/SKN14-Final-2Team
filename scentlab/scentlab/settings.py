@@ -230,3 +230,6 @@ LOGGING = {
     },
 }
 
+# ✅ Kakao JS 키(.env에서 로드)
+KAKAO_JS_KEY = os.getenv("KAKAO_JS_KEY", "")
+
