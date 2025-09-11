@@ -1,4 +1,4 @@
-from django.urls import path
+﻿from django.urls import path
 from . import views
 
 app_name = 'scentpick'
@@ -15,6 +15,11 @@ urlpatterns = [
     path('mypage/', views.mypage, name='mypage'),
     path('mypage/profile/', views.profile_edit, name='profile_edit'),
     path('mypage/password/', views.password_change_view, name='password_change'),
-    path("api/chat", views.chat_submit_api, name="chat_submit_api")
+    path("api/chat", views.chat_submit_api, name="chat_submit_api"),
+    # Chat sidebar + history APIs
+    path("api/conversations", views.conversations_api, name="conversations_api"),
+    path("api/conversations/<int:conv_id>/messages", views.conversation_messages_api, name="conversation_messages_api"),
+    path("api/chat/new", views.chat_new_api, name="chat_new_api"),
 ]
+
 
