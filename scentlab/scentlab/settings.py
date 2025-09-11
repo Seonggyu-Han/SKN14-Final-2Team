@@ -230,6 +230,8 @@ LOGGING = {
     },
 }
 
+FASTAPI_CHAT_URL = os.environ.get("FASTAPI_CHAT_URL")
+SERVICE_TOKEN    = os.environ.get("SERVICE_TOKEN")
+
 # ✅ Kakao JS 키(.env에서 로드)
 KAKAO_JS_KEY = os.getenv("KAKAO_JS_KEY", "")
-
