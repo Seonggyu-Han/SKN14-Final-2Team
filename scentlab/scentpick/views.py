@@ -37,6 +37,7 @@ def register(request):
 
 @login_required
 def chat(request):
+    import uuid
     if "thread_uuid" not in request.session:
         request.session["thread_uuid"] = str(uuid.uuid4())
     return render(request, "scentpick/chat.html", {
@@ -789,12 +790,18 @@ def chat_submit_api(request):
         conv_id = body.get("conversation_id") or request.session.get("conversation_id")
         conv_id = int(conv_id) if conv_id else None
 
+        # 새로운 대화라면 제목 생성 (15글자)
+        title = None
+        if not conv_id:
+            title = content[:15] if len(content) > 15 else content
+
         idem = str(uuid.uuid4())
         payload = {
             "user_id": request.user.id,
             "conversation_id": conv_id,
             "external_thread_id": thread_uuid,  # ✅ 장고가 만든 UUID 고정 사용
-            "title": None,
+            "title": title,
+            "query": content,  # FastAPI가 기대하는 필드명
             "message": {
                 "content": content,
                 "idempotency_key": idem,
@@ -806,19 +813,71 @@ def chat_submit_api(request):
             "X-Idempotency-Key": idem,
             "Content-Type": "application/json",
         }
+        
+        # 디버깅용 로그
+        print(f"DEBUG: FASTAPI_CHAT_URL = {FASTAPI_CHAT_URL}")
+        print(f"DEBUG: payload = {payload}")
+        
         r = requests.post(FASTAPI_CHAT_URL, json=payload, headers=headers, timeout=30)
+        print(f"DEBUG: Response status = {r.status_code}")
+        print(f"DEBUG: Response text = {r.text}")
         r.raise_for_status()
         data = r.json()
+        print(f"DEBUG: Parsed data = {data}")
+        print(f"DEBUG: Data keys = {list(data.keys()) if isinstance(data, dict) else 'Not a dict'}")
+
+        # FastAPI 응답 구조에 맞게 필드 추출
+        final_answer = data.get("final_answer") or data.get("response") or data.get("answer") or "응답을 받지 못했습니다."
+
+        # Django에서 직접 conversation 및 message 생성/관리
+        from .models import Conversation, Message
+        
+        # 기존 conversation이 있으면 사용, 없으면 새로 생성
+        if conv_id:
+            try:
+                conversation = Conversation.objects.get(id=conv_id, user=request.user)
+            except Conversation.DoesNotExist:
+                conversation = None
+        else:
+            conversation = None
+            
+        # 새 conversation 생성
+        if not conversation:
+            conversation = Conversation.objects.create(
+                user=request.user,
+                title=title,
+                external_thread_id=thread_uuid
+            )
+            print(f"DEBUG: Created new conversation {conversation.id} with title '{title}'")
+        
+        # 사용자 메시지 저장
+        user_message = Message.objects.create(
+            conversation=conversation,
+            role='user',
+            content=content,
+            idempotency_key=idem,
+            metadata={"source": "django-web"}
+        )
+        
+        # AI 응답 메시지 저장
+        ai_message = Message.objects.create(
+            conversation=conversation,
+            role='assistant',
+            content=final_answer,
+            model='fastapi-bot'
+        )
+        
+        print(f"DEBUG: Saved user message {user_message.id} and AI message {ai_message.id}")
 
         # 세션 갱신(재요청/새로고침 대비)
-        request.session["conversation_id"] = data["conversation_id"]
-        request.session["thread_uuid"]     = data["external_thread_id"]
+        request.session["conversation_id"] = conversation.id
+        request.session["thread_uuid"] = thread_uuid
 
         # 프론트에 필요한 최소 데이터만 반환
         return JsonResponse({
-            "conversation_id": data["conversation_id"],
-            "external_thread_id": data["external_thread_id"],
-            "final_answer": data["final_answer"],
+            "conversation_id": conversation.id,
+            "external_thread_id": thread_uuid,
+            "final_answer": final_answer,
             "messages_appended": data.get("messages_appended", []),
         })
     except requests.HTTPError as e:
@@ -1745,3 +1804,57 @@ def mypage(request):
         }
     
     return render(request, "scentpick/mypage.html", context)
+
+# --- Chat Conversations APIs ---
+from django.views.decorators.http import require_GET
+
+@login_required
+@require_GET
+def conversations_api(request):
+    # Lazy import to avoid touching global imports
+    from .models import Conversation
+    items = []
+    qs = Conversation.objects.filter(user=request.user).order_by('-updated_at')[:100]
+    for c in qs:
+        title = c.title
+        if not title:
+            # Fallback: derive from first user message
+            try:
+                first_user = c.messages.filter(role='user').order_by('created_at').first()
+                if first_user and first_user.content:
+                    title = first_user.content[:15]
+            except Exception:
+                pass
+        if not title:
+            title = f"대화 {c.id}"
+        items.append({
+            'id': c.id,
+            'title': title,
+            'updated_at': c.updated_at.isoformat(),
+        })
+    return JsonResponse({'items': items})
+
+@login_required
+@require_GET
+def conversation_messages_api(request, conv_id: int):
+    from .models import Conversation
+    conv = get_object_or_404(Conversation, id=conv_id, user=request.user)
+    msgs = conv.messages.order_by('created_at')
+    data = []
+    for m in msgs:
+        data.append({
+            'role': m.role,
+            'content': m.content,
+            'created_at': m.created_at.isoformat(),
+        })
+    return JsonResponse({'conversation_id': conv.id, 'items': data})
+
+@login_required
+@require_POST
+def chat_new_api(request):
+    import uuid as _uuid
+    # Reset conversation and start a fresh thread for new chat
+    request.session['conversation_id'] = None
+    new_uuid = str(_uuid.uuid4())
+    request.session['thread_uuid'] = new_uuid
+    return JsonResponse({'ok': True, 'external_thread_id': new_uuid})
