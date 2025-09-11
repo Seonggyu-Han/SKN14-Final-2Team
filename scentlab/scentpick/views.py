@@ -245,6 +245,10 @@ def product_detail(request, perfume_id):
         'gender': perfume.gender,
         'prev_perfume': prev_perfume,
         'next_perfume': next_perfume,
+        'detail_url': perfume.detail_url,  # bysuco 링크 추가
+        'notes_score': perfume.notes_score,  # 노트 점수 추가
+        'season_score': perfume.season_score,  # 계절 점수 추가
+        'day_night_score': perfume.day_night_score,  # 낮/밤 점수 추가
     }
     return render(request, 'scentpick/product_detail.html', context)
 
@@ -1085,6 +1089,46 @@ NOTE_TRANSLATIONS = {
     'Gasoline': '휘발유',
     'Rubber': '고무',
     'Plastic': '플라스틱',
+    
+    # 추가된 항목들
+    'Earthy': '얼디',
+    'Warm': '웜',
+    'Spicy': '스파이시',
+    'Aromatic': '아로마틱',
+    'Peach': '피치',
+    'May': '5월의',
+    'Pear': '페어',
+    'Sambac': '삼박',
+    'Tahitian': '타히티안',
+    'Australian': '호주산',
+    'Liquorice': '리코리스',
+    'Yellow': '옐로우',
+    'Floral': '플로랄',
+    'Tree': '트리',
+    'Seed': '씨드',
+    'Leaf': '리프',
+    'Madagascar': '마다가스카르',
+    'Coumarin': '쿠마린',
+    'Calabrian': '칼라브리안',
+    'Petitgrain': '페티그레인',
+    'Ginger': '진저',
+    'Cardamom': '카다멈',
+    'Solar': '솔라',
+    'Dry Flower': '드라이플라워',
+    'Absolute': '앱솔루트',
+    'Driftwood': '드리프트우드',
+    'Musk': '머스',
+    'Oud': '오드',
+    'Yuzu': '유주',
+    'Grape': '그레이프',
+    'Fruit': '프룻',
+    'Osmanthus': '오스만투스',
+    'Hedione': '헤디온',
+    'Pink': '핑크',
+    'Watery': '워터리',
+    'Wild': '와일드',
+    'Flower': '플라워',
+    'Tropical': '트로피칼',
 }
 
 def get_korean_note_name(english_name):
@@ -1482,6 +1526,10 @@ def product_detail(request, perfume_id):
         'gender': perfume.gender,
         'prev_perfume': prev_perfume,
         'next_perfume': next_perfume,
+        'detail_url': perfume.detail_url,  # bysuco 링크 추가
+        'notes_score': perfume.notes_score,  # 노트 점수 추가
+        'season_score': perfume.season_score,  # 계절 점수 추가
+        'day_night_score': perfume.day_night_score,  # 낮/밤 점수 추가
     }
     return render(request, 'scentpick/product_detail.html', context)
 
