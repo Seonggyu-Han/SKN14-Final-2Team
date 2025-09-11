@@ -230,3 +230,10 @@ LOGGING = {
     },
 }
 
+# settings.py
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+FASTAPI_CHAT_URL = os.environ.get("FASTAPI_CHAT_URL")
+SERVICE_TOKEN    = os.environ.get("SERVICE_TOKEN")
