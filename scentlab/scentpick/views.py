@@ -49,11 +49,37 @@ def register(request):
 
 @login_required
 def chat(request):
-    if "thread_uuid" not in request.session:
-        request.session["thread_uuid"] = str(uuid.uuid4())
+    """
+    Chat 페이지: conversations DB에서 대화 목록과 메시지들을 읽어서 표시
+    """
+    # 전체 대화 목록 (프론트에서 스크롤로 제한)
+    recent_conversations = Conversation.objects.filter(
+        user=request.user
+    ).order_by('-updated_at')
+    
+    # 현재 선택된 대화 ID (세션 또는 GET 파라미터에서)
+    current_conversation_id = request.GET.get('conversation_id') or request.session.get('conversation_id')
+    current_conversation = None
+    messages = []
+    
+    if current_conversation_id:
+        try:
+            current_conversation = Conversation.objects.get(
+                id=current_conversation_id, 
+                user=request.user
+            )
+            # 해당 대화의 메시지들 가져오기
+            messages = current_conversation.messages.order_by('created_at')
+            # 세션에 저장
+            request.session['conversation_id'] = current_conversation.id
+        except Conversation.DoesNotExist:
+            current_conversation_id = None
+    
     return render(request, "scentpick/chat.html", {
-        "conversation_id": request.session.get("conversation_id"),
-        "external_thread_id": request.session.get("thread_uuid"),
+        "recent_conversations": recent_conversations,
+        "current_conversation": current_conversation,
+        "current_conversation_id": current_conversation_id,
+        "messages": messages,
     })
 
 @login_required
@@ -626,165 +652,69 @@ def fetch_random_by_accords(accords, pool=60, k=3, exclude_ids=None):
     return picked
 
 
-FASTAPI_CHAT_URL = os.environ.get("FASTAPI_CHAT_URL")  # e.g., http://<fastapi-host>:8000/chat.run
+# FastAPI 설정
+FASTAPI_CHAT_URL = os.environ.get("FASTAPI_CHAT_URL")
 SERVICE_TOKEN = os.environ.get("SERVICE_TOKEN")
 
 
-@login_required
-def chat_submit(request):
-    if request.method == "POST":
-        user = request.user
-        content = request.POST.get("content", "").strip()
-
-        # 세션에서 thread_uuid 사용(없으면 생성)
-        thread_uuid = request.session.get("thread_uuid")
-        if not thread_uuid:
-            thread_uuid = str(uuid.uuid4())
-            request.session["thread_uuid"] = thread_uuid
-
-        # 기존 대화 이어가기: 템플릿 hidden 또는 세션에서 가져옴
-        conversation_id_raw = request.POST.get("conversation_id") or request.session.get("conversation_id")
-        conversation_id = int(conversation_id_raw) if conversation_id_raw else None
-
-        idem_key = str(uuid.uuid4())
-
-        payload = {
-            "user_id": user.id,
-            "conversation_id": conversation_id,         # 있으면 그대로
-            "external_thread_id": thread_uuid,          # ✅ 장고가 만든 UUID 고정 사용
-            "title": None,
-            "message": {
-                "content": content,
-                "idempotency_key": idem_key,
-                "metadata": {"source": "django-web"},
-            }
-        }
-        headers = {
-            "X-Service-Token": SERVICE_TOKEN,
-            "X-Idempotency-Key": idem_key,
-            "Content-Type": "application/json",
-        }
-
-        r = requests.post(FASTAPI_CHAT_URL, json=payload, headers=headers, timeout=30)
-        r.raise_for_status()
-        data = r.json()
-
-        # 세션에 최신 conversation_id / external_thread_id 저장(재시도/재진입 대비)
-        request.session["conversation_id"] = data["conversation_id"]
-        request.session["thread_uuid"] = data["external_thread_id"]
-
-        return render(request, "scentpick/chat.html", {
-            "conversation_id": data["conversation_id"],
-            "external_thread_id": data["external_thread_id"],
-            "final_answer": data["final_answer"],
-            "appended": data["messages_appended"],
-        })
-
-    # GET이면 chat()로 돌려도 됨
-    return redirect("scentpick:chat")
-
-FASTAPI_CHAT_URL = os.environ.get("FASTAPI_CHAT_URL")  # 예: http://<fastapi-host>:8000/chatbot/chat.run
-SERVICE_TOKEN    = os.environ.get("SERVICE_TOKEN")
-
-@login_required
+@login_required 
 @require_POST
 def chat_submit_api(request):
+    """
+    사용자가 메세지 전송 시 user_id와 query만 fastapi로 전송하고,
+    chatbot.py로 fastapi에서 conversations db를 작성해서 django가 db를 읽어서 띄워주는 방식
+    """
     try:
-        body = json.loads(request.body.decode("utf-8"))
-        content = (body.get("content") or "").strip()
+        # JSON 요청 처리
+        if request.content_type == 'application/json':
+            body = json.loads(request.body.decode("utf-8"))
+            content = (body.get("content") or body.get("query") or "").strip()
+            conversation_id = body.get("conversation_id")
+        else:
+            # Form 데이터 처리 (기존 호환성)
+            content = request.POST.get("content", "").strip()
+            conversation_id = request.POST.get("conversation_id") or request.session.get("conversation_id")
+            
         if not content:
             return JsonResponse({"error": "내용이 비었습니다."}, status=400)
 
-        # 세션의 thread_uuid 보장(없으면 생성)
-        thread_uuid = request.session.get("thread_uuid")
-        if not thread_uuid:
-            thread_uuid = str(uuid.uuid4())
-            request.session["thread_uuid"] = thread_uuid
-
-        # 대화 이어가기: 세션 또는 요청에서 conversation_id 사용
-        conv_id = body.get("conversation_id") or request.session.get("conversation_id")
-        conv_id = int(conv_id) if conv_id else None
-
-        # 새로운 대화라면 제목 생성 (15글자)
-        title = None
-        if not conv_id:
-            title = content[:15] if len(content) > 15 else content
-
-        idem = str(uuid.uuid4())
+        # FastAPI로 user_id와 query만 전송
         payload = {
             "user_id": request.user.id,
-            "conversation_id": conv_id,
-            "external_thread_id": thread_uuid,  # ✅ 장고가 만든 UUID 고정 사용
-            "title": title,
-            "query": content,  # FastAPI가 기대하는 필드명
-            "message": {
-                "content": content,
-                "idempotency_key": idem,
-                "metadata": {"source": "django-web"},
-            },
+            "query": content
         }
+        
+        if conversation_id:
+            try:
+                payload["conversation_id"] = int(conversation_id)
+            except ValueError:
+                pass  # 잘못된 conversation_id는 무시
+
         headers = {
             "X-Service-Token": SERVICE_TOKEN,
-            "X-Idempotency-Key": idem,
             "Content-Type": "application/json",
         }
         
+        # FastAPI 호출
         r = requests.post(FASTAPI_CHAT_URL, json=payload, headers=headers, timeout=30)
         r.raise_for_status()
         data = r.json()
 
-        # FastAPI 응답 구조에 맞게 필드 추출
-        final_answer = data.get("final_answer") or data.get("response") or data.get("answer") or "응답을 받지 못했습니다."
-        
-        # 기존 conversation이 있으면 사용, 없으면 새로 생성
-        if conv_id:
-            try:
-                conversation = Conversation.objects.get(id=conv_id, user=request.user)
-            except Conversation.DoesNotExist:
-                conversation = None
-        else:
-            conversation = None
-            
-        # 새 conversation 생성
-        if not conversation:
-            conversation = Conversation.objects.create(
-                user=request.user,
-                title=title,
-                external_thread_id=thread_uuid
-            )
-        
-        # 사용자 메시지 저장
-        user_message = Message.objects.create(
-            conversation=conversation,
-            role='user',
-            content=content,
-            idempotency_key=idem,
-            metadata={"source": "django-web"}
-        )
-        
-        # AI 응답 메시지 저장
-        ai_message = Message.objects.create(
-            conversation=conversation,
-            role='assistant',
-            content=final_answer,
-            model='fastapi-bot'
-        )
+        # 세션에 conversation_id 업데이트 (다음 메시지에서 사용)
+        if data.get("conversation_id"):
+            request.session["conversation_id"] = data["conversation_id"]
 
-        # 세션 갱신(재요청/새로고침 대비)
-        request.session["conversation_id"] = conversation.id
-        request.session["thread_uuid"] = thread_uuid
-
-        # 프론트에 필요한 최소 데이터만 반환
+        # FastAPI가 conversations DB를 작성했으므로 응답만 반환
         return JsonResponse({
-            "conversation_id": conversation.id,
-            "external_thread_id": thread_uuid,
-            "final_answer": final_answer,
-            "messages_appended": data.get("messages_appended", []),
+            "conversation_id": data.get("conversation_id"),
+            "final_answer": data.get("final_answer", "응답을 받지 못했습니다."),
+            "success": True
         })
+        
     except requests.HTTPError as e:
         return JsonResponse({"error": f"FastAPI 오류: {e.response.text}"}, status=502)
     except Exception as e:
-        return JsonResponse({"error": f"서버 오류: {e}"}, status=500)
+        return JsonResponse({"error": f"서버 오류: {str(e)}"}, status=500)
 
 # 노트 한국어 번역 딕셔너리
 NOTE_TRANSLATIONS = {
@@ -1673,6 +1603,9 @@ def mypage(request):
 @login_required
 @require_GET
 def conversations_api(request):
+    """
+    대화 목록 API - AJAX로 대화 목록 로드
+    """
     items = []
     qs = Conversation.objects.filter(user=request.user).order_by('-updated_at')[:100]
     for c in qs:
@@ -1697,6 +1630,9 @@ def conversations_api(request):
 @login_required
 @require_GET
 def conversation_messages_api(request, conv_id: int):
+    """
+    특정 대화의 메시지 목록 API - AJAX로 메시지 로드
+    """
     conv = get_object_or_404(Conversation, id=conv_id, user=request.user)
     msgs = conv.messages.order_by('created_at')
     data = []
@@ -1706,13 +1642,14 @@ def conversation_messages_api(request, conv_id: int):
             'content': m.content,
             'created_at': m.created_at.isoformat(),
         })
-    return JsonResponse({'conversation_id': conv.id, 'items': data})
+    return JsonResponse({'conversation_id': conv.id, 'title': conv.title, 'items': data})
 
 @login_required
 @require_POST
 def chat_new_api(request):
-    # Reset conversation and start a fresh thread for new chat
+    """
+    새 대화 시작 API - 세션 초기화
+    """
+    # 세션에서 현재 대화 ID 제거
     request.session['conversation_id'] = None
-    new_uuid = str(uuid.uuid4())
-    request.session['thread_uuid'] = new_uuid
-    return JsonResponse({'ok': True, 'external_thread_id': new_uuid})
+    return JsonResponse({'ok': True, 'message': '새 대화가 시작되었습니다.'})
