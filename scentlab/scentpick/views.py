@@ -703,12 +703,15 @@ def chat_submit_api(request):
         if data.get("conversation_id"):
             request.session["conversation_id"] = data["conversation_id"]
 
-        # FastAPI가 conversations DB를 작성했으므로 응답만 반환
-        return JsonResponse({
+        # FastAPI가 conversations DB를 작성했으므로 응답만 반환 + 추천 향수 리스트 포함
+        response_data = {
             "conversation_id": data.get("conversation_id"),
             "final_answer": data.get("final_answer", "응답을 받지 못했습니다."),
+            "perfume_list": data.get("perfume_list", []),
             "success": True
-        })
+        }
+        print("💾 Django API Response:", response_data)  # 서버 콘솔에 출력
+        return JsonResponse(response_data)
         
     except requests.HTTPError as e:
         return JsonResponse({"error": f"FastAPI 오류: {e.response.text}"}, status=502)
