@@ -37,7 +37,6 @@ from .models import (
 from uauth.models import UserDetail
 from uauth.utils import process_profile_image, upload_to_s3_and_get_url
 
-
 def home(request):
     return render(request, "scentpick/home.html")
 
@@ -1753,3 +1752,56 @@ def update_feedback_api(request):
             'status': 'error',
             'message': f'오류가 발생했습니다: {str(e)}'
         }, status=500)
+@login_required
+@require_GET
+def conversations_api(request):
+    """
+    대화 목록 API - AJAX로 대화 목록 로드
+    """
+    items = []
+    qs = Conversation.objects.filter(user=request.user).order_by('-updated_at')[:100]
+    for c in qs:
+        title = c.title
+        if not title:
+            # Fallback: derive from first user message
+            try:
+                first_user = c.messages.filter(role='user').order_by('created_at').first()
+                if first_user and first_user.content:
+                    title = first_user.content[:15]
+            except Exception:
+                pass
+        if not title:
+            title = f"대화 {c.id}"
+        items.append({
+            'id': c.id,
+            'title': title,
+            'updated_at': c.updated_at.isoformat(),
+        })
+    return JsonResponse({'items': items})
+
+@login_required
+@require_GET
+def conversation_messages_api(request, conv_id: int):
+    """
+    특정 대화의 메시지 목록 API - AJAX로 메시지 로드
+    """
+    conv = get_object_or_404(Conversation, id=conv_id, user=request.user)
+    msgs = conv.messages.order_by('created_at')
+    data = []
+    for m in msgs:
+        data.append({
+            'role': m.role,
+            'content': m.content,
+            'created_at': m.created_at.isoformat(),
+        })
+    return JsonResponse({'conversation_id': conv.id, 'title': conv.title, 'items': data})
+
+@login_required
+@require_POST
+def chat_new_api(request):
+    """
+    새 대화 시작 API - 세션 초기화
+    """
+    # 세션에서 현재 대화 ID 제거
+    request.session['conversation_id'] = None
+    return JsonResponse({'ok': True, 'message': '새 대화가 시작되었습니다.'})
