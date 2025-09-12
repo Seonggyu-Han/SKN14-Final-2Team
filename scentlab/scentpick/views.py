@@ -1346,6 +1346,27 @@ def product_detail(request, perfume_id):
     perfume = get_object_or_404(Perfume, id=perfume_id)
     image_url = f"https://scentpick-images.s3.ap-northeast-2.amazonaws.com/perfumes/{perfume.id}.jpg"
     
+    # 사용자의 즐겨찾기/피드백 상태 확인
+    is_favorite = False
+    feedback_status = None
+    
+    if request.user.is_authenticated:
+        # 즐겨찾기 상태 확인
+        is_favorite = Favorite.objects.filter(
+            user=request.user,
+            perfume=perfume
+        ).exists()
+        
+        # 피드백 상태 확인
+        feedback = FeedbackEvent.objects.filter(
+            user=request.user,
+            perfume=perfume,
+            action__in=['like', 'dislike']
+        ).first()
+        
+        if feedback:
+            feedback_status = feedback.action
+    
     def safe_process_json_field(field_data):
         if not field_data:
             return []
@@ -1410,6 +1431,8 @@ def product_detail(request, perfume_id):
         'notes_score': perfume.notes_score,  # 노트 점수 추가
         'season_score': perfume.season_score,  # 계절 점수 추가
         'day_night_score': perfume.day_night_score,  # 낮/밤 점수 추가
+        'is_favorite': is_favorite,  # 즐겨찾기 상태
+        'feedback_status': feedback_status,  # 피드백 상태 ('like', 'dislike', None)
     }
     return render(request, 'scentpick/product_detail.html', context)
 
@@ -1557,43 +1580,58 @@ def mypage(request):
     try:
         request.user = User.objects.get(username=request.user.username)
         
+        # 추천 받은 향수 내역 (더미 데이터 - 실제로는 추천 시스템과 연결)
+        # 실제 구현시에는 RecommendationRun 모델을 사용하거나 추천 기록을 저장하는 테이블 필요
+        recommendation_runs = []
+        
         # admin 사용자의 즐겨찾기한 향수들 가져오기
         favorite_perfumes = Perfume.objects.filter(
             favorited_by__user=request.user
         ).order_by('-favorited_by__created_at')
         
-        # admin 사용자의 좋아요한 향수들 가져오기
-        liked_perfumes = Perfume.objects.filter(
-            feedback_events__user=request.user,
-            feedback_events__action='like'
-        ).distinct().order_by('-feedback_events__created_at')
+        # admin 사용자의 피드백 이벤트들 가져오기 (좋아요/싫어요)
+        liked_feedback = FeedbackEvent.objects.filter(
+            user=request.user,
+            action='like'
+        ).select_related('perfume').order_by('-created_at')
         
-        # admin 사용자의 싫어요한 향수들 가져오기
-        disliked_perfumes = Perfume.objects.filter(
-            feedback_events__user=request.user,
-            feedback_events__action='dislike'
-        ).distinct().order_by('-feedback_events__created_at')
+        disliked_feedback = FeedbackEvent.objects.filter(
+            user=request.user,
+            action='dislike'
+        ).select_related('perfume').order_by('-created_at')
+        
+        # 이미지 URL 부여
+        for perfume in favorite_perfumes:
+            perfume.image_url = f"https://scentpick-images.s3.ap-northeast-2.amazonaws.com/perfumes/{perfume.id}.jpg"
+        
+        for feedback in liked_feedback:
+            feedback.perfume.image_url = f"https://scentpick-images.s3.ap-northeast-2.amazonaws.com/perfumes/{feedback.perfume.id}.jpg"
+        
+        for feedback in disliked_feedback:
+            feedback.perfume.image_url = f"https://scentpick-images.s3.ap-northeast-2.amazonaws.com/perfumes/{feedback.perfume.id}.jpg"
         
         favorites_count = favorite_perfumes.count()
-        likes_count = liked_perfumes.count()
-        dislikes_count = disliked_perfumes.count()
+        likes_count = liked_feedback.count()
+        dislikes_count = disliked_feedback.count()
         
         context = {
+            'recommendation_runs': recommendation_runs,
             'favorite_perfumes': favorite_perfumes,
             'favorites_count': favorites_count,
-            'liked_perfumes': liked_perfumes,
+            'liked_perfumes': liked_feedback,  # FeedbackEvent 객체들
             'likes_count': likes_count,
-            'disliked_perfumes': disliked_perfumes,
+            'disliked_perfumes': disliked_feedback,  # FeedbackEvent 객체들
             'dislikes_count': dislikes_count
         }
         
     except User.DoesNotExist:
         context = {
+            'recommendation_runs': [],
             'favorite_perfumes': Perfume.objects.none(),
             'favorites_count': 0,
-            'liked_perfumes': Perfume.objects.none(),
+            'liked_perfumes': [],
             'likes_count': 0,
-            'disliked_perfumes': Perfume.objects.none(),
+            'disliked_perfumes': [],
             'dislikes_count': 0,
             'error': 'admin 사용자를 찾을 수 없습니다.'
         }
@@ -1653,3 +1691,65 @@ def chat_new_api(request):
     # 세션에서 현재 대화 ID 제거
     request.session['conversation_id'] = None
     return JsonResponse({'ok': True, 'message': '새 대화가 시작되었습니다.'})
+
+
+@login_required
+@require_POST
+def delete_feedback_api(request):
+    """피드백 삭제 API"""
+    try:
+        data = json.loads(request.body)
+        feedback_id = data.get('feedback_id')
+        
+        if not feedback_id:
+            return JsonResponse({
+                'status': 'error',
+                'message': '피드백 ID가 필요합니다.'
+            }, status=400)
+        
+        # 피드백 이벤트 삭제
+        feedback = get_object_or_404(FeedbackEvent, id=feedback_id, user=request.user)
+        feedback.delete()
+        
+        return JsonResponse({
+            'status': 'success',
+            'message': '피드백이 삭제되었습니다.'
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': f'오류가 발생했습니다: {str(e)}'
+        }, status=500)
+
+
+@login_required
+@require_POST  
+def update_feedback_api(request):
+    """피드백 업데이트 API"""
+    try:
+        data = json.loads(request.body)
+        feedback_id = data.get('feedback_id')
+        action = data.get('action')
+        
+        if not feedback_id or action not in ['like', 'dislike']:
+            return JsonResponse({
+                'status': 'error',
+                'message': '유효하지 않은 요청입니다.'
+            }, status=400)
+        
+        # 피드백 이벤트 업데이트
+        feedback = get_object_or_404(FeedbackEvent, id=feedback_id, user=request.user)
+        feedback.action = action
+        feedback.save()
+        
+        return JsonResponse({
+            'status': 'success',
+            'message': f'피드백이 {action}로 업데이트되었습니다.'
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': f'오류가 발생했습니다: {str(e)}'
+        }, status=500)
