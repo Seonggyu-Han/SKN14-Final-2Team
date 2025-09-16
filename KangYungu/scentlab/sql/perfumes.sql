@@ -846,3 +846,5 @@ ON DUPLICATE KEY UPDATE
   updated_at    = NOW(6);
 
 commit;
+
+-- rollback;
