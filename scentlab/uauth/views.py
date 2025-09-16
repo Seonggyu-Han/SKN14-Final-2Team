@@ -105,6 +105,8 @@ def register(request):
 
         if not email:
             errors.append("이메일을 입력해주세요.")
+        elif "@" not in email or "." not in email.split("@")[-1]:
+            errors.append("올바른 이메일 형식을 입력해주세요. (예: user@example.com)")
 
         if not birth_year:
             errors.append("출생연도를 입력해주세요.")
