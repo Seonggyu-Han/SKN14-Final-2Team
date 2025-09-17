@@ -19,7 +19,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Count, Max  # yyh : Count, Max 추가
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
@@ -1662,6 +1662,40 @@ def mypage(request):
         # 추천 받은 향수 내역 (더미 데이터 - 실제로는 추천 시스템과 연결)
         # 실제 구현시에는 RecommendationRun 모델을 사용하거나 추천 기록을 저장하는 테이블 필요
         recommendation_runs = []
+
+        # =========================[ADD yyh] 추천 내역 집계 블록 시작 =========================
+        # 필터 파라미터
+        brand = (request.GET.get('brand') or '').strip()
+        name = (request.GET.get('name') or '').strip()
+        date_from = (request.GET.get('date_from') or '').strip()
+        date_to   = (request.GET.get('date_to') or '').strip()
+
+        # 내 추천 로그에서 향수별 집계(추천횟수, 최신일자)
+        rec_qs = RecCandidate.objects.filter(run_rec__user=request.user)
+
+        # 필터(집계 전에 적용)
+        if brand:
+            rec_qs = rec_qs.filter(perfume__brand__icontains=brand)
+        if name:
+            rec_qs = rec_qs.filter(perfume__name__icontains=name)
+        if date_from:
+            rec_qs = rec_qs.filter(run_rec__created_at__date__gte=date_from)
+        if date_to:
+            rec_qs = rec_qs.filter(run_rec__created_at__date__lte=date_to)
+
+        rec_agg = (
+            rec_qs.values('perfume_id', 'perfume__brand', 'perfume__name')
+                 .annotate(
+                     rec_count=Count('id'),
+                     last_date=Max('run_rec__created_at'),
+                 )
+                 .order_by('-last_date')  # 최신순
+        )
+
+        # 페이지네이션(5개)
+        rec_paginator = Paginator(rec_agg, 5)
+        rec_page = rec_paginator.get_page(request.GET.get('page') or 1)
+        # =========================[ADD yyh] 추천 내역 집계 블록 끝 =========================
         
         # admin 사용자의 즐겨찾기한 향수들 가져오기
         favorite_perfumes = Perfume.objects.filter(
@@ -1695,6 +1729,13 @@ def mypage(request):
         
         context = {
             'recommendation_runs': recommendation_runs,
+            # =========================[ADD yyh] 추천 내역 컨텍스트 추가 시작=========================
+            'rec_page': rec_page,          # 템플릿에서 rec_page.object_list 로 루프
+            'f_brand': brand,              # 필터 값 유지용
+            'f_name': name,
+            'f_date_from': date_from,
+            'f_date_to': date_to,
+            # =========================[ADD yyh] 추천 내역 컨텍스트 추가 끝=========================
             'favorite_perfumes': favorite_perfumes,
             'favorites_count': favorites_count,
             'liked_perfumes': liked_feedback,  # FeedbackEvent 객체들
@@ -1706,6 +1747,10 @@ def mypage(request):
     except User.DoesNotExist:
         context = {
             'recommendation_runs': [],
+            # =========================[ADD yyh] 기본값도 함께 추가 시작=========================
+            'rec_page': None,
+            'f_brand': '', 'f_name': '', 'f_date_from': '', 'f_date_to': '',
+            # =========================[ADD yyh] 기본값도 함께 추가 끝=========================
             'favorite_perfumes': Perfume.objects.none(),
             'favorites_count': 0,
             'liked_perfumes': [],
