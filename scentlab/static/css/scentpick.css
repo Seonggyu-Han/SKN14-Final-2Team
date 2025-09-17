@@ -7,7 +7,7 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    min-height: 100vh;
+    min-height: fit-content;
     line-height: 1.6;
     color: #333;
 }
@@ -83,7 +83,7 @@ body {
 /* Main Content */
 .main-content {
     margin-top: 80px;
-    min-height: calc(100vh - 160px);
+    min-height: calc(96vh - 160px);
     padding: 40px 20px;
 }
 
