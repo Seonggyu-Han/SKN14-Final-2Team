@@ -458,22 +458,45 @@ def fetch_weather_simple(city="Seoul", lat=None, lon=None):
 # =======================
 # DB 조회 / 이미지 URL 부여
 # =======================
-def query_perfumes_by_accords(accords, limit=8):
-    # JSONField 가정
-    q = Q()
+def query_perfumes_by_accords(accords, limit=8, gender=None):
+    from django.db.models import Q
+    
+    # 어코드 조건 구성
+    accord_q = Q()
     for a in accords:
-        q |= Q(main_accords__contains=[a])
+        accord_q |= Q(main_accords__contains=[a])
+    
+    # 성별 조건 추가
+    def apply_gender_filter(base_query):
+        if gender and gender in ['Male', 'Female']:
+            # Male이나 Female이 요청되면 해당 성별 + Unisex 포함
+            return base_query.filter(Q(gender=gender) | Q(gender='Unisex'))
+        elif gender == 'Unisex':
+            # Unisex만 요청되면 Unisex만
+            return base_query.filter(gender='Unisex')
+        else:
+            # gender가 None이면 성별 필터링 없음
+            return base_query
+    
     try:
-        qs = Perfume.objects.filter(q)[:limit]
+        # JSONField 방식으로 시도
+        base_qs = Perfume.objects.filter(accord_q)
+        qs = apply_gender_filter(base_qs)[:limit]
+        
         if qs.exists():
             return list(qs)
     except Exception:
         pass  # TextField(JSON 문자열) fallback
-
-    q = Q()
+    
+    # TextField fallback
+    accord_q = Q()
     for a in accords:
-        q |= Q(main_accords__icontains=f'"{a}"')
-    return list(Perfume.objects.filter(q)[:limit])
+        accord_q |= Q(main_accords__icontains=f'"{a}"')
+    
+    base_qs = Perfume.objects.filter(accord_q)
+    qs = apply_gender_filter(base_qs)[:limit]
+    
+    return list(qs)
 
 def attach_image_urls(perfumes_iter):
     """scentpick-images/perfumes/{id}.jpg 규칙으로 image_url 속성 부여"""
@@ -604,7 +627,7 @@ def recommend(request):
     t = request.GET.get("t", "")   # "day" | "night"
 
     try:
-        # ① 날씨 정보
+       # ① 날씨 정보
         if lat and lon:
             line1, line2, code = fetch_weather_simple(lat=float(lat), lon=float(lon))
         else:
@@ -612,15 +635,22 @@ def recommend(request):
         tip, target_accords = tip_and_accords_by_code(code)
         emoji = emoji_by_code(code)
 
+        # 사용자 성별 정보 가져오기 (users 테이블에서)
+        user_gender = None
+        if request.user.is_authenticated:
+            try:
+                user_gender = request.user.detail.gender
+            except:
+                user_gender = None
+
         # ② 날씨 기반 추천: 풀 60개 중 랜덤 3개
-        weather_perfumes = fetch_random_by_accords(target_accords, pool=60, k=3)
+        weather_perfumes = fetch_random_by_accords(target_accords, pool=60, k=3, gender=user_gender)
         exclude_ids = {p.id for p in weather_perfumes}
 
         # ③ 계절 기반 추천: 당일 계절 어코드로 풀 60개 중 랜덤 3개 (위와 중복 안 나오게)
         now = datetime.now(ZoneInfo("Asia/Seoul"))
         season_title, season_tip, season_accords = seasonal_accords_and_tip(now.month)
-        seasonal_perfumes = fetch_random_by_accords(season_accords, pool=60, k=3, exclude_ids=exclude_ids)
-
+        seasonal_perfumes = fetch_random_by_accords(season_accords, pool=60, k=3, exclude_ids=exclude_ids, gender=user_gender)
         context = {
             # 날씨 박스
             "weather_line1": line1,
@@ -677,18 +707,26 @@ def _sample_random(seq, k):
         return seq
     return random.sample(seq, k)
 
-def fetch_random_by_accords(accords, pool=60, k=3, exclude_ids=None):
+def fetch_random_by_accords(accords, pool=60, k=3, exclude_ids=None, gender=None):
     """
     어코드로 pool개 풀을 긁어온 뒤 k개 랜덤 뽑기.
     exclude_ids에 있는 id는 제외(중복 회피용).
+    gender: 'Male', 'Female', 'Unisex' 중 하나.
     """
-    pool_list = query_perfumes_by_accords(accords, limit=pool)
+    # 풀 데이터 조회 시 성별 필터링 포함
+    pool_list = query_perfumes_by_accords(accords, limit=pool, gender=gender)
+    
+    # 중복 제외 처리
     if exclude_ids:
         pool_list = [p for p in pool_list if getattr(p, "id", None) not in exclude_ids]
+    
+    # 랜덤 추출
     picked = _sample_random(pool_list, k)
+    
+    # 이미지 URL 붙이기
     attach_image_urls(picked)
+    
     return picked
-
 
 # FastAPI 설정
 FASTAPI_CHAT_URL = os.environ.get("FASTAPI_CHAT_URL")
