@@ -1072,6 +1072,7 @@ def toggle_favorite(request):
         
         return JsonResponse({
             'status': 'success',
+            'success': True,  # 기존 코드와의 호환성을 위해 추가
             'is_favorite': is_favorite,
             'message': message,
             'debug_total_favorites': total_favorites  # 디버깅 정보
@@ -1150,6 +1151,7 @@ def toggle_like_dislike(request):
         
         return JsonResponse({
             'status': 'success',
+            'success': True,  # 기존 코드와의 호환성을 위해 추가
             'current_action': current_action,
             'message': message,
             'debug_likes': total_likes,
