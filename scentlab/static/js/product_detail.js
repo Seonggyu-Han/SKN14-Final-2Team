@@ -182,7 +182,7 @@ function createDataBar(label, value, percentage, isPercentage = true) {
                       if (data.success) {
                           favoriteBtn.classList.toggle('active');
                           if (favoriteBtn.classList.contains('active')) {
-                              favoriteBtn.innerHTML = '<span class="action-icon">⭐</span> 즐겨찾기됨';
+                              favoriteBtn.innerHTML = '<span class="action-icon">⭐</span> 즐겨찾기';
                           } else {
                               favoriteBtn.innerHTML = '<span class="action-icon">⭐</span> 즐겨찾기';
                           }
@@ -240,9 +240,9 @@ function createDataBar(label, value, percentage, isPercentage = true) {
   
                   if (data.current_action === 'like') {
                       likeBtn.classList.add('active');
-                      likeBtn.style.background = '#48bb78';
+                      likeBtn.style.background = '#e53e3e';  // 빨간색
                       likeBtn.style.color = 'white';
-                      likeBtn.style.borderColor = '#48bb78';
+                      likeBtn.style.borderColor = '#e53e3e';  // 빨간색
                   } else if (data.current_action === 'dislike') {
                       dislikeBtn.classList.add('active');
                       dislikeBtn.style.background = '#718096';
@@ -250,8 +250,7 @@ function createDataBar(label, value, percentage, isPercentage = true) {
                       dislikeBtn.style.borderColor = '#718096';
                   }
               } else {
-                  const errorData = await response.json();
-                  alert(errorData.message || '피드백 처리 중 오류가 발생했습니다.');
+                  alert(data.message || '피드백 처리 중 오류가 발생했습니다.');
               }
           } else {
               const errorData = await response.json();
