@@ -1,4 +1,4 @@
--- Active: 1753665099225@@127.0.0.1@3306@scentpickdb
+-- Active: 1753665902833@@127.0.0.1@3306@scentpickdb
 use scentpickdb;
 
 # created_at, created_at 기본값 설정
@@ -856,3 +856,220 @@ commit;
 -- SET main_accords = JSON_ARRAY("로즈", "플로랄")
 -- WHERE name = '아뜰리에 드 플뢰르 로사 다마세나 오 드 퍼퓸';
 
+
+
+-- notes_score 컬럼에 0.0 값이 들어간 향수 확인
+-- notes_score 키 확인
+SELECT DISTINCT jt.note_key
+FROM perfumes p,
+JSON_TABLE(
+    JSON_KEYS(p.notes_score),
+    '$[*]' COLUMNS(note_key VARCHAR(100) PATH '$')
+) AS jt
+ORDER BY jt.note_key;
+
+
+SELECT p.id, p.name, p.notes_score
+FROM perfumes p,
+JSON_TABLE(
+    p.notes_score,
+    '$'
+    COLUMNS (
+        aldehydic DOUBLE PATH '$.aldehydic',
+        almond DOUBLE PATH '$.almond',
+        amber DOUBLE PATH '$.amber',
+        animalic DOUBLE PATH '$.animalic',
+        anis DOUBLE PATH '$.anis',
+        aquatic DOUBLE PATH '$.aquatic',
+        aromatic DOUBLE PATH '$.aromatic',
+        asphault DOUBLE PATH '$.asphault',
+        balsamic DOUBLE PATH '$.balsamic',
+        beeswax DOUBLE PATH '$.beeswax',
+        bitter DOUBLE PATH '$.bitter',
+        cacao DOUBLE PATH '$.cacao',
+        camphor DOUBLE PATH '$.camphor',
+        cannabis DOUBLE PATH '$.cannabis',
+        caramel DOUBLE PATH '$.caramel',
+        cherry DOUBLE PATH '$.cherry',
+        chocolate DOUBLE PATH '$.chocolate',
+        cinnamon DOUBLE PATH '$.cinnamon',
+        citrus DOUBLE PATH '$.citrus',
+        coconut DOUBLE PATH '$.coconut',
+        coffee DOUBLE PATH '$.coffee',
+        conifer DOUBLE PATH '$.conifer',
+        earthy DOUBLE PATH '$.earthy',
+        floral DOUBLE PATH '$.floral',
+        fresh DOUBLE PATH '$.fresh',
+        fruity DOUBLE PATH '$.fruity',
+        green DOUBLE PATH '$.green',
+        herbal DOUBLE PATH '$.herbal',
+        honey DOUBLE PATH '$.honey',
+        iris DOUBLE PATH '$.iris',
+        lactonic DOUBLE PATH '$.lactonic',
+        lavender DOUBLE PATH '$.lavender',
+        leather DOUBLE PATH '$.leather',
+        marine DOUBLE PATH '$.marine',
+        metallic DOUBLE PATH '$.metallic',
+        mineral DOUBLE PATH '$.mineral',
+        mossy DOUBLE PATH '$.mossy',
+        musky DOUBLE PATH '$.musky',
+        nutty DOUBLE PATH '$.nutty',
+        oud DOUBLE PATH '$.oud',
+        ozonic DOUBLE PATH '$.ozonic',
+        patchouli DOUBLE PATH '$.patchouli',
+        Pear DOUBLE PATH '$.Pear',
+        powdery DOUBLE PATH '$.powdery',
+        rose DOUBLE PATH '$.rose',
+        rum DOUBLE PATH '$.rum',
+        salty DOUBLE PATH '$.salty',
+        savory DOUBLE PATH '$.savory',
+        smoky DOUBLE PATH '$.smoky',
+        soapy DOUBLE PATH '$.soapy',
+        sour DOUBLE PATH '$.sour',
+        spicy DOUBLE PATH '$.spicy',
+        sweet DOUBLE PATH '$.sweet',
+        terpenic DOUBLE PATH '$.terpenic',
+        tobacco DOUBLE PATH '$.tobacco',
+        tropical DOUBLE PATH '$.tropical',
+        tuberose DOUBLE PATH '$.tuberose',
+        vanilla DOUBLE PATH '$.vanilla',
+        vinyl DOUBLE PATH '$.vinyl',
+        violet DOUBLE PATH '$.violet',
+        vodka DOUBLE PATH '$.vodka',
+        whiskey DOUBLE PATH '$.whiskey',
+        woody DOUBLE PATH '$.woody'
+    )
+) AS jt
+WHERE 0 IN (
+    jt.aldehydic, jt.almond, jt.amber, jt.animalic, jt.anis, jt.aquatic,
+    jt.aromatic, jt.asphault, jt.balsamic, jt.beeswax, jt.bitter, jt.cacao,
+    jt.camphor, jt.cannabis, jt.caramel, jt.cherry, jt.chocolate, jt.cinnamon,
+    jt.citrus, jt.coconut, jt.coffee, jt.conifer, jt.earthy, jt.floral,
+    jt.fresh, jt.fruity, jt.green, jt.herbal, jt.honey, jt.iris,
+    jt.lactonic, jt.lavender, jt.leather, jt.marine, jt.metallic, jt.mineral,
+    jt.mossy, jt.musky, jt.nutty, jt.oud, jt.ozonic, jt.patchouli,
+    jt.Pear, jt.powdery, jt.rose, jt.rum, jt.salty, jt.savory,
+    jt.smoky, jt.soapy, jt.sour, jt.spicy, jt.sweet, jt.terpenic,
+    jt.tobacco, jt.tropical, jt.tuberose, jt.vanilla, jt.vinyl, jt.violet,
+    jt.vodka, jt.whiskey, jt.woody
+)
+or 0 IN (
+    jt.aldehydic, jt.almond, jt.amber, jt.animalic, jt.anis, jt.aquatic,
+    jt.aromatic, jt.asphault, jt.balsamic, jt.beeswax, jt.bitter, jt.cacao,
+    jt.camphor, jt.cannabis, jt.caramel, jt.cherry, jt.chocolate, jt.cinnamon,
+    jt.citrus, jt.coconut, jt.coffee, jt.conifer, jt.earthy, jt.floral,
+    jt.fresh, jt.fruity, jt.green, jt.herbal, jt.honey, jt.iris,
+    jt.lactonic, jt.lavender, jt.leather, jt.marine, jt.metallic, jt.mineral,
+    jt.mossy, jt.musky, jt.nutty, jt.oud, jt.ozonic, jt.patchouli,
+    jt.Pear, jt.powdery, jt.rose, jt.rum, jt.salty, jt.savory,
+    jt.smoky, jt.soapy, jt.sour, jt.spicy, jt.sweet, jt.terpenic,
+    jt.tobacco, jt.tropical, jt.tuberose, jt.vanilla, jt.vinyl, jt.violet,
+    jt.vodka, jt.whiskey, jt.woody
+);
+
+
+
+-- season_score 컬럼에 0.0 값이 들어간 향수 확인
+--{"fall": 0.0, "spring": 0.0, "summer": 0.0, "winter": 0.0}
+-- id = 2, 
+SELECT p.id, p.name, p.season_score
+FROM perfumes p,
+JSON_TABLE(
+    p.season_score,
+    '$'
+    COLUMNS (
+        fall   DOUBLE PATH '$.fall',
+        spring DOUBLE PATH '$.spring',
+        summer DOUBLE PATH '$.summer',
+        winter DOUBLE PATH '$.winter'
+    )
+) AS jt
+WHERE jt.fall   = 0
+  AND jt.spring = 0
+  AND jt.summer = 0
+  AND jt.winter = 0;
+
+
+-- day_night_score 컬럼에 0.0 값이 들어간 향수 확인
+-- {"day": 0.0, "night": 0.0}
+-- id = 2, 61, 131, 132, 133, 192, 253, 284, 417, 516, 559
+SELECT p.id, p.name, p.day_night_score
+FROM perfumes p,
+JSON_TABLE(
+    p.day_night_score,
+    '$'
+    COLUMNS (
+        day   DOUBLE PATH '$.day',
+        night DOUBLE PATH '$.night'
+    )
+) AS jt
+WHERE jt.day   = 0
+  AND jt.night = 0;
+
+
+-- 업데이트 쿼리
+-- id = 2
+UPDATE perfumes
+SET season_score = JSON_OBJECT('fall', 100.0, 'spring', 25.0, 'summer', 25.0, 'winter', 62.5),
+    day_night_score = JSON_OBJECT('day', 62.5, 'night', 75.0)
+WHERE id = 2;
+
+-- id = 61
+UPDATE perfumes
+SET season_score = JSON_OBJECT('fall', 65.7, 'spring', 100.0, 'summer', 93.2, 'winter', 18.6),
+    day_night_score = JSON_OBJECT('day', 94.1, 'night', 39.1)
+WHERE id = 61;
+
+-- id = 131
+UPDATE perfumes
+SET season_score = JSON_OBJECT('fall', 66.6, 'spring', 100.0, 'summer', 100.0, 'winter', 55.5),
+    day_night_score = JSON_OBJECT('day', 100.0, 'night', 44.4)
+WHERE id = 131;
+
+-- id = 132
+UPDATE perfumes
+SET season_score = JSON_OBJECT('fall', 37.1, 'spring', 100.0, 'summer', 73.0, 'winter', 21.8),
+    day_night_score = JSON_OBJECT('day', 92.9, 'night', 33.2)
+WHERE id = 132;
+
+-- id = 133
+UPDATE perfumes
+SET season_score = JSON_OBJECT('fall', 48.0, 'spring', 100.0, 'summer', 75.4, 'winter', 29.4),
+    day_night_score = JSON_OBJECT('day', 90.5, 'night', 40.3)
+WHERE id = 133;
+
+-- id = 192
+UPDATE perfumes
+SET season_score = JSON_OBJECT('fall', 88.1, 'spring', 100.0, 'summer', 75.1, 'winter', 43.7),
+    day_night_score = JSON_OBJECT('day', 97.2, 'night', 45.8)
+WHERE id = 192;
+
+-- id = 253
+UPDATE perfumes
+SET season_score = JSON_OBJECT('fall', 94.7, 'spring', 51.1, 'summer', 20.0, 'winter', 100.0),
+    day_night_score = JSON_OBJECT('day', 53.8, 'night', 95.9)
+WHERE id = 253;
+
+-- id = 284
+UPDATE perfumes
+SET season_score = JSON_OBJECT('fall', 100.0, 'spring', 46.3, 'summer', 23.1, 'winter', 70.3),
+    day_night_score = JSON_OBJECT('day', 72.4, 'night', 52.9)
+WHERE id = 284;
+
+-- id = 417
+UPDATE perfumes
+SET season_score = JSON_OBJECT('fall', 13.2, 'spring', 71.8, 'summer', 100.0, 'winter', 8.6),
+    day_night_score = JSON_OBJECT('day', 84.1, 'night', 10.9)
+WHERE id = 417;
+
+-- id = 516
+UPDATE perfumes
+SET season_score = JSON_OBJECT('fall', 100.0, 'spring', 55.3, 'summer', 26.9, 'winter', 86.7),
+    day_night_score = JSON_OBJECT('day', 72.0, 'night', 66.1)
+WHERE id = 516;
+
+-- id = 559
+UPDATE perfumes
+SET season_score = JSON_OBJECT('fall', 93.4, 'spring', 47.3, 'summer', 21.0, 'winter', 85.5),
+    day_night_score = JSON_OBJECT('day', 53.9, 'night', 100.0)
+WHERE id = 559;
