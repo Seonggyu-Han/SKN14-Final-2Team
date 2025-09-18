@@ -24,9 +24,16 @@
 
   <!-- 가운데: 추천 내역 -->
 <div class="recommendations-section">
-  <h3 style="margin-bottom:12px;">추천 받은 향수 내역</h3>
+  <h3 style="margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
+    추천 받은 향수 내역
+    <!-- ✅ 토글 버튼 추가 -->
+    <button id="toggle-rec-btn"
+            style="padding:4px 10px; font-size:13px; border:1px solid #e2e8f0; border-radius:6px; background:#f8fafc; cursor:pointer;">
+      목록 접기
+    </button>
+  </h3>
 
-  <div class="rec-list-wrap" style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;">
+  <div id="rec-list-wrap" class="rec-list-wrap" style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;">
     {% if rec_page and rec_page.object_list %}
       <!-- 헤더 -->
       <div style="display:grid;grid-template-columns:92px 120px 1fr 54px;gap:8px;padding:6px 8px;color:#64748b;font-size:13px;">
@@ -66,7 +73,7 @@
 
       <!-- 페이지네이션 -->
       {% if rec_page.paginator.num_pages > 1 %}
-        <div class="rec-pagination" style="display:flex;gap:10px;align-items:center;justify-content:flex-start;margin-top:10px;">
+        <div class="rec-pagination" style="display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px;">
           {% if rec_page.has_previous %}
             <a href="?page={{ rec_page.previous_page_number }}" style="color:#2563eb;text-decoration:none;">이전</a>
           {% endif %}
@@ -350,6 +357,18 @@
     updateCounts();
   });
 })();
+
+document.addEventListener("DOMContentLoaded", function(){
+    const btn  = document.getElementById("toggle-rec-btn");
+    const wrap = document.getElementById("rec-list-wrap");
+    if (!btn || !wrap) return;
+
+    btn.addEventListener("click", function(){
+      const hidden = wrap.style.display === "none";
+      wrap.style.display = hidden ? "block" : "none";
+      btn.textContent   = hidden ? "목록 접기" : "목록 펼치기";
+    });
+  });
 </script>
 {% endblock script %}
 
