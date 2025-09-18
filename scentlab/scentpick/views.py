@@ -20,10 +20,11 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db.models import Q, Count, Max  # yyh : Count, Max 추가
-from django.http import JsonResponse
+from django.http import JsonResponse, StreamingHttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST, require_GET
+from django.views.decorators.csrf import csrf_exempt
 
 # --- 프로젝트 내부 (app) ---
 from .models import (
@@ -794,6 +795,106 @@ def chat_submit_api(request):
         return JsonResponse({"error": f"FastAPI 오류: {e.response.text}"}, status=502)
     except Exception as e:
         return JsonResponse({"error": f"서버 오류: {str(e)}"}, status=500)
+
+
+@login_required
+@require_POST
+def chat_stream_api(request):
+    """
+    스트리밍 채팅 API - Server-Sent Events 방식으로 실시간 응답
+    """
+    try:
+        # JSON 요청 처리
+        if request.content_type == 'application/json':
+            body = json.loads(request.body.decode("utf-8"))
+            content = (body.get("content") or body.get("query") or "").strip()
+            conversation_id = body.get("conversation_id")
+        else:
+            content = request.POST.get("content", "").strip()
+            conversation_id = request.POST.get("conversation_id") or request.session.get("conversation_id")
+
+        if not content:
+            def error_generator():
+                yield f"data: {json.dumps({'error': '내용이 비었습니다.'})}\n\n"
+            return StreamingHttpResponse(error_generator(), content_type='text/event-stream')
+
+        # FastAPI로 스트리밍 요청 준비
+        payload = {
+            "user_id": request.user.id,
+            "query": content,
+            "stream": True  # 스트리밍 요청임을 표시
+        }
+
+        if conversation_id:
+            try:
+                payload["conversation_id"] = int(conversation_id)
+            except ValueError:
+                pass
+
+        headers = {
+            "X-Service-Token": SERVICE_TOKEN,
+            "Content-Type": "application/json",
+            "Accept": "text/event-stream"  # SSE 요청
+        }
+
+        def stream_generator():
+            try:
+                # FastAPI 서버가 없을 때 임시 mock 응답
+                if not FASTAPI_CHAT_URL:
+                    mock_response = f"안녕하세요! '{content}'에 대한 응답입니다. 현재 FastAPI 서버가 연결되지 않아 임시 응답을 제공합니다."
+                    import time
+                    for chunk in mock_response.split():
+                        yield f"data: {json.dumps({'content': chunk + ' '})}\n\n"
+                        time.sleep(0.1)  # 스트리밍 효과
+                    yield f"data: {json.dumps({'done': True, 'conversation_id': conversation_id or 1, 'perfume_list': []})}\n\n"
+                    return
+
+                # FastAPI로 스트리밍 요청
+                response = requests.post(
+                    FASTAPI_CHAT_URL + "/stream" if not FASTAPI_CHAT_URL.endswith("/stream") else FASTAPI_CHAT_URL,
+                    json=payload,
+                    headers=headers,
+                    stream=True,
+                    timeout=120
+                )
+                response.raise_for_status()
+
+                # 스트리밍 응답 처리
+                for line in response.iter_lines(decode_unicode=True):
+                    if line:
+                        # FastAPI에서 오는 SSE 데이터를 그대로 전달
+                        if line.startswith("data: "):
+                            yield f"{line}\n\n"
+                        else:
+                            # 일반 텍스트라면 SSE 형식으로 감싸기
+                            yield f"data: {json.dumps({'content': line})}\n\n"
+
+                # 스트림 종료 신호
+                yield f"data: {json.dumps({'done': True})}\n\n"
+
+            except requests.RequestException as e:
+                # FastAPI 서버가 없을 때 mock 응답
+                print(f"FastAPI 연결 실패, mock 응답 사용: {e}")
+                mock_response = f"안녕하세요! '{content}'에 대한 응답입니다. FastAPI 서버 연결에 실패하여 임시 응답을 제공합니다."
+                import time
+                for chunk in mock_response.split():
+                    yield f"data: {json.dumps({'content': chunk + ' '})}\n\n"
+                    time.sleep(0.1)
+                yield f"data: {json.dumps({'done': True, 'conversation_id': conversation_id or 1, 'perfume_list': []})}\n\n"
+
+            except Exception as e:
+                yield f"data: {json.dumps({'error': f'서버 오류: {str(e)}'})}\n\n"
+
+        response = StreamingHttpResponse(stream_generator(), content_type='text/event-stream')
+        response['Cache-Control'] = 'no-cache'
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Headers'] = 'Cache-Control'
+        return response
+
+    except Exception as e:
+        def error_generator():
+            yield f"data: {json.dumps({'error': f'서버 오류: {str(e)}'})}\n\n"
+        return StreamingHttpResponse(error_generator(), content_type='text/event-stream')
 
 # 노트 한국어 번역 딕셔너리
 NOTE_TRANSLATIONS = {
