@@ -106,9 +106,17 @@ function createDataBar(label, value, percentage, isPercentage = true) {
       });
     }
   
-    // SEASON 데이터
+    // SEASON 데이터 - 봄-여름-가을-겨울 순으로 정렬
     if (seasonContainer && window.seasonData) {
-      Object.values(window.seasonData).forEach(item => {
+      // 계절 순서 정의
+      const seasonOrder = ['봄', '여름', '가을', '겨울'];
+      
+      // 계절 데이터를 순서대로 정렬
+      const sortedSeasons = seasonOrder.map(season => {
+        return Object.values(window.seasonData).find(item => item.label === season);
+      }).filter(item => item); // undefined 제거
+      
+      sortedSeasons.forEach(item => {
         seasonContainer.innerHTML += createDataBar(item.label, item.value, item.percentage);
       });
     }
@@ -202,7 +210,7 @@ function createDataBar(label, value, percentage, isPercentage = true) {
       }
   
       try {
-          const response = await fetch('/scentpick/api/feedback/', {
+          const response = await fetch('/scentpick/api/toggle-like-dislike/', {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
