@@ -7,7 +7,7 @@
   <style>
     /* 마크다운으로 렌더되는 AI 메시지 전용 */
     .markdown-body {
-      white-space: normal !important;
+      white-space: pre-wrap !important;
       overflow-wrap: anywhere;
       word-break: keep-all;
       line-height: 1.4;
@@ -119,27 +119,6 @@
     INITIAL_MESSAGES = [];
   }
 
-  // 로딩 메시지 데이터
-  const loadingData = {
-    loading_messages: [
-      "향수의 첫인상인 톱 노트는 뿌린 직후 10분 동안 시트러스나 허브 향이 퍼져요.",
-      "미들 노트는 향수의 중심 향으로 30분에서 2시간 동안 플로럴이나 스파이시 향을 느낄 수 있어요.",
-      "베이스 노트는 오랫동안 남는 잔향으로, 우디나 머스크, 바닐라 향이 대표적이에요.",
-      "퍼퓸은 가장 진한 타입으로, 하루 종일 향이 지속돼요.",
-      "오 드 퍼퓸(EDP)은 가장 대중적이며 8시간 정도 향이 유지돼요.",
-      "향수는 햇빛과 열을 피하고, 어둡고 서늘한 곳에 보관해야 해요.",
-      "향수를 너무 많이 뿌리면 주변 사람들이 불편할 수 있으니 적당히 뿌려주세요.",
-      "향은 감정과 기억에 강하게 연결돼 기분을 바꾸는 힘이 있어요."
-    ]
-  };
-
-  // 랜덤 문장 선택
-  function getRandomLoadingMessage() {
-    const messages = loadingData.loading_messages;
-    const randomIndex = Math.floor(Math.random() * messages.length);
-    return messages[randomIndex];
-  }
-
   (function () {
     const sendBtn = document.getElementById("chatSendBtn");
     const input   = document.getElementById("chatInput");
@@ -148,49 +127,158 @@
     const historyList = document.getElementById("chatHistory");
     if (!sendBtn || !input || !box || !historyList) return;
 
+    // ✅ 친절한 로딩 멘트용 향수 팩트 (랜덤)
+    const perfume_facts = [
+      "톱 노트는 뿌리고 10분 내에 느껴지는 첫인상이에요. 상큼한 시트러스가 많아요!",
+      "미들(하트) 노트는 30분~2시간 지속되는 중심 향이에요. 플로럴/스파이시가 자주 쓰여요.",
+      "베이스 노트는 잔향 단계로 우디·머스크·바닐라가 오래 남아요.",
+      "퍼퓸(Extrait)은 농도 20%+로 가장 진하고 오래 갑니다.",
+      "EDP(오 드 퍼퓸)는 보통 8시간 안팎, 데일리로 제일 많이 쓰여요.",
+      "EDT(오 드 뚜왈렛)는 가볍고 산뜻, 약 5시간 정도 지속돼요.",
+      "EDC(오 드 코롱)는 상쾌하지만 2시간 내외로 금방 사라져요.",
+      "향수는 직사광선과 고온을 피하고, 서늘하고 어두운 곳에 보관하세요.",
+      "개봉 후 유효기간은 평균 1~3년이에요. 빛/공기 노출이 관건!",
+      "비행기 반입은 100ml 이하만 투명 지퍼백에 넣어야 해요.",
+      "공중에 뿌리고 지나가면 옷과 머리에 은은하게 남아요.",
+      "머리카락엔 너무 가까이 뿌리면 건조해질 수 있어요. 살짝 거리 두기!",
+      "블로터(종이) 시향은 1~2분 뒤 맡으면 더 정확해요.",
+      "피부 시향으로 체취와 어울림을 꼭 확인해보세요.",
+      "한 번에 3~4개 이상 시향하면 후각이 쉽게 피곤해져요.",
+      "샘플로 며칠 써보고 정품 구매하면 실패가 줄어요.",
+      "여름엔 시트러스/아쿠아, 겨울엔 우디/앰버가 잘 어울려요.",
+      "오피스엔 은은하게, 데이트엔 조금 더 관능적인 향도 좋아요.",
+      "머스크는 지금은 대부분 합성 원료를 사용해요.",
+      "레이어링으로 자신만의 시그니처 향을 만들 수 있어요 ✨"
+    ];
+
+    // 서버에서 내려준 초기 컨텍스트
     let conversationId   = {{ conversation_id|default:"null" }};
     let externalThreadId = {% if external_thread_id %}"{{ external_thread_id }}"{% else %}null{% endif %};
 
-    // 로딩 메시지 추가
-    function addLoading() {
-      const baseText = "답변을 생성하는중입니다...";
-      const randomMessage = getRandomLoadingMessage();
-      return addMessage(`${baseText} ${randomMessage}`, false, false);
+    // 대화 목록 불러오기
+    async function loadConversations() {
+      try {
+        const resp = await fetch("{% url 'scentpick:conversations_api' %}", {
+          method: "GET",
+          headers: { "X-CSRFToken": CSRF_TOKEN }
+        });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        historyList.innerHTML = '';
+        if (data.items && data.items.length > 0) {
+          data.items.forEach(conv => {
+            const li = document.createElement("li");
+            li.className = "conversation-item";
+            li.dataset.conversationId = conv.id;
+            li.textContent = conv.title || `대화 ${conv.id}`;
+            li.addEventListener('click', () => window.loadConversation(conv.id));
+            historyList.appendChild(li);
+          });
+        } else {
+          historyList.innerHTML = '<li class="no-conversations">아직 대화가 없습니다.</li>';
+        }
+      } catch (e) {
+        console.error('대화 목록 불러오기 실패:', e);
+        historyList.innerHTML = '<li class="error">대화 목록을 불러올 수 없습니다</li>';
+      }
     }
 
-    // 마크다운 렌더링
+    // 특정 대화 불러오기
+    window.loadConversation = async function(convId) {
+      try {
+        document.querySelectorAll('.conversation-item').forEach(item => item.classList.remove('active'));
+        const act = document.querySelector(`[data-conversation-id="${convId}"]`);
+        if (act) act.classList.add('active');
+
+        const resp = await fetch(`/api/conversations/${convId}/messages`, {
+          method: "GET",
+          headers: { "X-CSRFToken": CSRF_TOKEN }
+        });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+        const data = await resp.json();
+        conversationId = data.conversation_id;
+        box.innerHTML = '';
+
+        if (data.items && data.items.length > 0) {
+          data.items.forEach(msg => {
+            const el = addMessage(msg.content, msg.role === 'user');
+            if (msg.role === 'assistant' && msg.perfume_list && msg.perfume_list.length > 0) {
+              addPerfumeRecommendations(el.wrap, msg.perfume_list);
+            }
+          });
+        } else {
+          addMessage("이 대화에는 아직 메시지가 없습니다.", false, false);
+        }
+      } catch (e) {
+        console.error('대화 불러오기 실패:', e);
+        if (e.message && !e.message.includes('404')) {
+          addMessage(`대화를 불러오는 중 문제가 발생했습니다.`, false, false);
+        }
+      }
+    }
+
+    // 새 채팅 시작
+    async function startNewChat() {
+      try {
+        const resp = await fetch("{% url 'scentpick:chat_new_api' %}", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-CSRFToken": CSRF_TOKEN }
+        });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+
+        conversationId = null;
+        externalThreadId = data.external_thread_id;
+
+        box.innerHTML = "";
+        addMessage("안녕하세요! ScentPick AI입니다. 어떤 향수를 찾고 계신가요?", false, false);
+        document.querySelectorAll('.conversation-item').forEach(i => i.classList.remove('active'));
+        input.focus();
+      } catch (e) {
+        console.error('새 채팅 시작 실패:', e);
+        addMessage(`새 채팅을 시작하는 중 문제가 발생했습니다.`, false, false);
+      }
+    }
+
+    // 마크다운 렌더링 (개행 최소화)
     function renderMarkdown(text) {
       try {
-        if (typeof marked === 'undefined') return text;
-        
+        if (typeof marked === 'undefined') return (text ?? '').replace(/(?:\r\n|\r|\n)/g, '<br>');
+
         marked.setOptions({
           gfm: true,
-          breaks: false,
+          breaks: true,      // FastAPI 응답 개행을 <br>로 유지
           headerIds: false,
           mangle: false,
           sanitize: false
         });
-        
+
         const preprocessed = (text ?? '')
-          .replace(/\r\n/g, '\n')
-          .replace(/\n{3,}/g, '\n\n')
-          .trim();
-        
+          .replace(/\r\n/g, '\n')           // CRLF를 LF로 통일
+          .replace(/\r/g, '\n')               // 단독 CR도 LF로 변환
+          .replace(/\\n/g, '\n');          // FastAPI 응답의 \n을 실제 개행으로
+
         let rendered = marked.parse(preprocessed);
-        
+
+        if (!rendered.includes('<br') && preprocessed.includes('\n')) {
+          rendered = preprocessed
+            .split('\n')
+            .map(line => marked.parseInline(line) || '')
+            .join('<br>');
+        }
+
         rendered = rendered
           .replace(/>\s+</g, '><')
-          .replace(/\n\s*\n/g, '\n')
           .trim();
-          
+
         return rendered;
       } catch (e) {
         console.error('마크다운 파싱 오류:', e);
-        return text;
+        return (text ?? '').replace(/(?:\r\n|\r|\n)/g, '<br>');
       }
     }
 
-    // 메시지 출력
     function addMessage(msg, isUser = false, useMarkdown = true) {
       const wrap  = document.createElement("div");
       wrap.className = "message" + (isUser ? " user" : "");
@@ -210,7 +298,7 @@
       return { wrap, inner };
     }
 
-    // 추천 결과 버튼
+    // 추천 버튼
     function addPerfumeRecommendations(messageWrap, perfumes) {
       if (!perfumes || perfumes.length === 0) return;
       const div = document.createElement("div");
@@ -226,7 +314,12 @@
       box.scrollTop = box.scrollHeight;
     }
 
-    // 메시지 전송
+    // ✅ 로딩 메시지: 친절한 팁을 함께 표기
+    function addLoading() {
+      const fact = perfume_facts[Math.floor(Math.random() * perfume_facts.length)];
+      return addMessage(`답변을 준비하고 있어요...\n💡 TIP: ${fact}`, false, false);
+    }
+
     async function send() {
       const txt = (input.value || "").trim();
       if (!txt) return;
@@ -238,7 +331,11 @@
       const loader = addLoading();
 
       try {
+        // EventSource를 사용한 스트리밍 방식
         const streamUrl = "{% url 'scentpick:chat_stream_api' %}";
+
+        // POST 데이터를 URL 파라미터로 전송 (EventSource는 POST를 직접 지원하지 않음)
+        // 대신 fetch로 스트리밍 요청
         const response = await fetch(streamUrl, {
           method: "POST",
           headers: {
@@ -254,11 +351,13 @@
           return;
         }
 
+        // 스트리밍 응답 처리
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
         let buffer = '';
         let currentContent = '';
 
+        // 로딩 메시지 초기화
         loader.inner.innerHTML = '';
         loader.inner.classList.add("markdown-body");
 
@@ -267,8 +366,10 @@
           if (done) break;
 
           buffer += decoder.decode(value, { stream: true });
+
+          // SSE 형식 파싱 (data: ... 형태)
           const lines = buffer.split('\n');
-          buffer = lines.pop() || '';
+          buffer = lines.pop() || ''; // 마지막 미완성 라인은 버퍼에 보관
 
           for (const line of lines) {
             if (line.startsWith('data: ')) {
@@ -287,12 +388,14 @@
                 }
 
                 if (data.done) {
+                  // 스트리밍 완료
                   if (data.conversation_id) {
                     conversationId = data.conversation_id;
                   }
                   if (data.perfume_list && data.perfume_list.length > 0) {
                     addPerfumeRecommendations(loader.wrap, data.perfume_list);
                   }
+                  loadConversations();
                   return;
                 }
               } catch (e) {
@@ -316,7 +419,12 @@
     input.addEventListener("keypress", (e) => { if (e.key === "Enter") send(); });
     newBtn.addEventListener("click", startNewChat);
 
-    // 초기 메시지 표시
+    // 현재 대화 ID 설정
+    {% if current_conversation_id %}
+      conversationId = {{ current_conversation_id }};
+    {% endif %}
+
+    // 초기 메시지 복원
     try {
       if (INITIAL_MESSAGES && INITIAL_MESSAGES.length > 0) {
         box.innerHTML = '';
