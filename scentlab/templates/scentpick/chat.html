@@ -7,7 +7,7 @@
   <style>
     /* 마크다운으로 렌더되는 AI 메시지 전용 */
     .markdown-body {
-      white-space: normal !important;
+      white-space: pre-wrap !important;
       overflow-wrap: anywhere;
       word-break: keep-all;
       line-height: 1.4;
@@ -220,34 +220,38 @@
     // 마크다운 렌더링 (개행 최소화)
     function renderMarkdown(text) {
       try {
-        if (typeof marked === 'undefined') return text;
-        
+        if (typeof marked === 'undefined') return (text ?? '').replace(/(?:\r\n|\r|\n)/g, '<br>');
+
         marked.setOptions({
           gfm: true,
-          breaks: false,      // 단일 개행을 <br>로 변환하지 않음
+          breaks: true,      // FastAPI 응답 개행을 <br>로 유지
           headerIds: false,
           mangle: false,
           sanitize: false
         });
-        
-        // 텍스트 전처리: 과도한 개행 제거
+
         const preprocessed = (text ?? '')
           .replace(/\r\n/g, '\n')           // CRLF를 LF로 통일
-          .replace(/\n{3,}/g, '\n\n')       // 3개 이상 연속 개행을 2개로 제한
-          .trim();
-        
+          .replace(/\r/g, '\n')               // 단독 CR도 LF로 변환
+          .replace(/\\n/g, '\n');          // FastAPI 응답의 \n을 실제 개행으로
+
         let rendered = marked.parse(preprocessed);
-        
-        // 후처리: HTML에서 불필요한 공백 제거
+
+        if (!rendered.includes('<br') && preprocessed.includes('\n')) {
+          rendered = preprocessed
+            .split('\n')
+            .map(line => marked.parseInline(line) || '')
+            .join('<br>');
+        }
+
         rendered = rendered
-          .replace(/>\s+</g, '><')          // 태그 사이 공백 제거
-          .replace(/\n\s*\n/g, '\n')        // 빈 줄 제거
+          .replace(/>\s+</g, '><')
           .trim();
-          
+
         return rendered;
       } catch (e) {
         console.error('마크다운 파싱 오류:', e);
-        return text;
+        return (text ?? '').replace(/(?:\r\n|\r|\n)/g, '<br>');
       }
     }
 
