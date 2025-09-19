@@ -127,6 +127,30 @@
     const historyList = document.getElementById("chatHistory");
     if (!sendBtn || !input || !box || !historyList) return;
 
+    // ✅ 친절한 로딩 멘트용 향수 팩트 (랜덤)
+    const perfume_facts = [
+      "톱 노트는 뿌리고 10분 내에 느껴지는 첫인상이에요. 상큼한 시트러스가 많아요!",
+      "미들(하트) 노트는 30분~2시간 지속되는 중심 향이에요. 플로럴/스파이시가 자주 쓰여요.",
+      "베이스 노트는 잔향 단계로 우디·머스크·바닐라가 오래 남아요.",
+      "퍼퓸(Extrait)은 농도 20%+로 가장 진하고 오래 갑니다.",
+      "EDP(오 드 퍼퓸)는 보통 8시간 안팎, 데일리로 제일 많이 쓰여요.",
+      "EDT(오 드 뚜왈렛)는 가볍고 산뜻, 약 5시간 정도 지속돼요.",
+      "EDC(오 드 코롱)는 상쾌하지만 2시간 내외로 금방 사라져요.",
+      "향수는 직사광선과 고온을 피하고, 서늘하고 어두운 곳에 보관하세요.",
+      "개봉 후 유효기간은 평균 1~3년이에요. 빛/공기 노출이 관건!",
+      "비행기 반입은 100ml 이하만 투명 지퍼백에 넣어야 해요.",
+      "공중에 뿌리고 지나가면 옷과 머리에 은은하게 남아요.",
+      "머리카락엔 너무 가까이 뿌리면 건조해질 수 있어요. 살짝 거리 두기!",
+      "블로터(종이) 시향은 1~2분 뒤 맡으면 더 정확해요.",
+      "피부 시향으로 체취와 어울림을 꼭 확인해보세요.",
+      "한 번에 3~4개 이상 시향하면 후각이 쉽게 피곤해져요.",
+      "샘플로 며칠 써보고 정품 구매하면 실패가 줄어요.",
+      "여름엔 시트러스/아쿠아, 겨울엔 우디/앰버가 잘 어울려요.",
+      "오피스엔 은은하게, 데이트엔 조금 더 관능적인 향도 좋아요.",
+      "머스크는 지금은 대부분 합성 원료를 사용해요.",
+      "레이어링으로 자신만의 시그니처 향을 만들 수 있어요 ✨"
+    ];
+
     // 서버에서 내려준 초기 컨텍스트
     let conversationId   = {{ conversation_id|default:"null" }};
     let externalThreadId = {% if external_thread_id %}"{{ external_thread_id }}"{% else %}null{% endif %};
@@ -290,7 +314,11 @@
       box.scrollTop = box.scrollHeight;
     }
 
-    function addLoading() { return addMessage("생각 중...", false, false); }
+    // ✅ 로딩 메시지: 친절한 팁을 함께 표기
+    function addLoading() {
+      const fact = perfume_facts[Math.floor(Math.random() * perfume_facts.length)];
+      return addMessage(`답변을 준비하고 있어요...\n💡 TIP: ${fact}`, false, false);
+    }
 
     async function send() {
       const txt = (input.value || "").trim();
