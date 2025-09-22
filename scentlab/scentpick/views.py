@@ -10,6 +10,7 @@ from zoneinfo import ZoneInfo
 
 # --- 외부 라이브러리 ---
 import requests
+import boto3
 
 # --- Django 기본 ---
 from django.conf import settings
@@ -41,6 +42,14 @@ from uauth.models import UserDetail
 from uauth.utils import process_profile_image, upload_to_s3_and_get_url
 
 from .utils.note_translations import get_korean_note_name, get_english_note_name
+
+# S3 클라이언트 전역 설정
+s3_client = boto3.client(
+    "s3",
+    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+    region_name=settings.AWS_REGION,
+)
 
 def home(request):
     return render(request, "scentpick/home.html")
@@ -804,7 +813,7 @@ def chat_submit_api(request):
 @require_POST
 def chat_stream_api(request):
     """
-    스트리밍 채팅 API - Server-Sent Events 방식으로 실시간 응답
+    스트리밍 채팅 API - Server-Sent Events 방식으로 실시간 응답 (멀티모달 지원)
     """
     try:
         # JSON 요청 처리
@@ -812,11 +821,14 @@ def chat_stream_api(request):
             body = json.loads(request.body.decode("utf-8"))
             content = (body.get("content") or body.get("query") or "").strip()
             conversation_id = body.get("conversation_id")
+            image_file = None
         else:
+            # FormData 요청 처리 (이미지 + 텍스트)
             content = request.POST.get("content", "").strip()
             conversation_id = request.POST.get("conversation_id") or request.session.get("conversation_id")
+            image_file = request.FILES.get("image")
 
-        if not content:
+        if not content and not image_file:
             def error_generator():
                 yield f"data: {json.dumps({'error': '내용이 비었습니다.'})}\n\n"
             return StreamingHttpResponse(error_generator(), content_type='text/event-stream')
@@ -827,6 +839,18 @@ def chat_stream_api(request):
             "query": content,
             "stream": True  # 스트리밍 요청임을 표시
         }
+
+        # 이미지 첨부 시 S3 업로드
+        if image_file:
+            filename = f"chat_images/{uuid.uuid4()}_{image_file.name}"
+            s3_client.upload_fileobj(
+                image_file,
+                settings.AWS_STORAGE_BUCKET_NAME,
+                filename,
+                ExtraArgs={"ContentType": image_file.content_type},
+            )
+            img_url = f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.{settings.AWS_REGION}.amazonaws.com/{filename}"
+            payload["image_url"] = img_url
 
         if conversation_id:
             try:
