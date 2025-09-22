@@ -108,6 +108,7 @@
     return m ? m.pop() : '';
   }
   const CSRF_TOKEN = getCookie('csrftoken');
+  const SERVICE_TOKEN = "{{ SERVICE_TOKEN }}";
 
   // 초기 메시지 (서버 주입)
   let INITIAL_MESSAGES = [];
@@ -160,7 +161,7 @@
       try {
         const resp = await fetch("{% url 'scentpick:conversations_api' %}", {
           method: "GET",
-          headers: { "X-CSRFToken": CSRF_TOKEN }
+          headers: { "X-CSRFToken": CSRF_TOKEN, "X-Service-Token": SERVICE_TOKEN }
         });
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const data = await resp.json();
@@ -192,7 +193,7 @@
 
         const resp = await fetch(`/api/conversations/${convId}/messages`, {
           method: "GET",
-          headers: { "X-CSRFToken": CSRF_TOKEN }
+          headers: { "X-CSRFToken": CSRF_TOKEN, "X-Service-Token": SERVICE_TOKEN, }
         });
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
 
@@ -223,7 +224,7 @@
       try {
         const resp = await fetch("{% url 'scentpick:chat_new_api' %}", {
           method: "POST",
-          headers: { "Content-Type": "application/json", "X-CSRFToken": CSRF_TOKEN }
+          headers: { "Content-Type": "application/json", "X-CSRFToken": CSRF_TOKEN, "X-Service-Token": SERVICE_TOKEN }
         });
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const data = await resp.json();
@@ -314,7 +315,7 @@
       box.scrollTop = box.scrollHeight;
     }
 
-    // ✅ 로딩 메시지: 친절한 팁을 함께 표기
+    // 로딩 메시지: 친절한 팁을 함께 표기
     function addLoading() {
       const fact = perfume_facts[Math.floor(Math.random() * perfume_facts.length)];
       return addMessage(`답변을 준비하고 있어요...\n💡 TIP: ${fact}`, false, false);
@@ -328,48 +329,43 @@
       addMessage(txt, true);
       sendBtn.disabled = true;
       input.disabled = true;
-      const loader = addLoading();
+
+      // 1) 로딩 메시지 표시 (TIP)
+      const loadingMsg = addLoading();
 
       try {
-        // EventSource를 사용한 스트리밍 방식
         const streamUrl = "{% url 'scentpick:chat_stream_api' %}";
-
-        // POST 데이터를 URL 파라미터로 전송 (EventSource는 POST를 직접 지원하지 않음)
-        // 대신 fetch로 스트리밍 요청
         const response = await fetch(streamUrl, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             "X-CSRFToken": CSRF_TOKEN,
-            "Accept": "text/event-stream"
+            "Accept": "text/event-stream",
+            "X-Service-Token": SERVICE_TOKEN
           },
           body: JSON.stringify({ content: txt, conversation_id: conversationId || null })
         });
 
         if (!response.ok) {
-          loader.inner.innerHTML = renderMarkdown(`오류: HTTP ${response.status}`);
+          loadingMsg.inner.innerHTML = renderMarkdown(`오류: HTTP ${response.status}`);
           return;
         }
 
-        // 스트리밍 응답 처리
+        // 2) 스트리밍 응답 준비
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
         let buffer = '';
         let currentContent = '';
-
-        // 로딩 메시지 초기화
-        loader.inner.innerHTML = '';
-        loader.inner.classList.add("markdown-body");
+        let firstChunk = true;
+        let loader;   // loader 미리 선언
 
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
 
           buffer += decoder.decode(value, { stream: true });
-
-          // SSE 형식 파싱 (data: ... 형태)
           const lines = buffer.split('\n');
-          buffer = lines.pop() || ''; // 마지막 미완성 라인은 버퍼에 보관
+          buffer = lines.pop() || '';
 
           for (const line of lines) {
             if (line.startsWith('data: ')) {
@@ -377,18 +373,33 @@
                 const data = JSON.parse(line.slice(6));
 
                 if (data.error) {
-                  loader.inner.innerHTML = renderMarkdown(`오류: ${data.error}`);
+                  loadingMsg.inner.innerHTML = renderMarkdown(`오류: ${data.error}`);
                   return;
                 }
 
                 if (data.content) {
-                  currentContent += data.content;
-                  loader.inner.innerHTML = renderMarkdown(currentContent);
+                  // 첫 번째 청크 도착 → TIP 제거 & loader 생성
+                  if (firstChunk) {
+                    loadingMsg.wrap.remove();
+                    loader = addMessage("", false, false);
+                    loader.inner.classList.add("markdown-body");
+                    firstChunk = false;
+                  }
+
+                  // 타자 효과
+                  await new Promise(resolve => setTimeout(resolve, 50));
+
+                  const span = document.createElement("span");
+                  span.textContent = data.content;
+                  loader.inner.appendChild(span);
                   box.scrollTop = box.scrollHeight;
+
+                  currentContent += data.content;
                 }
 
                 if (data.done) {
-                  // 스트리밍 완료
+                  loader.inner.innerHTML = renderMarkdown(currentContent);
+
                   if (data.conversation_id) {
                     conversationId = data.conversation_id;
                   }
@@ -406,7 +417,7 @@
         }
 
       } catch (e) {
-        loader.inner.innerHTML = renderMarkdown(`오류: ${e && e.message ? e.message : e}`);
+        loadingMsg.inner.innerHTML = renderMarkdown(`오류: ${e && e.message ? e.message : e}`);
       } finally {
         sendBtn.disabled = false;
         input.disabled = false;

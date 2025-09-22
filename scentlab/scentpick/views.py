@@ -121,6 +121,7 @@ def chat(request):
         "current_conversation": current_conversation,
         "current_conversation_id": current_conversation_id,
         "chat_messages": json.dumps(messages, default=str, ensure_ascii=False),  # JSON으로 직렬화
+        "SERVICE_TOKEN": SERVICE_TOKEN,
     })
 
 @login_required
@@ -891,6 +892,7 @@ def chat_stream_api(request):
         response['Cache-Control'] = 'no-cache'
         response['Access-Control-Allow-Origin'] = '*'
         response['Access-Control-Allow-Headers'] = 'Cache-Control'
+        response['X-Accel-Buffering'] = 'no'   # Nginx 버퍼링 비활성화
         return response
 
     except Exception as e:
