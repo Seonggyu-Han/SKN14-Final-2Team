@@ -90,6 +90,7 @@ def chat(request):
                     'role': m.role,
                     'content': m.content,
                     'created_at': m.created_at,
+                    'image_url': getattr(m, 'image_url', None),  # 안전한 이미지 URL 접근
                     'perfume_list': []
                 }
                 
@@ -840,17 +841,25 @@ def chat_stream_api(request):
             "stream": True  # 스트리밍 요청임을 표시
         }
 
-        # 이미지 첨부 시 S3 업로드
+        # 이미지 첨부 시 S3 업로드 (체계적인 경로 구조)
+        uploaded_image_url = None
         if image_file:
-            filename = f"chat_images/{uuid.uuid4()}_{image_file.name}"
+            # 체계적인 경로: chat_images/user_id/conversation_id/message_id_timestamp_filename
+            from datetime import datetime
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+
+            # conversation_id가 있으면 사용, 없으면 'new'로 임시 처리
+            conv_path = str(conversation_id) if conversation_id else 'new'
+            filename = f"chat_images/{request.user.id}/{conv_path}/{timestamp}_{image_file.name}"
+
             s3_client.upload_fileobj(
                 image_file,
                 settings.AWS_STORAGE_BUCKET_NAME,
                 filename,
                 ExtraArgs={"ContentType": image_file.content_type},
             )
-            img_url = f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.{settings.AWS_REGION}.amazonaws.com/{filename}"
-            payload["image_url"] = img_url
+            uploaded_image_url = f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.{settings.AWS_REGION}.amazonaws.com/{filename}"
+            payload["image_url"] = uploaded_image_url
 
         if conversation_id:
             try:
@@ -865,6 +874,7 @@ def chat_stream_api(request):
         }
 
         def stream_generator():
+            final_conversation_id = None
             try:
                 # FastAPI 서버가 없을 때 임시 mock 응답
                 if not FASTAPI_CHAT_URL:
@@ -891,6 +901,13 @@ def chat_stream_api(request):
                     if line:
                         # FastAPI에서 오는 SSE 데이터를 그대로 전달
                         if line.startswith("data: "):
+                            try:
+                                # conversation_id 추출 시도
+                                data = json.loads(line[6:])
+                                if data.get('conversation_id'):
+                                    final_conversation_id = data['conversation_id']
+                            except:
+                                pass
                             yield f"{line}\n\n"
                         else:
                             # 일반 텍스트라면 SSE 형식으로 감싸기
@@ -898,6 +915,19 @@ def chat_stream_api(request):
 
                 # 스트림 종료 신호
                 yield f"data: {json.dumps({'done': True})}\n\n"
+
+                # 스트리밍 완료 후 이미지 URL 업데이트
+                if uploaded_image_url and final_conversation_id:
+                    try:
+                        # 해당 conversation의 가장 최근 user 메시지 찾기
+                        conv = Conversation.objects.get(id=final_conversation_id, user=request.user)
+                        user_message = conv.messages.filter(role='user').order_by('-created_at').first()
+                        if user_message:
+                            user_message.image_url = uploaded_image_url
+                            user_message.save()
+                            print(f"✅ Image URL saved to message {user_message.id}: {uploaded_image_url}")
+                    except Exception as e:
+                        print(f"❌ Failed to save image URL: {e}")
 
             except requests.RequestException as e:
                 # FastAPI 서버가 없을 때 mock 응답
@@ -1445,6 +1475,7 @@ def conversation_messages_api(request, conv_id: int):
             'role': m.role,
             'content': m.content,
             'created_at': m.created_at.isoformat(),
+            'image_url': getattr(m, 'image_url', None),  # 안전한 이미지 URL 접근
         }
         
         # assistant 메시지인 경우 관련된 추천 데이터 찾기

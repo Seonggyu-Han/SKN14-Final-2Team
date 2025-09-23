@@ -106,8 +106,7 @@
       {% if recent_conversations %}
         {% for conversation in recent_conversations %}
           <li class="conversation-item{% if conversation.id == current_conversation_id %} active{% endif %}"
-              data-conversation-id="{{ conversation.id }}"
-              onclick="loadConversation({{ conversation.id }})">
+              data-conversation-id="{{ conversation.id }}">
             {{ conversation.title|default:"대화"|truncatechars:25 }}
           </li>
         {% endfor %}
@@ -211,6 +210,102 @@
       previewWrapper.style.display = "none";
     });
 
+    // 서버에서 내려준 초기 컨텍스트
+    let conversationId = {% if current_conversation_id %}{{ current_conversation_id }}{% else %}null{% endif %};
+    let externalThreadId = {% if external_thread_id %}"{{ external_thread_id }}"{% else %}null{% endif %};
+
+    // 대화 목록 불러오기
+    async function loadConversations() {
+      try {
+        const resp = await fetch("{% url 'scentpick:conversations_api' %}", {
+          method: "GET",
+          headers: { "X-CSRFToken": CSRF_TOKEN }
+        });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        historyList.innerHTML = '';
+        if (data.items && data.items.length > 0) {
+          data.items.forEach(conv => {
+            const li = document.createElement("li");
+            li.className = "conversation-item";
+            if (conv.id == conversationId) li.className += " active";
+            li.dataset.conversationId = conv.id;
+            li.textContent = conv.title || `대화 ${conv.id}`;
+            li.addEventListener('click', () => window.loadConversation(conv.id));
+            historyList.appendChild(li);
+          });
+        } else {
+          historyList.innerHTML = '<li class="no-conversations">아직 대화가 없습니다.</li>';
+        }
+      } catch (e) {
+        console.error('대화 목록 불러오기 실패:', e);
+        historyList.innerHTML = '<li class="error">대화 목록을 불러올 수 없습니다</li>';
+      }
+    }
+
+    // 특정 대화 불러오기
+    window.loadConversation = async function(convId) {
+      try {
+        console.log('대화 불러오기 시작:', convId);
+        document.querySelectorAll('.conversation-item').forEach(item => item.classList.remove('active'));
+        const act = document.querySelector(`[data-conversation-id="${convId}"]`);
+        if (act) act.classList.add('active');
+
+        const resp = await fetch(`{% url 'scentpick:conversation_messages_api' conv_id=0 %}`.replace('0', convId), {
+          method: "GET",
+          headers: { "X-CSRFToken": CSRF_TOKEN }
+        });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+        const data = await resp.json();
+        console.log('API 응답 데이터:', data);
+        conversationId = data.conversation_id;
+        box.innerHTML = '';
+
+        if (data.items && data.items.length > 0) {
+          console.log('메시지 개수:', data.items.length);
+          data.items.forEach(msg => {
+            console.log('메시지 렌더링:', msg);
+            const el = addMessage(msg.content, msg.role === 'user', true, msg.image_url);
+            if (msg.role === 'assistant' && msg.perfume_list && msg.perfume_list.length > 0) {
+              addPerfumeRecommendations(el.wrap, msg.perfume_list);
+            }
+          });
+        } else {
+          console.log('메시지가 없음');
+          addMessage("이 대화에는 아직 메시지가 없습니다.", false, false);
+        }
+      } catch (e) {
+        console.error('대화 불러오기 실패:', e);
+        if (e.message && !e.message.includes('404')) {
+          addMessage(`대화를 불러오는 중 문제가 발생했습니다.`, false, false);
+        }
+      }
+    }
+
+    // 새 채팅 시작
+    async function startNewChat() {
+      try {
+        const resp = await fetch("{% url 'scentpick:chat_new_api' %}", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-CSRFToken": CSRF_TOKEN }
+        });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+
+        conversationId = null;
+        externalThreadId = data.external_thread_id;
+
+        box.innerHTML = "";
+        addMessage("안녕하세요! ScentPick AI입니다. 어떤 향수를 찾고 계신가요?", false, false);
+        document.querySelectorAll('.conversation-item').forEach(i => i.classList.remove('active'));
+        input.focus();
+      } catch (e) {
+        console.error('새 채팅 시작 실패:', e);
+        addMessage(`새 채팅을 시작하는 중 문제가 발생했습니다.`, false, false);
+      }
+    }
+
     function renderMarkdown(text) {
       try {
         if (typeof marked === 'undefined') return (text ?? '').replace(/\n/g, '<br>');
@@ -219,16 +314,29 @@
       } catch (e) { return (text ?? '').replace(/\n/g, '<br>'); }
     }
 
-    function addMessage(msg, isUser = false, useMarkdown = true) {
+    function addMessage(msg, isUser = false, useMarkdown = true, imageUrl = null) {
       const wrap  = document.createElement("div");
       wrap.className = "message" + (isUser ? " user" : "");
-      const inner = document.createElement("div");
-      inner.className = "message-content";
-      inner.innerHTML = useMarkdown ? renderMarkdown(msg) : msg;
-      wrap.appendChild(inner);
+
+      // 이미지가 있으면 먼저 이미지 추가
+      if (imageUrl) {
+        const imgDiv = document.createElement("div");
+        imgDiv.className = "message-image";
+        imgDiv.innerHTML = `<img src="${imageUrl}" alt="업로드된 이미지" style="max-width: 300px; max-height: 300px; border-radius: 8px; margin-bottom: 8px;">`;
+        wrap.appendChild(imgDiv);
+      }
+
+      // 텍스트 메시지 추가
+      if (msg && msg.trim()) {
+        const inner = document.createElement("div");
+        inner.className = "message-content";
+        inner.innerHTML = useMarkdown ? renderMarkdown(msg) : msg;
+        wrap.appendChild(inner);
+      }
+
       box.appendChild(wrap);
       box.scrollTop = box.scrollHeight;
-      return { wrap, inner };
+      return { wrap, inner: wrap.querySelector('.message-content') };
     }
 
     function addPerfumeRecommendations(messageWrap, perfumes) {
@@ -255,8 +363,20 @@
       const txt = (input.value || "").trim();
       if (!txt && !uploadedFile) return;
 
+      // 이미지 미리보기 URL 저장 (사용자 메시지용)
+      const userImageUrl = uploadedFile ? previewImage.src : null;
+
       input.value = "";
-      addMessage(txt, true);
+      // 사용자 메시지에 이미지 포함
+      addMessage(txt, true, false, userImageUrl);
+
+      // 전송 즉시 미리보기 제거
+      if (uploadedFile) {
+        uploadedFile = null;
+        fileInput.value = "";
+        previewWrapper.style.display = "none";
+      }
+
       sendBtn.disabled = true;
       input.disabled = true;
       const loader = addLoading();
@@ -315,23 +435,18 @@
         sendBtn.disabled = false;
         input.disabled = false;
         input.focus();
-        // 전송 완료 후 이미지 미리보기 초기화
-        if (uploadedFile) {
-          uploadedFile = null;
-          fileInput.value = "";
-          previewWrapper.style.display = "none";
-        }
+        // 미리보기는 이미 위에서 제거했으므로 여기서는 불필요
       }
     }
 
     sendBtn.addEventListener("click", send);
     input.addEventListener("keypress", (e) => { if (e.key === "Enter") send(); });
-    newBtn.addEventListener("click", () => location.reload());
+    newBtn.addEventListener("click", startNewChat);
 
     // 초기 메시지 복원
     if (INITIAL_MESSAGES && INITIAL_MESSAGES.length > 0) {
       INITIAL_MESSAGES.forEach(msg => {
-        const el = addMessage(msg.content, msg.role === 'user');
+        const el = addMessage(msg.content, msg.role === 'user', true, msg.image_url);
         if (msg.role === 'assistant' && msg.perfume_list) {
           addPerfumeRecommendations(el.wrap, msg.perfume_list);
         }
@@ -339,6 +454,15 @@
     } else {
       addMessage("안녕하세요! ScentPick AI입니다. 어떤 향수를 찾고 계신가요?", false, false);
     }
+
+    // 기존 대화 항목들에 클릭 이벤트 리스너 추가
+    document.querySelectorAll('.conversation-item[data-conversation-id]').forEach(item => {
+      item.addEventListener('click', () => {
+        const convId = parseInt(item.dataset.conversationId);
+        window.loadConversation(convId);
+      });
+    });
+
   })();
 </script>
 {% endblock %}
