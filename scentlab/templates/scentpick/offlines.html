@@ -5,20 +5,25 @@
 <h2 style="margin-bottom:24px;color:#111827;">오프라인 매장 찾기</h2>
 
 <style>
+  /* chip 버튼 공통 스타일 */
   .chip{
     padding:8px 12px;border:none;border-radius:999px;background:#f3f4f6;
     color:#1f2937;font-weight:600;font-size:13px;cursor:pointer;transition:all .15s ease;
   }
   .chip:hover{ background:#e5e7eb; box-shadow:0 2px 8px rgba(0,0,0,.06); transform:translateY(-1px); }
+
+  /* 지도/사이드바 레이아웃 */
   #mapSection{ position:relative;border-radius:16px;overflow:hidden;background:#f1f5f9; height:720px; }
   #map{ width:100%; height:100%; }
   #side{ max-height:720px; overflow:auto; }
 </style>
 
 <div style="display:grid;grid-template-columns:1.7fr 1fr;gap:16px;">
+  <!-- 지도 영역 -->
   <section id="mapSection">
     <div id="map"></div>
 
+    <!-- 프리셋 버튼 -->
     <div id="presetBar" style="position:absolute;left:12px;top:12px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:6px 8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;z-index:1000;box-shadow:0 6px 16px rgba(0,0,0,.05);">
       <button class="preset" data-q="__ALL__" data-force="ALL" style="padding:6px 10px;border-radius:10px;border:1px solid #e5e7eb;background:#eef2ff;">전체</button>
       <button class="preset" data-q="올리브영" data-force="OLIVE" style="padding:6px 10px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;">올리브영</button>
@@ -26,6 +31,7 @@
       <button class="preset" data-q="조말론|딥디크|딥티크|샤넬|디올|바이레도|이솝|탬버린즈|톰포드|프라다|겐조|로에베|르라보|메종 마르지엘라" data-force="BRAND" style="padding:6px 10px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;">브랜드 매장</button>
     </div>
 
+    <!-- 범례 -->
     <div id="legend"
         style="position:absolute;right:12px;bottom:12px;background:#fff;border:1px solid #e5e7eb;
                 border-radius:12px;padding:8px 12px;display:flex;gap:14px;align-items:center;
@@ -43,20 +49,22 @@
         <em style="font-style:normal;font-size:13px;color:#475569;">향수공방</em>
       </span>
     </div>
-
   </section>
 
+  <!-- 사이드바 -->
   <aside id="side" style="background:#fff;border-radius:16px;padding:16px;box-shadow:0 8px 24px rgba(0,0,0,.06);">
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">
       <span id="count" style="color:#64748b;font-size:12px;">0건</span>
     </div>
 
+    <!-- 검색창 -->
     <div style="display:flex;gap:8px;margin-bottom:8px;">
       <input id="q" placeholder="예: 올리브영 강남, 딥티크, 샤넬"
              style="flex:1;padding:10px 12px;border:1px solid #e5e7eb;border-radius:12px;background:#f8fafc;outline:none;">
       <button id="btnSearch" style="padding:10px 12px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;">검색</button>
     </div>
 
+    <!-- 옵션 -->
     <div style="display:flex;gap:10px;align-items:center;color:#64748b;font-size:12px;margin-bottom:10px;flex-wrap:wrap;">
       <span>범위: 지도 중심 <strong>10km</strong></span>
       <label style="display:flex;gap:6px;align-items:center;cursor:pointer;">
@@ -65,6 +73,7 @@
       <button id="btnRequery" style="margin-left:auto;padding:6px 8px;border:1px solid #e5e7eb;border-radius:8px;background:#fafafa;cursor:pointer;">현 지도에서 다시 검색</button>
     </div>
 
+    <!-- chip -->
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
       <button class="chip" data-q="올리브영"  data-force="OLIVE"># 올리브영</button>
       <button class="chip" data-q="향수공방"  data-force="WORK"># 향수공방</button>
@@ -74,16 +83,20 @@
       <button class="chip" data-q="샤넬"      data-force="BRAND"># 샤넬</button>
     </div>
 
+    <!-- 상태 -->
     <div id="status" style="font-size:12px;color:#64748b;margin-bottom:8px;">검색 대기 중…</div>
 
+    <!-- 결과 리스트 -->
     <ul id="list" style="display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none;border-top:1px solid #f1f5f9;padding-top:8px;"></ul>
 
+    <!-- 더보기 버튼 -->
     <div id="moreWrap" style="display:none;margin-top:8px;">
       <button id="btnMore" style="width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:10px;background:#fafafa;cursor:pointer;">더보기</button>
     </div>
   </aside>
 </div>
 
+<!-- 길찾기 모달 -->
 <div id="dirModal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.35);z-index:1200;">
   <div style="background:#fff;border-radius:16px;max-width:520px;width:92%;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden;">
     <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #e5e7eb;">
@@ -114,10 +127,10 @@
 
 {% block script %}
 <script>
-  const KAKAO_JS_KEY = "{{ KAKAO_JS_KEY|escapejs }}";
+  const KAKAO_JS_KEY = "{{ KAKAO_JS_KEY|escapejs }}"; // Kakao API Key
 
+  /* 전역 변수 */
   const SEARCH_RADIUS_M = 10000;
-  const MAP_HEIGHT = 720;
   let map, places, geocoder, clusterer;
   let markers = [];
   let markersById = new Map();
@@ -135,6 +148,7 @@
   let dirTarget = null;
   let forceCategory = 'ALL';
 
+  /* DOM 헬퍼 */
   const $  = s => document.querySelector(s);
   const $$ = s => Array.from(document.querySelectorAll(s));
   const setCount  = n => $('#count').textContent = n + '건';
@@ -145,6 +159,7 @@
     return c.getLat().toFixed(5) + ',' + c.getLng().toFixed(5) + '|' + map.getLevel();
   }
 
+  /* 카테고리/브랜드 상수 */
   const CAT_COLOR = { BRAND:'#2563eb', OLIVE:'#10b981', WORK:'#f59e0b' };
   const CAT_TEXT  = { BRAND:'브랜드',   OLIVE:'올리브영', WORK:'향수공방' };
 
@@ -157,6 +172,7 @@
   const WORK_HINT_RE   = /(공방|원데이|원 데이|클래스|공예)/i;
   const EXCLUDE_RE = /(미용실|헤어|네일|왁싱|마사지|스파|피부관리|에스테틱|피부과|치과|안과|의원|병원|약국|카페|식당|음식점|숙박|학원|부동산|세탁|수선|자동차|주유소|주차장|공업사|PC방|노래방|당구|골프|인테리어)/i;
 
+  /* 장소 필터 */
   function isBeautyPlace(d, q='') {
     const name = d.place_name || '';
     const cat  = d.category_name || '';
@@ -169,6 +185,7 @@
     return BEAUTY_HINT_RE.test(hay);
   }
 
+  /* 카테고리 판별 */
   function catOf(d, query='') {
     const name = d.place_name || '';
     const cat  = d.category_name || '';
@@ -181,6 +198,7 @@
     return BEAUTY_HINT_RE.test(hay) ? 'BRAND' : 'WORK';
   }
 
+  /* 마커 이미지 */
   function markerImage(color) {
     const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28'>"
               + "<circle cx='14' cy='14' r='10' fill='"+color+"'/><circle cx='14' cy='14' r='4' fill='#fff'/></svg>";
@@ -191,6 +209,7 @@
     );
   }
 
+  /* store 변환 */
   function toStore(d, q){
     const cat = catOf(d, q);
     return { id:d.id, name:d.place_name, addr:d.road_address_name || d.address_name || '', phone:d.phone || '', lat:parseFloat(d.y), lng:parseFloat(d.x), place_url:d.place_url || '#', cat };
@@ -199,6 +218,7 @@
   function closeDetail(){ if (detailOverlay) { detailOverlay.setMap(null); detailOverlay = null; } }
   function closeHover(){ if (hoverOverlay) { hoverOverlay.setMap(null); hoverOverlay = null; } }
 
+  /* 상세 오버레이 */
   function openDetail(r, marker){
     closeDetail(); closeHover();
     const el = document.createElement('div');
@@ -222,6 +242,7 @@
     detailOverlay.setMap(map);
   }
 
+  /* hover 오버레이 */
   function showHover(r, marker){
     closeHover();
     const el = document.createElement('div');
@@ -235,6 +256,7 @@
     hoverOverlay.setMap(map);
   }
 
+  /* 마커/리스트 클리어 */
   function clearMarkers(){
     markers.forEach(m => m.setMap(null));
     markers = [];
@@ -242,6 +264,7 @@
     clusterer.clear();
   }
 
+  /* 리스트 렌더 */
   function renderRows(rows, append=false){
     const ul = $('#list');
     if (!append) ul.innerHTML = '';
@@ -296,6 +319,7 @@
     setCount($('#list').children.length);
   }
 
+  /* 검색 결과 핸들링 */
   function handleSearch(data, status, pagination){
     if (status === kakao.maps.services.Status.OK) {
       const filtered = data.filter(d => isBeautyPlace(d, currentQuery));
@@ -320,6 +344,7 @@
     return { x:c.getLng(), y:c.getLat(), radius:SEARCH_RADIUS_M, size:15 };
   }
 
+  /* 단일 검색 */
   function startSearch(query){
     lastSearch = { type:'single', query, force: forceCategory };
     currentQuery = query;
@@ -331,6 +356,7 @@
     places.keywordSearch(query, handleSearch, searchOptions());
   }
 
+  /* 멀티 검색 */
   function multiSearch(keywords){
     lastSearch = { type:'multi', keywords: keywords.slice(), force: forceCategory };
     closeDetail(); closeHover();
@@ -381,6 +407,7 @@
     currentPagination.nextPage();
   }
 
+  /* 길찾기 모달 */
   function openDirModal(){ $('#dirModal').style.display = 'flex'; $('#dirStart').focus(); }
   function closeDirModal(){ $('#dirModal').style.display = 'none'; }
   $('#dirClose').addEventListener('click', closeDirModal);
@@ -453,6 +480,7 @@
   $('#openKakaoDir').addEventListener('click', ()=>handleOpenDirections('kakao'));
   $('#openGoogleDir').addEventListener('click', ()=>handleOpenDirections('google'));
 
+  /* 이벤트 바인딩 */
   function bindEvents(){
     $$('.preset').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -493,6 +521,7 @@
     window.addEventListener('resize', () => { if (map) map.relayout(); });
   }
 
+  /* Kakao SDK 로드 */
   (function loadKakaoSDK(){
     const sdkUrl =
       'https://dapi.kakao.com/v2/maps/sdk.js?appkey=' +
@@ -508,6 +537,7 @@
     document.head.appendChild(s);
   })();
 
+  /* 지도 초기화 */
   function initMap(){
     const center = new kakao.maps.LatLng(37.48642884662146, 127.02087044474453);
     map = new kakao.maps.Map(document.getElementById('map'), { center, level:5 });
