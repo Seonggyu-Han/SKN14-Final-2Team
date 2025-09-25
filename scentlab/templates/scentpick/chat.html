@@ -246,7 +246,6 @@
     // 특정 대화 불러오기
     window.loadConversation = async function(convId) {
       try {
-        console.log('대화 불러오기 시작:', convId);
         document.querySelectorAll('.conversation-item').forEach(item => item.classList.remove('active'));
         const act = document.querySelector(`[data-conversation-id="${convId}"]`);
         if (act) act.classList.add('active');
@@ -258,15 +257,12 @@
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
 
         const data = await resp.json();
-        console.log('API 응답 데이터:', data);
         conversationId = data.conversation_id;
         box.innerHTML = '';
 
         if (data.items && data.items.length > 0) {
-          console.log('메시지 개수:', data.items.length);
           data.items.forEach(msg => {
-            console.log('메시지 렌더링:', msg);
-            const el = addMessage(msg.content, msg.role === 'user', true, msg.image_url);
+            const el = addMessage(msg.content, msg.role === 'user', true, msg.chat_image);
             if (msg.role === 'assistant' && msg.perfume_list && msg.perfume_list.length > 0) {
               addPerfumeRecommendations(el.wrap, msg.perfume_list);
             }
@@ -356,26 +352,24 @@
 
     function addLoading() {
       const fact = perfume_facts[Math.floor(Math.random() * perfume_facts.length)];
-      return addMessage(`답변을 준비하고 있어요...\n💡 TIP: ${fact}`, false, false);
+      return addMessage(`답변을 준비하고 있어요...<br>
+      💡 TIP: ${fact}`, false, false);
     }
 
     async function send() {
       const txt = (input.value || "").trim();
       if (!txt && !uploadedFile) return;
 
-      // 이미지 미리보기 URL 저장 (사용자 메시지용)
-      const userImageUrl = uploadedFile ? previewImage.src : null;
+      // 전송할 값 미리 백업
+      const sendText = txt;
+      const sendImage = uploadedFile;
 
-      input.value = "";
-      // 사용자 메시지에 이미지 포함
-      addMessage(txt, true, false, userImageUrl);
+      const userImageUrl = sendImage ? previewImage.src : null;
+      addMessage(sendText, true, false, userImageUrl);
 
-      // 전송 즉시 미리보기 제거
-      if (uploadedFile) {
-        uploadedFile = null;
-        fileInput.value = "";
-        previewWrapper.style.display = "none";
-      }
+      // 버튼 누르는 순간 입력창/미리보기 초기화
+      input.value = "";                     
+      previewWrapper.style.display = "none";
 
       sendBtn.disabled = true;
       input.disabled = true;
@@ -383,8 +377,13 @@
 
       try {
         const formData = new FormData();
-        formData.append("content", txt);
-        if (uploadedFile) formData.append("image", uploadedFile);
+        formData.append("content", sendText);
+        if (sendImage) formData.append("image", sendImage);
+
+        // conversation_id 유지해서 보내기
+        if (conversationId) {
+          formData.append("conversation_id", conversationId);
+        }
 
         const response = await fetch("{% url 'scentpick:chat_stream_api' %}", {
           method: "POST",
@@ -420,6 +419,10 @@
                   loader.inner.innerHTML = renderMarkdown(currentContent);
                 }
                 if (data.done) {
+                  if (data.conversation_id) {
+                    conversationId = data.conversation_id;
+                  }
+
                   if (data.perfume_list && data.perfume_list.length > 0) {
                     addPerfumeRecommendations(loader.wrap, data.perfume_list);
                   }
@@ -432,10 +435,13 @@
       } catch (e) {
         loader.inner.innerHTML = renderMarkdown(`오류: ${e.message}`);
       } finally {
+        // 전송 끝난 후 업로드 상태만 초기화
+        uploadedFile = null;
+        fileInput.value = "";
+
         sendBtn.disabled = false;
         input.disabled = false;
         input.focus();
-        // 미리보기는 이미 위에서 제거했으므로 여기서는 불필요
       }
     }
 
@@ -446,7 +452,7 @@
     // 초기 메시지 복원
     if (INITIAL_MESSAGES && INITIAL_MESSAGES.length > 0) {
       INITIAL_MESSAGES.forEach(msg => {
-        const el = addMessage(msg.content, msg.role === 'user', true, msg.image_url);
+        const el = addMessage(msg.content, msg.role === 'user', true, msg.chat_image);
         if (msg.role === 'assistant' && msg.perfume_list) {
           addPerfumeRecommendations(el.wrap, msg.perfume_list);
         }

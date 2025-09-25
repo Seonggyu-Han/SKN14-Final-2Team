@@ -90,7 +90,7 @@ def chat(request):
                     'role': m.role,
                     'content': m.content,
                     'created_at': m.created_at,
-                    'image_url': getattr(m, 'image_url', None),  # 안전한 이미지 URL 접근
+                    'chat_image': getattr(m, 'chat_image', None),  # 안전한 이미지 URL 접근
                     'perfume_list': []
                 }
                 
@@ -829,10 +829,15 @@ def chat_stream_api(request):
             conversation_id = request.POST.get("conversation_id") or request.session.get("conversation_id")
             image_file = request.FILES.get("image")
 
+         # 텍스트도 없고 이미지도 없으면 에러
         if not content and not image_file:
             def error_generator():
                 yield f"data: {json.dumps({'error': '내용이 비었습니다.'})}\n\n"
             return StreamingHttpResponse(error_generator(), content_type='text/event-stream')
+
+        # 이미지만 있을 경우 기본 query 채워주기
+        if not content and image_file:
+            content = "이미지 기반 추천 요청"
 
         # FastAPI로 스트리밍 요청 준비
         payload = {
@@ -905,6 +910,8 @@ def chat_stream_api(request):
                                 # conversation_id 추출 시도
                                 data = json.loads(line[6:])
                                 if data.get('conversation_id'):
+                                    # conversation_id가 있으면 세션과 변수에 저장
+                                    request.session["conversation_id"] = data["conversation_id"]
                                     final_conversation_id = data['conversation_id']
                             except:
                                 pass
@@ -923,7 +930,7 @@ def chat_stream_api(request):
                         conv = Conversation.objects.get(id=final_conversation_id, user=request.user)
                         user_message = conv.messages.filter(role='user').order_by('-created_at').first()
                         if user_message:
-                            user_message.image_url = uploaded_image_url
+                            user_message.chat_image = uploaded_image_url
                             user_message.save()
                             print(f"✅ Image URL saved to message {user_message.id}: {uploaded_image_url}")
                     except Exception as e:
@@ -950,6 +957,9 @@ def chat_stream_api(request):
         return response
 
     except Exception as e:
+        # Fast API 실패 시 업로드 취소
+        s3_client.delete_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=filename)
+
         def error_generator():
             yield f"data: {json.dumps({'error': f'서버 오류: {str(e)}'})}\n\n"
         return StreamingHttpResponse(error_generator(), content_type='text/event-stream')
@@ -1470,7 +1480,7 @@ def conversation_messages_api(request, conv_id: int):
             'role': m.role,
             'content': m.content,
             'created_at': m.created_at.isoformat(),
-            'image_url': getattr(m, 'image_url', None),  # 안전한 이미지 URL 접근
+            'chat_image': getattr(m, 'chat_image', None),  # 안전한 이미지 URL 접근
         }
         
         # assistant 메시지인 경우 관련된 추천 데이터 찾기

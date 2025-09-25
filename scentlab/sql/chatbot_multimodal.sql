@@ -1,0 +1,1 @@
+ALTER TABLE messages ADD COLUMN chat_image VARCHAR(500) NULL;
