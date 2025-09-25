@@ -1225,27 +1225,26 @@ def toggle_like_dislike(request):
             'message': f'오류가 발생했습니다: {str(e)}'
         }, status=500)
 
+
 @login_required 
 def mypage(request):
     """마이페이지"""
     try:
         request.user = User.objects.get(username=request.user.username)
-        
-        # 추천 받은 향수 내역 (더미 데이터 - 실제로는 추천 시스템과 연결)
-        # 실제 구현시에는 RecommendationRun 모델을 사용하거나 추천 기록을 저장하는 테이블 필요
-        recommendation_runs = []
 
-        # =========================[ADD yyh] 추천 내역 집계 블록 시작 =========================
-        # 필터 파라미터
+        # --- 정렬 파라미터 ---
+        sort_by  = (request.GET.get('sort_by')  or 'date').strip()   # date|brand|name|count
+        sort_dir = (request.GET.get('sort_dir') or 'desc').strip()   # asc|desc
+        desc = (sort_dir == 'desc')
+
+        # =========================[ 추천 내역 집계 ]=========================
         brand = (request.GET.get('brand') or '').strip()
         name = (request.GET.get('name') or '').strip()
         date_from = (request.GET.get('date_from') or '').strip()
         date_to   = (request.GET.get('date_to') or '').strip()
 
-        # 내 추천 로그에서 향수별 집계(추천횟수, 최신일자)
         rec_qs = RecCandidate.objects.filter(run_rec__user=request.user)
 
-        # 필터(집계 전에 적용)
         if brand:
             rec_qs = rec_qs.filter(perfume__brand__icontains=brand)
         if name:
@@ -1261,77 +1260,73 @@ def mypage(request):
                      rec_count=Count('id'),
                      last_date=Max('run_rec__created_at'),
                  )
-                 .order_by('-last_date')  # 최신순
         )
+
+        # --- 정렬 결정 ---
+        order = []
+        if sort_by == 'brand':
+            order = ['-perfume__brand', '-perfume__name'] if desc else ['perfume__brand', 'perfume__name']
+        elif sort_by == 'name':
+            order = ['-perfume__name'] if desc else ['perfume__name']
+        elif sort_by == 'count':
+            # 같은 횟수면 최신순 보조 정렬
+            order = ['-rec_count', '-last_date'] if desc else ['rec_count', '-last_date']
+        else:  # 'date' 기본
+            order = ['-last_date'] if desc else ['last_date']
+
+        rec_agg = rec_agg.order_by(*order)
 
         # 페이지네이션(5개)
         rec_paginator = Paginator(rec_agg, 5)
         rec_page = rec_paginator.get_page(request.GET.get('page') or 1)
-        # =========================[ADD yyh] 추천 내역 집계 블록 끝 =========================
-        
-        # admin 사용자의 즐겨찾기한 향수들 가져오기
+        # ===============================================================
+
+        # 이하 즐겨찾기/피드백 기존 코드 그대로...
         favorite_perfumes = Perfume.objects.filter(
             favorited_by__user=request.user
         ).order_by('-favorited_by__created_at')
-        
-        # admin 사용자의 피드백 이벤트들 가져오기 (좋아요/싫어요)
+
         liked_feedback = FeedbackEvent.objects.filter(
-            user=request.user,
-            action='like'
+            user=request.user, action='like'
         ).select_related('perfume').order_by('-created_at')
-        
+
         disliked_feedback = FeedbackEvent.objects.filter(
-            user=request.user,
-            action='dislike'
+            user=request.user, action='dislike'
         ).select_related('perfume').order_by('-created_at')
-        
-        # 이미지 URL 부여
+
         for perfume in favorite_perfumes:
             perfume.image_url = f"https://scentpick-images.s3.ap-northeast-2.amazonaws.com/perfumes/{perfume.id}.jpg"
-        
         for feedback in liked_feedback:
             feedback.perfume.image_url = f"https://scentpick-images.s3.ap-northeast-2.amazonaws.com/perfumes/{feedback.perfume.id}.jpg"
-        
         for feedback in disliked_feedback:
             feedback.perfume.image_url = f"https://scentpick-images.s3.ap-northeast-2.amazonaws.com/perfumes/{feedback.perfume.id}.jpg"
-        
-        favorites_count = favorite_perfumes.count()
-        likes_count = liked_feedback.count()
-        dislikes_count = disliked_feedback.count()
-        
+
         context = {
-            'recommendation_runs': recommendation_runs,
-            # =========================[ADD yyh] 추천 내역 컨텍스트 추가 시작=========================
-            'rec_page': rec_page,          # 템플릿에서 rec_page.object_list 로 루프
-            'f_brand': brand,              # 필터 값 유지용
-            'f_name': name,
-            'f_date_from': date_from,
-            'f_date_to': date_to,
-            # =========================[ADD yyh] 추천 내역 컨텍스트 추가 끝=========================
+            'rec_page': rec_page,
+            'f_brand': brand, 'f_name': name, 'f_date_from': date_from, 'f_date_to': date_to,
             'favorite_perfumes': favorite_perfumes,
-            'favorites_count': favorites_count,
-            'liked_perfumes': liked_feedback,  # FeedbackEvent 객체들
-            'likes_count': likes_count,
-            'disliked_perfumes': disliked_feedback,  # FeedbackEvent 객체들
-            'dislikes_count': dislikes_count
+            'favorites_count': favorite_perfumes.count(),
+            'liked_perfumes': liked_feedback,
+            'likes_count': liked_feedback.count(),
+            'disliked_perfumes': disliked_feedback,
+            'dislikes_count': disliked_feedback.count(),
+            # ★ 템플릿에 현재 정렬 상태 전달 (화살표 표시용)
+            'sort_by': sort_by,
+            'sort_dir': sort_dir,
         }
-        
+
     except User.DoesNotExist:
         context = {
-            'recommendation_runs': [],
-            # =========================[ADD yyh] 기본값도 함께 추가 시작=========================
             'rec_page': None,
             'f_brand': '', 'f_name': '', 'f_date_from': '', 'f_date_to': '',
-            # =========================[ADD yyh] 기본값도 함께 추가 끝=========================
             'favorite_perfumes': Perfume.objects.none(),
             'favorites_count': 0,
-            'liked_perfumes': [],
-            'likes_count': 0,
-            'disliked_perfumes': [],
-            'dislikes_count': 0,
-            'error': 'admin 사용자를 찾을 수 없습니다.'
+            'liked_perfumes': [], 'likes_count': 0,
+            'disliked_perfumes': [], 'dislikes_count': 0,
+            'sort_by': 'date', 'sort_dir': 'desc',
+            'error': 'admin 사용자를 찾을 수 없습니다.',
         }
-    
+
     return render(request, "scentpick/mypage.html", context)
 
 @login_required
