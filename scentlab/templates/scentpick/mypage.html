@@ -572,30 +572,36 @@ document.addEventListener('DOMContentLoaded', function(){
   };
 });
 </script>
+
 <script>
 /* ====== 그리드 페이지네이션 (공용) ====== */
 (function(){
   const PAGE_SIZE = 6;
 
   // ★ 비어있는 칸을 채우는 투명 패드 추가
-  function fillPlaceholders(grid, pageSize = PAGE_SIZE){
+  function fillPlaceholders(grid){
     if (!grid) return;
     // 기존 패드 제거
     grid.querySelectorAll('.grid-pad').forEach(n=>n.remove());
 
     // 보이는 카드 개수
-    const visible = grid.querySelectorAll('.recommendation-card')
-      ? Array.from(grid.querySelectorAll('.recommendation-card')).filter(c => c.style.display !== 'none').length
-      : 0;
+    const cards = Array.from(grid.querySelectorAll('.recommendation-card'))
+      .filter(c => c.style.display !== 'none');
+    const visible = cards.length;
 
-    if (visible === 0) return;  
+    if (visible === 0) return;
+
+    // 보이는 개수에 따라 pageSize 조정
+    let pageSize;
+    if (visible <= 2) pageSize = 2;
+    else if (visible <= 4) pageSize = 4;
+    else pageSize = PAGE_SIZE; // 6
 
     const need = Math.max(pageSize - visible, 0);
     if (!need) return;
 
     // 카드 높이 측정 (숨겨진 카드만 있다면 임시 표시해서 측정)
-    let sample = grid.querySelector('.recommendation-card:not([style*="display: none"])') 
-              || grid.querySelector('.recommendation-card');
+    let sample = cards[0] || grid.querySelector('.recommendation-card');
     let h = 300;
     if (sample){
       const wasHidden = sample.style.display === 'none';
@@ -604,7 +610,7 @@ document.addEventListener('DOMContentLoaded', function(){
       if (wasHidden) sample.style.display = 'none';
     }
 
-    // 필요 개수만큼 패드 생성 (DOM의 끝에 붙여서 "위에서부터" 카드가 채워지도록)
+    // 필요 개수만큼 패드 생성
     for (let i=0;i<need;i++){
       const pad = document.createElement('div');
       pad.className = 'grid-pad';
@@ -612,6 +618,7 @@ document.addEventListener('DOMContentLoaded', function(){
       grid.appendChild(pad);
     }
   }
+
 
   function applyPagination(grid, pageSize = PAGE_SIZE){
     if (!grid) return;
@@ -689,6 +696,14 @@ document.addEventListener('DOMContentLoaded', function(){
     if (tab) repaginateAll();
   });
 })();
+</script>
+<script>
+  // 뒤로가기 했을 때 캐시 화면이 뜨지 않게 강제로 새로고침
+  window.addEventListener("pageshow", function(event) {
+    if (event.persisted) {
+      window.location.reload();
+    }
+  });
 </script>
 
 {% endblock script %}
