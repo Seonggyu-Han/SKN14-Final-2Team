@@ -253,7 +253,7 @@
       // 파일 확장자 확인
       const ext = file.name.split(".").pop().toLowerCase();
       if (!allowedExtensions.includes(ext)) {
-        alert("이미지 파일이 아닙니다. (허용: JPG, JPEG, PNG, GIF)");
+        showToast("이미지 파일이 아닙니다. (허용: JPG, JPEG, PNG, GIF)", "error");
         fileInput.value = "";
         uploadedFile = null;
         return;
@@ -261,7 +261,7 @@
 
       // 파일 크기 확인
       if (file.size > maxSize) {
-        alert("이미지 크기는 5MB 이하여야 합니다.");
+        showToast("이미지 크기는 5MB 이하여야 합니다.", "error");
         fileInput.value = "";
         uploadedFile = null;
         return;
