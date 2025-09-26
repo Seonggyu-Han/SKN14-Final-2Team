@@ -2767,3 +2767,30 @@ body.mypage .recommendations-grid .recommendation-card[style*="display: none"] {
     border-radius: 18px;
     margin-top: 2px;
 }
+
+body.mypage .favorites-section {
+    min-height: 600px !important;
+    /* 선호/비선호랑 높이 통일 */
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+body.mypage .favorites-section .recommendations-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+    margin-top: 15px !important;
+    margin-bottom: 20px !important;
+}
+
+body.mypage .like-dislike-section {
+    min-height: 600px !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* 즐겨찾기는 min-height 제거 */
+body.mypage .favorites-section {
+    display: flex !important;
+    flex-direction: column !important;
+}
