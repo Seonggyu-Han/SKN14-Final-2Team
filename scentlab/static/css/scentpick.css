@@ -2794,3 +2794,50 @@ body.mypage .favorites-section {
     display: flex !important;
     flex-direction: column !important;
 }
+
+body.mypage .empty-message {
+    text-align: center !important;
+    color: #718096 !important;
+    font-style: italic !important;
+    padding: 40px 20px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+}
+
+
+body.mypage .empty-message {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    color: #718096 !important;
+    font-style: italic !important;
+    min-height: 200px !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+}
+
+body.mypage .empty-message {
+    flex: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    color: #718096 !important;
+    font-style: italic !important;
+    min-height: 200px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+body.mypage .like-dislike-section .empty-message {
+    flex: 0 !important;
+    display: block !important;
+    text-align: center !important;
+    margin-top: 34px !important;
+    padding: 0 !important;
+    min-height: auto !important;
+}
