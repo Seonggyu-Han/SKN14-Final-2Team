@@ -1,17 +1,9 @@
 # SKN14-FINAL-2Team
 
-<<<<<<< HEAD
-### ☘️ 팀명: ScentLab  
-### 🌳 프로젝트명: ScentPick  
-=======
 ### ☘️팀명: ScentLab
-### 🌳홈페이지: ScentPick (https://scentpick.store)
+### 🌳프로젝트명: ScentPick (https://scentpick.store)
 
 ### **🧴ScentPick: LLM 기반으로 맞춤형 향수를 추천하는 대화형 챗봇 서비스**
->>>>>>> 8d1479cf512c63c46337e233b8d1d59a1ef885c2
-
-
-## 🧴 ScentPick: LLM 기반 맞춤형 향수 추천 챗봇 서비스
 
 > ScentPick은 **대화형 RAG 기반 챗봇**으로, 사용자가 일상적인 언어(“여름 바닷가의 시원한 향”, “무겁지 않은 출근용 향”)로 입력하면  
 AI가 이를 이해하고 개인 맞춤형 향수를 추천해주는 서비스입니다.  
@@ -21,114 +13,24 @@ AI가 이를 이해하고 개인 맞춤형 향수를 추천해주는 서비스�
   2. 노트·어코드 등 전문 용어 중심 → 일반 소비자가 이해하기 어려움  
   3. 매장 접근성·높은 가격·시향 불가 문제  
 
-<<<<<<< HEAD
 - **해결 목표**  
   자연어 기반 대화형 인터페이스 + 벡터 검색 + 멀티모달 기능을 통해  
   사용자가 쉽게 본인 취향에 맞는 향수를 찾도록 지원  
-=======
-### 🎇 Features 🎇
-- **RAG기반의 Chatbot** : 
-    - RAG 기술로 향수 브랜드 전체 데이터베이스에서 필요한 부분을 가져오는 기능 
-    - 로그인한 고객 대상으로 채팅 히스토리를 제공하는 기능 
-    - 실시간으로 고객과 챗봇의 질의응답 대화가 가능
-    - 이미지 업로드하면 분위기에 맞는 향수를 추천하는 **멀티모달** 기능  
-- **사용자의 의견을 반영한 추천 시스템** :
-    - 사용자가 원하는 노트와 향 종류를 반영하여 적절한 향수 제품을 추천하는 기능
-      
-- **간결하고 직관적인 UI** 
-
->>>>>>> 8d1479cf512c63c46337e233b8d1d59a1ef885c2
 
 <img src="./images/프로젝트개요.png" alt="프로젝트 개요 이미지" />
 
-<<<<<<< HEAD
 <br>
-=======
-- 개발 환경: Pycharm, VSCode
-- 기술 스택
-<img width="826" height="353" alt="Image" src="https://github.com/user-attachments/assets/07c03098-faf3-4959-8e24-980fc9cece3f" />
->>>>>>> 8d1479cf512c63c46337e233b8d1d59a1ef885c2
 
 ## 👨‍💻 팀원 소개
 
-<<<<<<< HEAD
 | **박빛나** | **유용환** | **한성규** | **강윤구** | **전정규** | **정유진** |
 |:----------:|:----------:|:----------:|:----------:|:----------:|:----------:|
 | <img src="./images/박빛나_향수.jpg" width="120px" alt="박빛나 프로필 이미지"> | <img src="./images/yonghwan.png" width="120px" alt="유용환 프로필 이미지"> | <img src="./images/seonggyu.png" width="120px" alt="한성규 프로필 이미지"> | <img src="./images/yungoo.png" width="120px" alt="강윤구 프로필 이미지"> | <img src="./images/jeonggyu.png" width="120px" alt="전정규 프로필 이미지"> | <img src="./images/yujin.png" width="120px" alt="정유진 프로필 이미지"> |
 | [`@ParkVitna`](https://github.com/ParkVitna) | [`@yooyonghwan111`](https://github.com/yooyonghwan111) | [`@Seonggyu-Han`](https://github.com/Seonggyu-Han) | [`@dbsrn09`](https://github.com/dbsrn09) | [`@jeonggyu`](https://github.com/jeonggyu) | [`@rainbow0291`](https://github.com/rainbow0291) |
-=======
-
-
-### 📝 Table of Content
-
-- 팀원소개
-- ScentPick 챗봇서비스 소개
-- 주요 기능
-- 시스템 아키텍처
-- 데이터 구조
-- 향수 웹사이트 화면
-- 인공지능 모델링
-- 시스템 통합
-- 최종 개발
-- 기대 효과 
-- Contact
-
-
-### 팀원 소개
-
-| 이름   | GitHub ID      | 업무                                                                                       |
-|---------|----------------|------------------------------------------------------------------------------------------|
-| 박빛나  | ParkVitna      | PM(프로젝트 매니저), 프로젝트 관리, 데이터 크롤링 및 정제, 프로젝트 기획서 작성, django ORM, AWS 배포, CI/CD               | 
-| 유용환  | yooyonghwan111 | RM(리소스 매니저), Pinecone Vector DB 구축, wbs 작성, 데이터 조회 프로그램 작성, 시스템 아키텍처 구조, LangGraph 챗봇 설계 | 
-| 한성규  | Seonggyu-Han   | 향수 데이터 수집, 전처리 및 정제, UI 구성,  API 조사, 데이터베이스 설계문서 작성, FastAPI, 챗봇, 웹사이트 페이지 검수      |
-| 강윤구  | dbsrn09        | 향수 데이터 크롤링, 정제, 챗봇 사용자 입력 전처리 , 오프라인(map) 페이지, 상세페이지 및 마이페이지 검수,수정               | 
-| 전정규  | jung33010      | 머신러닝 메인 어코드 추출 기능, FastAPI, LangGraph 챗봇 설계, AWS배포, CI/CD                                              | 
-| 정유진  | rainbow0291    | UI 구성, 화면 설계 및 기능 구체화, README 파일, 회의록, 요구사항 정의서 작성, 상세페이지 작성                               | 
-
-
-### 🧴ScentPick 챗봇서비스 소개
-
-- 사용자가 원하는 조건에 맞게 향수를 3가지 추천해주는 챗봇 구현
-- 향수 이름, 향수 브랜드, 향수 종류, 향 설명, 가격, 용량, 메인 어코드, 탑/미들/베이스 노트 데이터를 DB에 저장
-- 참고 링크
-<img width="1427" height="679" alt="Image" src="https://github.com/user-attachments/assets/1e4b6971-1b67-4fb8-b028-5573b7c274de" />
-
-
-### 📱 주요 기능
-- **즐겨찾기** 기능: 로그인한 경우 마이페이지에 선택한 향수를 표시하는 기능
-- **챗봇추천** 기능: 사용자가 작성한 조건에 맞게 3가지 향수를 추천해주는 기능
-- 링크: 추천된 향수이름을 클릭하면 해당 제품 **상세페이지**로 연결되는 기능
-- 로그인하고 마이페이지에서 챗봇과 **대화내역**chat history  저장, 표시되는 기능
-- 향 설명, 탑/미들/베이스 노트, 용량 등의 **정보를 제공**하는 기능
-- 향수노트/어코드/브랜드/이미지 등 도메인 엔터티 관리
-- RAG 검색을 위한 임베딩/소스 문서 관리
-
-* 초기 페이지 구상  
-<img width="212.8" height="120.9" alt="Image" src="https://github.com/user-attachments/assets/bb77a9bd-213f-4f8c-8779-c70a985c2340" />
-<img width="214.2" height="120.1" alt="Image" src="https://github.com/user-attachments/assets/dda1392d-caa3-404e-9f33-6a0b7d155d18" />
-<img width="100.3" height="100.4" alt="Image" src="https://github.com/user-attachments/assets/d8a3b79b-8001-42a4-95f9-777174a41153" />
-<img width="200.8" height="100.4" alt="Image" src="https://github.com/user-attachments/assets/8bcac447-f498-4817-a4f9-011cd2c4b179" />
-
-
->>>>>>> 8d1479cf512c63c46337e233b8d1d59a1ef885c2
-
 
 <br>
 
-<<<<<<< HEAD
 ## 🛠️ 기술 스택
-=======
-<img width="1911" height="651" alt="Image" src="https://github.com/user-attachments/assets/f4830031-5058-4767-ac3a-aaab4dbe9c36" />
-
-<img width="655" height="464" alt="Image" src="https://github.com/user-attachments/assets/624ce6a7-12a7-41b7-9b44-1768c083929e" /> <br>
-- LLM_parser         : 2개 이상의 다중 제품 속성(facets) 쿼리를 파싱/정규화.
-- FAQ_agent          : 향수 지식/정의/차이/일반 질문.
-- human_fallback     : 비(非)향수 또는 오프토픽.
-- price_agent        : 가격 전용 의도(cheapest, price, buy, discount 등).
-- ML_agent           : 단일 취향/무드 추천 및 최근 추천 결과에 대한 FOLLOW-UP.
-- memory_echo        : 사용자가 "방금 내가 뭐라고 했지?" / 마지막 질문을 묻는 경우.
-- rec_echo           : 사용자가 "네가 방금 추천한 목록/이름 다시 보여줘"를 요청하는 경우.
->>>>>>> 8d1479cf512c63c46337e233b8d1d59a1ef885c2
 
 | 카테고리 | 기술 |
 |----------|------|
@@ -187,7 +89,6 @@ AI가 이를 이해하고 개인 맞춤형 향수를 추천해주는 서비스�
 
 ## 🖥️ 시스템 아키텍처
 
-<<<<<<< HEAD
 - **Frontend (Django Template)**  
   로그인/회원가입, 챗봇 UI, 추천 결과, 마이페이지  
 
@@ -200,51 +101,6 @@ AI가 이를 이해하고 개인 맞춤형 향수를 추천해주는 서비스�
   - RDS: 유저·대화·추천 로그 관리  
   - S3: 이미지 저장 (프로필, 향수 이미지)  
   - Pinecone: 향수 스펙·리뷰·키워드 임베딩 벡터 검색  
-=======
-
-### 🔢데이터 구조 
-<img width="1345" height="893" alt="Image" src="https://github.com/user-attachments/assets/3efa6c42-0033-4bbb-9800-28ef03d8578b" /> <br>
-
-### 향수 웹사이트 화면 <br>
- 1. 메인화면 <img width="1171" height="847" alt="Image" src="https://github.com/user-attachments/assets/60cf6ae4-772f-4ab1-bb70-942e87b78bb4" />  <br>
- 2. 챗봇 페이지 <img width="1196" height="804" alt="Image" src="https://github.com/user-attachments/assets/c43855cd-676e-4bcb-988a-223dc134a9a3" />  <br>
- 3. 추천 페이지(날씨에 따른 추천 등) <img width="1171" height="829" alt="Image" src="https://github.com/user-attachments/assets/9a54bb1b-060d-46c5-bdbf-592b6bce23f8" />  <br>
- 4. 전체 향수 리스트 페이지(조건에 따른 필터링 가능) <img width="1205" height="850" alt="Image" src="https://github.com/user-attachments/assets/5d2f9ffa-d826-4735-9734-223a881cce5e" />  <br>
- 5. 상세페이지(802개의 향수 특징- 성별/계절별/시간대별/노트별 특성) <img width="789" height="857" alt="Image" src="https://github.com/user-attachments/assets/e5e3eff1-e4dc-4da2-b1b3-97ec4e83c225" />  <br>
- 6. 오프라인 페이지(향수 매장 지도)<img width="1183" height="701" alt="Image" src="https://github.com/user-attachments/assets/983bef42-3c3f-4b2e-87e4-53099d8a8e39" />  <br>
- 7. 마이페이지(즐겨찾기, 선호/비선호, 추천받은 향수 목록)<img width="1175" height="814" alt="Image" src="https://github.com/user-attachments/assets/f752a9db-2a2b-4cbd-8dae-6371808621dd" />  <br>
- 8. 로그인페이지 <img width="1149" height="728" alt="Image" src="https://github.com/user-attachments/assets/e446197c-44dd-4106-a4b1-20fd8e308a15" />  <br>
- 9. 회원가입페이지 <img width="1089" height="857" alt="Image" src="https://github.com/user-attachments/assets/8661b604-c71e-48eb-ad96-2ddc46b21e14" />  <br>
-
-### 인공지능 모델링
-- 사용자의 자연어 향 설명에서 적절한 향수 메인 어코드를 분류
-- LLM 활용 모델 개발(자연어 입력하면 핵심 속성 추출(향 설명, 가격, 브랜드, 용량 등))
-- LangChain + OpenAI 연동
-- 시스템 아키텍처 설계
-- HuggingFace dataset 머신러닝 다중분류모델 성능 평가
-- 원본데이터 <img width="839" height="412" alt="Image" src="https://github.com/user-attachments/assets/7fa357f9-6818-4165-918b-e81df411ca73" />  <br>
-
-- 향 설명과 메인 어코드 추출 
-- ① 수집 → ② 결측치 처리 → ③ 불필요 단어 제거 → ④ 브랜드/향수명 제거 → ⑤ 숫자/특수문자 제거 → ⑥ 소문자 변환 → ⑦ 학습/검증 데이터 분리
-- 허깅페이스 데이터셋 최종 채택 모델: 
-- XLM-Roberta base + Classification Head
- (transformers.AutoModelForSequenceClassification, problem_type="multi_label_classification")	
-<img width="547" height="431" alt="Image" src="https://github.com/user-attachments/assets/dad82f8c-03ac-4d67-88ca-a694c4e5a57f" />  <br>
-
-<img width="531" height="100" alt="Image" src="https://github.com/user-attachments/assets/44752229-69f4-45db-bba8-cafba604ba09" />  <br>
-- **학습 결과 및 성능 평가**
-<img width="634" height="619" alt="Image" src="https://github.com/user-attachments/assets/1e556e61-fc4c-4211-9d33-a2d36e742a92" />  <br>
-
-<img width="617" height="466" alt="Image" src="https://github.com/user-attachments/assets/1bc5e614-d3d3-415c-b1a8-052303b90e42" />  <br>
-- 주요 지표(검증 셋)
-- threshold=0.5 기준 Epoch 5~7 최고점
-- Micro-F1 ≈ 0.53
-- Macro-F1 ≈ 0.33~0.34
-- Jaccard ≈ 0.42~0.43
-- 참고: 검증 Loss는 Epoch 5 이후 상승(과적합 경향), Micro-F1도 이후 정체/하락 
-→ 5~7 사이 모델이 가장 타당.
-결론: XLM-R 파인튜닝 + pos_weight + label threshold로 Micro-F1≈0.53 달성
->>>>>>> 8d1479cf512c63c46337e233b8d1d59a1ef885c2
 
 
 ## 🔗 시스템 통합
@@ -276,10 +132,7 @@ AI가 이를 이해하고 개인 맞춤형 향수를 추천해주는 서비스�
 
 <img src="images/erd데이터구조.png" alt="ERD 데이터 구조" />
 
-<<<<<<< HEAD
 <br>
-
-## 🖼️ 향수 웹사이트 화면
 
 ## 🖼️ 향수 웹사이트 화면
 
@@ -368,11 +221,3 @@ AI가 이를 이해하고 개인 맞춤형 향수를 추천해주는 서비스�
 - GitHub 메인 저장소: [Final Repo](https://github.com/skn-ai14-250409/SKN14-Final-2Team)  
 - GitHub Django Web: [Web Repo](https://github.com/skn-ai14-250409/SKN14-Final-2Team-Web)  
 - GitHub FastAPI: [AI Repo](https://github.com/skn-ai14-250409/SKN14-Final-2Team-Ai)  
-=======
-### 📢 Contact
-- 프로젝트 노션: https://www.notion.so/shqkel/SKN14-Final-2-24c9cb46e5e28024a084f0508d66d217?source=copy_link
-- Github SKN14기 저장소: https://github.com/skn-ai14-250409/SKN14-Final-2Team
-- Github SKN전체 저장소: https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN14-FINAL-2Team
-- **향수 Scentpick** : https://scentpick.store/
-
->>>>>>> 8d1479cf512c63c46337e233b8d1d59a1ef885c2
