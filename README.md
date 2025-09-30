@@ -25,7 +25,7 @@ AI가 이를 이해하고 개인 맞춤형 향수를 추천해주는 서비스�
 
 | **박빛나** | **유용환** | **한성규** | **강윤구** | **전정규** | **정유진** |
 |:----------:|:----------:|:----------:|:----------:|:----------:|:----------:|
-| <img src="./images/박빛나_향수.jpg" width="120px" alt="박빛나 프로필 이미지"> | <img src="./images/yonghwan.png" width="120px" alt="유용환 프로필 이미지"> | <img src="./images/seonggyu.png" width="120px" alt="한성규 프로필 이미지"> | <img src="./images/yungoo.png" width="120px" alt="강윤구 프로필 이미지"> | <img src="./images/jeonggyu.png" width="120px" alt="전정규 프로필 이미지"> | <img src="./images/yujin.png" width="120px" alt="정유진 프로필 이미지"> |
+| <img src="./images/박빛나_향수.jpg" width="120" height="150" style="object-fit: cover;" alt="박빛나 프로필 이미지"> | <img src="./images/유용환_향수.png" width="120" height="150" style="object-fit: cover;" alt="유용환 프로필 이미지"> | <img src="./images/한성규_향수.png" width="120" height="150" style="object-fit: cover;" alt="한성규 프로필 이미지"> | <img src="./images/강윤구_향수.png" width="120" height="150" style="object-fit: cover;" alt="강윤구 프로필 이미지"> | <img src="./images/전정규_향수.jpg" width="120" height="150" style="object-fit: cover;" alt="전정규 프로필 이미지"> | <img src="./images/정유진_향수.jpg" width="120" height="150" style="object-fit: cover;" alt="정유진 프로필 이미지"> |
 | [`@ParkVitna`](https://github.com/ParkVitna) | [`@yooyonghwan111`](https://github.com/yooyonghwan111) | [`@Seonggyu-Han`](https://github.com/Seonggyu-Han) | [`@dbsrn09`](https://github.com/dbsrn09) | [`@jeonggyu`](https://github.com/jeonggyu) | [`@rainbow0291`](https://github.com/rainbow0291) |
 
 <br>
@@ -202,7 +202,9 @@ AI가 이를 이해하고 개인 맞춤형 향수를 추천해주는 서비스�
 
 ## 📹 시연 동영상
 
-<img src="images/final_demo.png" alt="최종 시연 동영상 링크" />
+<a href="https://youtu.be/9NiaYqRUbyc?si=2Qh1V7Lnm8OrIr2T" target="_blank">
+  <img src="images/최종시연동영상썸네일.png" alt="최종 시연 동영상" width="600"/>
+</a>
 
 <br>
 
@@ -214,6 +216,17 @@ AI가 이를 이해하고 개인 맞춤형 향수를 추천해주는 서비스�
 - **확장성**: 디퓨저, 섬유유연제 등 향 기반 제품군으로 확장 가능  
 
 <br>
+
+## 🗣️ 프로젝트 한줄 회고
+
+| 이름      | 한 줄 회고                               |
+| ------- | ------------------------------------ |
+| **박빛나** | PM이 처음이라 팀원들을 고생시킨 거 같은데... ㅎㅎㅎ 향수 추천이라는 주제로 재밌게 LLM을 적용해보고 웹페이지를 만들어봐서 즐거웠습니다~! |
+| **강윤구** | 향수라는 낯선 도메인을 다루면서도 데이터 정리부터 챗봇 구현까지 배울 점이 많았고, 다 같이 결과물을 완성해내서 뿌듯했습니다. |
+| **유용환** | RAG 기반 추천 모델과 스트리밍 챗봇을 구현하며 AI 기술을 서비스로 확장하는 경험을 했고, 그 과정에서 배움과 협업의 가치를 깊이 느꼈다. |
+| **전정규** | AI과정에서 배운 지식들을 팀원들과 함께 펼쳐볼수있는 기회를 잘 활용한것같아서  좋았습니다.팀원분들 모두 고생 많이하셨습니다. |
+| **정유진** | 이번 파이널 프로젝트는 특히 더욱 유익하고 즐거운 경험이었습니다! |
+| **한성규** | 지금 내가 어떤 작업을 하고 있는지, 이 작업이 팀내에서 원래 하기로 합의된 방향이 맞는지 중간중간 스스로 돌아봐야 한다는 점. 팀원들과의 소통이 프로젝트에서 중요한 역할을 하는지에 대해 다시 깨닫게 되는 프로젝트였습니다. 2달간 함께 노력해주신 팀원분들 고생 많으셨습니다~ 감사합니다🙇 |
 
 ## 📢 Contact
 
